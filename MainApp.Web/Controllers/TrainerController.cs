@@ -13,21 +13,19 @@ namespace MainApp.Web.Controllers
     {
         private readonly IRepository<Trainer> _trainerRepository;
         private readonly ILogger<TrainerController> _logger;
-        
 
-        public TrainerController(IRepository<Trainer> trainerRepository)
+        public TrainerController(IRepository<Trainer> trainerRepository, ILogger<TrainerController> logger)
         {
             _trainerRepository = trainerRepository;
+            _logger = logger;
         }
 
         // GET: TrainerController
         public ActionResult Index()
         {
             _logger.LogInformation("Sciagam dane z bazy danych...");
-
-            var dataFromBase =_trainerRepository.GetAll();
-
-            return View(dataFromBase);
+            var trainers =_trainerRepository.GetAll();
+            return View(trainers);
         }
 
         // GET: TrainerController/Details/5
