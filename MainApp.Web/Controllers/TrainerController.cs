@@ -15,10 +15,9 @@ namespace MainApp.Web.Controllers
         private readonly ILogger<TrainerController> _logger;
         
 
-        public TrainerController(IRepository<Trainer> trainerRepository, ILogger<TrainerController> logger)
+        public TrainerController(IRepository<Trainer> trainerRepository)
         {
             _trainerRepository = trainerRepository;
-            _logger = logger;
         }
 
         // GET: TrainerController
@@ -28,7 +27,7 @@ namespace MainApp.Web.Controllers
 
             var dataFromBase =_trainerRepository.GetAll();
 
-            return View();
+            return View(dataFromBase);
         }
 
         // GET: TrainerController/Details/5
