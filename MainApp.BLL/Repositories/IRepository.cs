@@ -7,11 +7,11 @@ namespace MainApp.BLL.Repositories
 {
     public interface IRepository<T> where T : Entity
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAll();
         IQueryable<T> GetAllQueryable();
-        T Get(int id);
-        void Insert(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task<T> GetById(int id);
+        Task Insert(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
     }
 }

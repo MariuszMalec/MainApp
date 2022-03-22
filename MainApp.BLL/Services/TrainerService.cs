@@ -10,20 +10,20 @@ namespace MainApp.BLL.Services
 {
     public class TrainerService
     {
-        private readonly IRepository<Trainer> Trainers;
+        //private readonly IRepository<Trainer> Trainers;
 
-        public TrainerService(IRepository<Trainer> stages)
-        {
-            Trainers = stages;
-        }
-        public IEnumerable<Trainer> GetAll()
-        {
-            return Trainers.GetAllQueryable();
-        }
+        //public TrainerService(IRepository<Trainer> stages)
+        //{
+        //    Trainers = stages;
+        //}
+        //public IEnumerable<Trainer> GetAll()
+        //{
+        //    return Trainers.GetAllQueryable();
+        //}
 
-        public void InsertStage(Trainer stage)
-        {
-            Trainers.Insert(stage);
-        }
+        //public void InsertStage(Trainer stage)
+        //{
+        //    Trainers.Insert(stage);
+        //}
     }
 }

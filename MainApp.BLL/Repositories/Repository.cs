@@ -1,16 +1,14 @@
 ﻿using MainApp.BLL.Context;
-using MainApp.BLL.DataStorage;
 using MainApp.BLL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.BLL.Repositories
 {
-   public class Repository<T> : IRepository<T> where T : Entity
+    public class Repository<T> : IRepository<T> where T : Entity
     {
         private readonly ApplicationDbContext _context;
         private DbSet<T> entities;
@@ -19,9 +17,9 @@ namespace MainApp.BLL.Repositories
             _context = context;
             entities = context.Set<T>();
         }
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return entities.AsEnumerable();
+            return await entities.ToListAsync();
         }
 
         public IQueryable<T> GetAllQueryable()
@@ -29,36 +27,37 @@ namespace MainApp.BLL.Repositories
             return entities.AsQueryable();
         }
 
-        public T Get(int id)
+        public async Task<T> GetById(int id)
         {
-            return entities.SingleOrDefault(s => s.Id == id);
+            return await entities.SingleOrDefaultAsync(s => s.Id == id);
         }
-        public void Insert(T entity)
+        public async Task Insert(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
             entities.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
-            _context.SaveChanges();
+            entities.Update(entity);
+            await _context.SaveChangesAsync();
         }
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
             entities.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -21,17 +21,26 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: TrainerController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             _logger.LogInformation("Sciagam dane z bazy danych...");
-            var trainers =_trainerRepository.GetAll();
-            return View(trainers);
+            var models = await _trainerRepository.GetAll();
+            return View(models);
         }
 
         // GET: TrainerController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            _logger.LogInformation($"Sciagam dane uzytkowniak o id {id}");
+            var model = await _trainerRepository.GetById(id);
+
+            if (model == null)
+            {
+                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return View(model);
         }
 
         // GET: TrainerController/Create
@@ -43,10 +52,18 @@ namespace MainApp.Web.Controllers
         // POST: TrainerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Trainer model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                await _trainerRepository.Insert(model);
+                _logger.LogInformation($"Create new trainer with id {model.Id}");
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -56,18 +73,33 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: TrainerController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var model = await _trainerRepository.GetById(id);
+            if (model == null)
+            {
+                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // POST: TrainerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Trainer model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                await _trainerRepository.Update(model);
+                _logger.LogInformation($"Edit trainer with id {model.Id}");
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -77,18 +109,27 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: TrainerController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var model = await _trainerRepository.GetById(id);
+            if (model == null)
+            {
+                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // POST: TrainerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, Trainer model)
         {
             try
             {
+                await _trainerRepository.Delete(model);
+                _logger.LogWarning($"Delete trainer with id {model.Id}");
+
                 return RedirectToAction(nameof(Index));
             }
             catch
