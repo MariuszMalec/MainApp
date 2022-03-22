@@ -17,6 +17,7 @@ namespace MainApp.BLL.Entities
         [StringLength(25)]
         public string LastName { get; set; }
 
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
 
         public string? Phone { get; set; }
