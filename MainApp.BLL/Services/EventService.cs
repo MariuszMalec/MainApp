@@ -20,10 +20,9 @@ namespace MainApp.BLL.Services
         {
             return await Events.GetAll();
         }
-
-        public async Task Insert(Event user)
+        public async Task Insert(Event myEvent)
         {
-            await Events.Insert(user);
+            await Events.Insert(myEvent);
         }
 
     }

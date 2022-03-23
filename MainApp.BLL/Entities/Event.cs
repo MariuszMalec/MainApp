@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainApp.BLL.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +12,8 @@ namespace MainApp.BLL.Entities
     public class Event : Entity
     {
         public string Action { get; set; }
-
+        public string Email { get; set; }
+        public ActivityActions ActivityType { get; set; }
         public virtual User User { get; set; }
     }
 }

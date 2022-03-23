@@ -105,7 +105,6 @@ namespace MainApp.Web.Controllers
 
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
-
                 _logger.LogInformation($"User {userName} login successfully");
 
                 //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();

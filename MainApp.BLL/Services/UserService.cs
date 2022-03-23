@@ -1,5 +1,7 @@
 ﻿using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,5 +38,11 @@ namespace MainApp.BLL.Services
         {
             await Users.Update(user);
         }
+
+        public async Task<User> GetByEmail(string userEmail)
+        {
+            return await Users.GetAllQueryable().FirstOrDefaultAsync(n => n.Email == userEmail);
+        }
+
     }
 }

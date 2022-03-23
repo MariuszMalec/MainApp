@@ -1,5 +1,6 @@
 ﻿using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Http;
@@ -14,13 +15,15 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<TrainerController> _logger;
         private TrainerService _trainserService;
+        private UserService _userService;
         private EventService _eventService;
 
-        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService)
+        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService, UserService userService)
         {
             _logger = logger;
             _trainserService = trainserService;
             _eventService = eventService;
+            _userService = userService;
         }
 
         // GET: TrainerController
@@ -36,8 +39,9 @@ namespace MainApp.Web.Controllers
         {
             var userEmail = this.HttpContext.User.Identity.Name;
 
-            //await _eventService.Insert(new Event { Id = id, CreatedDate = DateTime.UtcNow, User = "", Action = "Detail" });
+            var user = await _userService.GetByEmail(userEmail);
 
+            await _eventService.Insert(new Event { CreatedDate = DateTime.UtcNow, User = user , Email = userEmail, Action = ActivityActions.detail.ToString() });
 
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             var model = await _trainserService.GetById(id);

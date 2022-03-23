@@ -6,9 +6,7 @@
     {
         @if (HttpContextAccessor.HttpContext.User.Identity.Name.Contains("user"))
         {
-            <li class="nav-item">
-                <a style="margin-left:1.35rem; margin-right:1.35rem;" class="btn btn-nav" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-            </li>
+
         }
     }
 </ul>

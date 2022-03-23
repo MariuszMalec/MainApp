@@ -1,10 +1,12 @@
-﻿@model IEnumerable<MainApp.BLL.Entities.Event>
+﻿@using MainApp.BLL.Context
+@using MainApp.BLL.Services
+@model IEnumerable<MainApp.BLL.Entities.Event>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Activity user's</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -22,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
+            <th>
+                <label asp-for="First().User.Email"></label>
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -36,6 +41,10 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @*<a asp-action="UserBudget" asp-route-id="@item.User.Id">@item.User.Email</a>*@
+                @item.Email
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
