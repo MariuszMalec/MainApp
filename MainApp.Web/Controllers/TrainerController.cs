@@ -11,20 +11,20 @@ namespace MainApp.Web.Controllers
 {
     public class TrainerController : Controller
     {
-        private readonly IRepository<Trainer> _trainerRepository;
         private readonly ILogger<TrainerController> _logger;
+        private TrainerService _trainserService;
 
-        public TrainerController(IRepository<Trainer> trainerRepository, ILogger<TrainerController> logger)
+        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService)
         {
-            _trainerRepository = trainerRepository;
             _logger = logger;
+            _trainserService = trainserService;
         }
 
         // GET: TrainerController
         public async Task<ActionResult> Index()
         {
             _logger.LogInformation("Sciagam dane z bazy danych...");
-            var models = await _trainerRepository.GetAll();
+            var models = await _trainserService.GetAll();
             return View(models);
         }
 
@@ -32,7 +32,7 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult> Details(int id)
         {
             _logger.LogInformation($"Sciagam dane uzytkowniak o id {id}");
-            var model = await _trainerRepository.GetById(id);
+            var model = await _trainserService.GetById(id);
 
             if (model == null)
             {
@@ -61,7 +61,7 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
-                await _trainerRepository.Insert(model);
+                await _trainserService.Insert(model);
                 _logger.LogInformation($"Create new trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));
@@ -75,7 +75,7 @@ namespace MainApp.Web.Controllers
         // GET: TrainerController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var model = await _trainerRepository.GetById(id);
+            var model = await _trainserService.GetById(id);
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
@@ -96,7 +96,7 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
-                await _trainerRepository.Update(model);
+                await _trainserService.Update(model);
                 _logger.LogInformation($"Edit trainer with id {model.Id}");
 
 
@@ -111,7 +111,7 @@ namespace MainApp.Web.Controllers
         // GET: TrainerController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _trainerRepository.GetById(id);
+            var model = await _trainserService.GetById(id);
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
@@ -127,7 +127,7 @@ namespace MainApp.Web.Controllers
         {
             try
             {
-                await _trainerRepository.Delete(model);
+                await _trainserService.Delete(model);
                 _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));

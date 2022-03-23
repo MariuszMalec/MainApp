@@ -9,6 +9,8 @@ namespace MainApp.BLL.Context
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Trainer> Trainers { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)//TODO dodanie uzytkownika do tabeli tylko poprzez migracje!!
         {
             //TODO dodac to jesli baza nie istnieje dodaje do bazy z seed i wlasciwosci do bazy

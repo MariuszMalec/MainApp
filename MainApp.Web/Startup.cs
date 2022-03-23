@@ -17,6 +17,7 @@ namespace MainApp.Web
 {
     public class Startup
     {
+        public const string CookieScheme = "CiasteczkaWMojejAplikacji";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +32,22 @@ namespace MainApp.Web
             var connectionString = Configuration.GetConnectionString("MyDatabase");
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
 
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<UserService>();
+            services.AddTransient<TrainerService>();
+
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddAuthentication(CookieScheme).
+                AddCookie(CookieScheme, options =>
+                {
+                    options.AccessDeniedPath = "/account/AccessDenied";
+                    options.LoginPath = "/account/login";
+                    options.LogoutPath = "/account/logout";
+                });
+
+            services.AddHttpContextAccessor();
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +69,8 @@ namespace MainApp.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
