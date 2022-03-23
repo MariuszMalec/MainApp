@@ -5,6 +5,7 @@ using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -13,11 +14,13 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<TrainerController> _logger;
         private TrainerService _trainserService;
+        private EventService _eventService;
 
-        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService)
+        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService)
         {
             _logger = logger;
             _trainserService = trainserService;
+            _eventService = eventService;
         }
 
         // GET: TrainerController
@@ -32,6 +35,10 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var userEmail = this.HttpContext.User.Identity.Name;
+
+            //await _eventService.Insert(new Event { Id = id, CreatedDate = DateTime.UtcNow, User = "", Action = "Detail" });
+
+
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             var model = await _trainserService.GetById(id);
 
