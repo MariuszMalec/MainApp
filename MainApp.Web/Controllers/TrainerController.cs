@@ -31,7 +31,8 @@ namespace MainApp.Web.Controllers
         // GET: TrainerController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            _logger.LogInformation($"Sciagam dane uzytkowniak o id {id}");
+            var userEmail = this.HttpContext.User.Identity.Name;
+            _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             var model = await _trainserService.GetById(id);
 
             if (model == null)
