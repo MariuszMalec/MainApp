@@ -35,7 +35,8 @@ namespace MainApp.Web
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<UserService>();
             services.AddTransient<TrainerService>();
-            services.AddTransient<EventService>(); 
+            services.AddTransient<EventService>();
+            services.AddHttpClient();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

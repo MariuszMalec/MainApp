@@ -30,6 +30,7 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult> Index()
         {
             _logger.LogInformation("Sciagam dane z bazy danych...");
+            await _eventService.InsertEvent(ActivityActions.ViewTrainers, this.HttpContext);
             var models = await _trainserService.GetAll();
             return View(models);
         }
@@ -37,13 +38,9 @@ namespace MainApp.Web.Controllers
         // GET: TrainerController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var userEmail = this.HttpContext.User.Identity.Name;
-
-            var user = await _userService.GetByEmail(userEmail);
-
-            await _eventService.Insert(new Event { CreatedDate = DateTime.UtcNow, User = user , Email = userEmail, Action = ActivityActions.detail.ToString() });
-
+            string userEmail = await _eventService.InsertEvent(ActivityActions.detail, this.HttpContext);
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
+
             var model = await _trainserService.GetById(id);
 
             if (model == null)
@@ -51,9 +48,10 @@ namespace MainApp.Web.Controllers
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return View(model);
         }
+
 
         // GET: TrainerController/Create
         public ActionResult Create()
@@ -73,7 +71,14 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
+                string userEmail = await _eventService.InsertEvent(ActivityActions.create, this.HttpContext);
+
+                if (userEmail == model.Email)
+                    _logger.LogWarning($"Trainer can't be created, email exist yet!");
+                    return RedirectToAction("Create");
+
                 await _trainserService.Insert(model);
+                
                 _logger.LogInformation($"Create new trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));
@@ -108,7 +113,13 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
+                string userEmail = await _eventService.InsertEvent(ActivityActions.edit, this.HttpContext);
+                if (userEmail == model.Email)
+                    _logger.LogWarning($"Trainer can't be edit, email exist yet!");
+                return RedirectToAction("Edit");
+
                 await _trainserService.Update(model);
+                
                 _logger.LogInformation($"Edit trainer with id {model.Id}");
 
 
@@ -140,6 +151,7 @@ namespace MainApp.Web.Controllers
             try
             {
                 await _trainserService.Delete(model);
+                string userEmail = await _eventService.InsertEvent(ActivityActions.delete, this.HttpContext);
                 _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));

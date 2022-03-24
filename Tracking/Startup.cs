@@ -28,6 +28,9 @@ namespace Tracking
         {
 
             services.AddControllers();
+            services.AddHttpClient();
+            services.AddHttpContextAccessor();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tracking", Version = "v1" });

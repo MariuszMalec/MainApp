@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
@@ -18,11 +19,13 @@ namespace MainApp.Web.Controllers
         private readonly UserService _userService;
         private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService)
+        private EventService _eventService;
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, EventService eventService)
         {
             _logger = logger;
             _accountService = accountService;
             _userService = userService;
+            _eventService = eventService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -61,6 +64,7 @@ namespace MainApp.Web.Controllers
                     if (user != null)
                     {
                         _logger.LogInformation($"User {request.Email} created successfully");
+                        await _eventService.InsertEvent(ActivityActions.register, this.HttpContext);
                         await _userService.Insert(user);
                         return RedirectToAction("Login");
                     }
@@ -106,9 +110,10 @@ namespace MainApp.Web.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
                 _logger.LogInformation($"User {userName} login successfully");
+                await _eventService.InsertEvent(ActivityActions.loggin, this.HttpContext);
 
                 //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();
-  
+
                 return RedirectToAction("Index", "Account", new { email = userName, role = authResult.RoleName }); // TODO dodac index w account!
 
             }
@@ -196,6 +201,7 @@ namespace MainApp.Web.Controllers
         }
         public async Task<IActionResult> Logout()
         {
+            await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext);
             await HttpContext.SignOutAsync();
             return Redirect("/");
         }

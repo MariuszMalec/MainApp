@@ -29,9 +29,6 @@ namespace MainApp.BLL.Migrations
                     b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 

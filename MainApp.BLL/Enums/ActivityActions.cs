@@ -10,12 +10,13 @@ namespace MainApp.BLL.Enums
     public enum ActivityActions
     {
         register,
-        logging,
+        loggin,
         logout,
         detail,
         create,
         edit,
-        delete          
+        delete,
+        ViewTrainers
     }
 
 }

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 
 namespace Tracking.Models
 {
-    public class Event
+    public class Event : Entity
     {
-        public int Id { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string IdUser { get; set; }
-
-        public List<string> Actions;
+        public string Action { get; set; }
+        public string? Email { get; set; }
+        public virtual User? User { get; set; }
     }
 }

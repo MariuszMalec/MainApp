@@ -8,9 +8,6 @@
 
 <h1>Activity user's</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -25,7 +22,8 @@
                 @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th>
-                <label asp-for="First().User.Email"></label>
+                @Html.DisplayNameFor(model => model.User.Email)
+                @*<label asp-for="First().User.Email"> </label>*@
             </th>
             <th></th>
         </tr>
@@ -47,9 +45,7 @@
                 @item.Email
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
             </td>
         </tr>
 }

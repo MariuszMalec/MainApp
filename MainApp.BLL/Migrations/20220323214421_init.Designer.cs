@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.BLL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220323202224_addActivityEnumToEvents")]
-    partial class addActivityEnumToEvents
+    [Migration("20220323214421_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,9 +30,6 @@ namespace MainApp.BLL.Migrations
 
                     b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
