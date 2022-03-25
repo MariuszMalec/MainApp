@@ -64,7 +64,7 @@ namespace MainApp.Web.Controllers
                     if (user != null)
                     {
                         _logger.LogInformation($"User {request.Email} created successfully");
-                        await _eventService.InsertEvent(ActivityActions.register, this.HttpContext);
+                        await _eventService.InsertEvent(ActivityActions.register, this.HttpContext, request.Email);
                         await _userService.Insert(user);
                         return RedirectToAction("Login");
                     }
@@ -110,7 +110,7 @@ namespace MainApp.Web.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
                 _logger.LogInformation($"User {userName} login successfully");
-                await _eventService.InsertEvent(ActivityActions.loggin, this.HttpContext);
+                await _eventService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
 
                 //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();
 
@@ -201,7 +201,8 @@ namespace MainApp.Web.Controllers
         }
         public async Task<IActionResult> Logout()
         {
-            await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext);
+            var userEmail = this.HttpContext.User.Identity.Name;
+            await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
             await HttpContext.SignOutAsync();
             return Redirect("/");
         }

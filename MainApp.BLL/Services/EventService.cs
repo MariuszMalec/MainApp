@@ -36,9 +36,11 @@ namespace MainApp.BLL.Services
         {
             await Events.Delete(myEvent);
         }
-        public async Task<string> InsertEvent(ActivityActions activityActions, HttpContext httpContext)
+        public async Task<string> InsertEvent(ActivityActions activityActions, HttpContext httpContext, string email)
         {
             var userEmail = httpContext.User.Identity.Name;
+            if (userEmail == null)
+                userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
             await Insert(new Event { CreatedDate = DateTime.UtcNow, User = user, Email = userEmail, Action = activityActions.ToString() });
             return userEmail;
