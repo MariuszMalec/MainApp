@@ -3,10 +3,15 @@ using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
+using MainApp.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -18,23 +23,49 @@ namespace MainApp.Web.Controllers
         private UserService _userService;
         private EventService _eventService;
 
-        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService, UserService userService)
+        IHttpClientFactory httpClientFactory;
+        private const string AppiUrl = "https://localhost:44311/api";
+
+        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService, UserService userService, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _trainserService = trainserService;
             _eventService = eventService;
             _userService = userService;
+            this.httpClientFactory = httpClientFactory;
         }
 
         // GET: TrainerController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult<List<TrainerView>>> Index()
         {
-            _logger.LogInformation("Sciagam dane z bazy danych...");
+
+            _logger.LogInformation("Sciagam dane z bazy danych API...");
+
             var userEmail = this.HttpContext.User.Identity.Name;
             await _eventService.InsertEvent(ActivityActions.ViewTrainers, this.HttpContext, userEmail);
-            var models = await _trainserService.GetAll();
-            return View(models);
+
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var result = await client.SendAsync(request);
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var trainers = JsonConvert.DeserializeObject<List<TrainerView>>(content);
+
+            //_logger.LogInformation($"Uzytkownik wyswietlil liste o godz {DateTime.Now}");
+
+            return View(trainers);
         }
+
+
+
+
+
+
 
         // GET: TrainerController/Details/5
         public async Task<ActionResult> Details(int id)

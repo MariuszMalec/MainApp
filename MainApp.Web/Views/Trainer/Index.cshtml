@@ -1,10 +1,10 @@
-﻿@model IEnumerable<MainApp.BLL.Entities.Trainer>
+﻿@model IEnumerable<MainApp.Web.Models.TrainerView>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Trainers in InfoShare</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,9 +12,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -25,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -37,9 +34,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
             <td>
@@ -49,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phone)
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
@@ -57,7 +51,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
