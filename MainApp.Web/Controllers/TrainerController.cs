@@ -1,6 +1,7 @@
 ﻿using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
+using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using MainApp.Web.Models;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -62,19 +64,27 @@ namespace MainApp.Web.Controllers
         }
 
 
-
-
-
-
-
-        // GET: TrainerController/Details/5
-        public async Task<ActionResult> Details(int id)
+        // GET: UserController/Details/5
+        public async Task<ActionResult<TrainerView>> Details(int id)
         {
+
             var email = this.HttpContext.User.Identity.Name;
             string userEmail = await _eventService.InsertEvent(ActivityActions.detail, this.HttpContext, email);
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
 
-            var model = await _trainserService.GetById(id);
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Headers.Add("Accept", "application/json");
+
+            var result = await client.SendAsync(request);
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var model = JsonConvert.DeserializeObject<TrainerView>(content);
 
             if (model == null)
             {
@@ -92,10 +102,10 @@ namespace MainApp.Web.Controllers
             return View();
         }
 
-        // POST: TrainerController/Create
+        // POST: UserControlle/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Trainer model)
+        public async Task<ActionResult> Create(TrainerView model)
         {
             try
             {
@@ -103,16 +113,26 @@ namespace MainApp.Web.Controllers
                 {
                     return View(model);
                 }
+
+                HttpClient client = httpClientFactory.CreateClient();
 
                 string userEmail = await _eventService.InsertEvent(ActivityActions.create, this.HttpContext, model.Email);
 
-                if (userEmail == model.Email)
-                    _logger.LogWarning($"Trainer can't be created, email exist yet!");
+                if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
+                {
+                    _logger.LogWarning($"Trainer can't be created, email exist yet!");//TODO wyswietlenie komunikatu
                     return RedirectToAction("Create");
-
-                await _trainserService.Insert(model);
+                }
                 
-                _logger.LogInformation($"Create new trainer with id {model.Id}");
+                var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Trainer");
+
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                var result = await client.SendAsync(request);
+
+                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
 
                 return RedirectToAction(nameof(Index));
             }
@@ -122,22 +142,36 @@ namespace MainApp.Web.Controllers
             }
         }
 
-        // GET: TrainerController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        // GET: UserController/Edit/5
+        public async Task<ActionResult<TrainerView>> Edit(int id)
         {
-            var model = await _trainserService.GetById(id);
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Headers.Add("Accept", "application/json");
+
+            var result = await client.SendAsync(request);
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var model = JsonConvert.DeserializeObject<TrainerView>(content);
+
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 
-        // POST: TrainerController/Edit/5
+        // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Trainer model)
+        public async Task<ActionResult> Edit(int id, TrainerView model)
         {
             try
             {
@@ -146,15 +180,22 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
+                HttpClient client = httpClientFactory.CreateClient();
+
                 string userEmail = await _eventService.InsertEvent(ActivityActions.edit, this.HttpContext, model.Email);
-                if (userEmail == model.Email)
+                if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
+                {
                     _logger.LogWarning($"Trainer can't be edit, email exist yet!");
-                return RedirectToAction("Edit");
+                    return RedirectToAction("Edit");
+                }
 
-                await _trainserService.Update(model);
-                
-                _logger.LogInformation($"Edit trainer with id {model.Id}");
+                var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Trainer/{id}");
 
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                var result = await client.SendAsync(request);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -164,30 +205,59 @@ namespace MainApp.Web.Controllers
             }
         }
 
-        // GET: TrainerController/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        // GET: UserController/Delete/5
+        public async Task<ActionResult<TrainerView>> Delete(int id)
         {
-            var model = await _trainserService.GetById(id);
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Headers.Add("Accept", "application/json");
+
+            var result = await client.SendAsync(request);
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var model = JsonConvert.DeserializeObject<TrainerView>(content);
+
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 
-        // POST: TrainerController/Delete/5
+        // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, Trainer model)
+        public async Task<IActionResult> Delete(int id, TrainerView model)
         {
             try
             {
-                await _trainserService.Delete(model);
+                //if (!ModelState.IsValid)
+                //{
+                //    return View(model);
+                //}
+
+                HttpClient client = httpClientFactory.CreateClient();
+
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Trainer/{model.Id}");
+
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                var result = await client.SendAsync(request);
+
                 string userEmail = await _eventService.InsertEvent(ActivityActions.delete, this.HttpContext, model.Email);
                 _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
