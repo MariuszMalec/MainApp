@@ -40,6 +40,18 @@ namespace MainApp.Web.Controllers
         }
 
         //--------------------------------------------------------------------------------------
+        //sent events to Api
+        //--------------------------------------------------------------------------------------
+        [HttpGet]
+        [Route("SentEvents")]
+        public async Task<IActionResult> SentEvents()
+        {
+            _logger.LogInformation("Sciagam dane z bazy z MainApp...");
+            var models = await _eventService.GetAll();
+            return Ok(models);
+        }
+
+        //--------------------------------------------------------------------------------------
         //get events from api
         //--------------------------------------------------------------------------------------
         [HttpGet]
@@ -62,10 +74,11 @@ namespace MainApp.Web.Controllers
         }
 
         //--------------------------------------------------------------------------------------
-        //sent events to api 
+        //sent events to api tutaj blad 405 gdy post niby niedozowpolona metoda
         //--------------------------------------------------------------------------------------
         // GET: TrainerController/Create
-        public async Task<ActionResult> Create()
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] IEnumerable<Event> events)
         {
             var models = await _eventService.GetAll();
 
