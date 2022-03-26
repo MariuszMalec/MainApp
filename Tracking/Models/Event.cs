@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Tracking.Models
 {
-    public class Event : Entity
+    public class Event : BaseEntity
     {
         public string Action { get; set; }
         public string? Email { get; set; }

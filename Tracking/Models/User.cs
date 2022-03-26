@@ -1,6 +1,6 @@
 ﻿namespace Tracking.Models
 {
-    public class User : Entity
+    public class User : BaseEntity
     {
         public string FirstName { get; set; }
 
