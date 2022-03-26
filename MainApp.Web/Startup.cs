@@ -1,6 +1,7 @@
 using MainApp.BLL.Context;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
+using MainApp.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -71,6 +72,8 @@ namespace MainApp.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseMiddleware<MyExceptionMiddleware>();
 
             app.UseAuthentication();
 

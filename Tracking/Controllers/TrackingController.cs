@@ -28,7 +28,6 @@ namespace Tracking.Controllers
         //------------------------------------------------------------------------------------------------------------
         // GET: api/<GetEventsController>
         [HttpGet]
-        [Route("GetAllEvents")]
         public IActionResult Get()
         {   
             List<Event> events = new List<Event>() { new Event() {Action = "Gowno", Email="sdsd", CreatedDate = DateTime.UtcNow, User = null } };
@@ -36,35 +35,15 @@ namespace Tracking.Controllers
             return Ok(events);
         }
 
-
-
-
-
-        // GET api/<GetEventsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpPost]
+        public IActionResult Insert([FromBody] IEnumerable<Event> events)
         {
-            return "value";
+            if (events == null)
+                return BadRequest("Brak uzytkownika!");
+            //_userService.Insert(user);
+            return Ok($"Added events to database");
         }
 
-        // POST api/<GetEventsController>
-        [HttpGet]
-        [Route("Send")]
-        public IActionResult Send([FromBody] Event user)
-        {
-            return Ok(user);
-        }
 
-        // PUT api/<GetEventsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<GetEventsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

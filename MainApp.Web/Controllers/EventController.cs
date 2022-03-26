@@ -27,26 +27,28 @@ namespace MainApp.Web.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
+
         // GET: EventController
-        //public async Task<ActionResult> Index()
-        //{
-        //    _logger.LogInformation("Sciagam dane z bazy danych...");//TODO user is empty???
-        //    var models = await _eventService.GetAll();
-        //    return View(models);
-        //}
 
+        [HttpGet]
+        [Route("GeAllEventsFromMainApp")]
+        public async Task<ActionResult> GeAllEventsFromMainApp()
+        {
+            _logger.LogInformation("Sciagam dane z bazy z MainApp...");//TODO user is empty???
+            var models = await _eventService.GetAll();
+            return View(models);
+        }
 
-
-        //------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------
         //get events from api
-        //------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------
         [HttpGet]
         public async Task<ActionResult<List<Event>>> Index()
         {
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking/GetAllEvents");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -59,102 +61,27 @@ namespace MainApp.Web.Controllers
             return View(users);
         }
 
-        //sent event to Api
-        [HttpPost]
-        [Route("Send")]
-        public async Task<IActionResult> Send()//([FromBody] List<Event> myEvent)
+        //--------------------------------------------------------------------------------------
+        //sent events to api 
+        //--------------------------------------------------------------------------------------
+        // GET: TrainerController/Create
+        public async Task<ActionResult> Create()
         {
+            var models = await _eventService.GetAll();
+
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking/Send");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var models = await _eventService.GetAll();
 
             request.Content = new StringContent(JsonConvert.SerializeObject(models), Encoding.UTF8, "application/json");
 
             var result = await client.SendAsync(request);
 
-            return Ok(result);
+            return View(models);
         }
 
-        // GET: EventController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: EventController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //// POST: EventController/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: EventController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: EventController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: EventController/Delete/5
-        //public async Task<ActionResult> Delete(int id)
-        //{
-        //    var model = await _eventService.GetById(id);
-        //    if (model == null)
-        //    {
-        //        _logger.LogWarning($"Event with Id {id} doesn't exist!");
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(model);
-        //}
-
-        //// POST: TrainerController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Delete(int id, Event model)
-        //{
-        //    try
-        //    {
-        //        await _eventService.Delete(model);
-        //        _logger.LogWarning($"Delete event with id {model.Id}");
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
     }
 }
