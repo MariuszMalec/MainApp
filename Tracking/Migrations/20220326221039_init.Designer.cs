@@ -9,7 +9,7 @@ using Tracking.Context;
 namespace Tracking.Migrations
 {
     [DbContext(typeof(MainApplicationContext))]
-    [Migration("20220326192345_init")]
+    [Migration("20220326221039_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace Tracking.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -72,65 +72,65 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9701),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 388, DateTimeKind.Local).AddTicks(1481),
                             Email = "ps@example.com",
                             FirstName = "Patryk",
                             LastName = "Szwermer",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9951),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3438),
                             Email = "ps@example.com",
                             FirstName = "Przemyslaw",
                             LastName = "sawicki",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9954),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3464),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dabrowski",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9955),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3468),
                             Email = "pk@example.com",
                             FirstName = "Piotr",
                             LastName = "Katny",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9957),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3471),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dudzic",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9960),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3477),
                             Email = "mk@example.com",
                             FirstName = "Maciej",
                             LastName = "Krakowiak",
-                            Phone = ""
+                            PhoneNumber = ""
                         },
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9961),
+                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3479),
                             Email = "jk@example.com",
                             FirstName = "Jakub",
                             LastName = "Nowikowski",
-                            Phone = ""
+                            PhoneNumber = ""
                         });
                 });
 
@@ -152,7 +152,7 @@ namespace Tracking.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

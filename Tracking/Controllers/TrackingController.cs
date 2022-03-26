@@ -41,7 +41,6 @@ namespace Tracking.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            //List<Event> events = new List<Event>() { new Event() {Action = "Gowno", Email="sdsd", CreatedDate = DateTime.UtcNow, User = null } };
             var events = _eventService.GetAll();
             return Ok(events);
         }
@@ -81,7 +80,9 @@ namespace Tracking.Controllers
             return Ok(events);
         }
 
-
+        //---------------------------------------------------------
+        //mainApp wrzuca bierzace eventy
+        //---------------------------------------------------------
         [HttpGet]
         [Route("ActiveEvents")]
         public async Task<IActionResult> ActiveEvents()

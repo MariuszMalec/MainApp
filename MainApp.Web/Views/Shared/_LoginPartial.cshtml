@@ -19,20 +19,23 @@
     else
     {
         var userEmail = this.HttpContextAccessor.HttpContext.User.Identity.Name;
-        var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();       
+        var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();     
+        
         <li class="nav-item">
            <a class="nav-link text-dark" asp-area="" asp-controller="Trainer" asp-action="Index">Trainers</a>
         </li>
-        <li class="nav-item">
+
+@*        <li class="nav-item">
            <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="GeAllEventsFromMainApp">Activity from MainApp</a>
-        </li>
+        </li>*@
+
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="event" asp-action="Index">Get activity from Api</a>
         </li>
 
-        <li class="nav-item">
+@*        <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="SentCurrentEvents">Send activity to Api</a>
-        </li>
+        </li>*@
 
         <li class="nav-item">
             <a style="margin-left:1.35rem;" class="btn btn-nav" asp-area="" asp-controller="account" asp-action="LogOut">Logout</a>

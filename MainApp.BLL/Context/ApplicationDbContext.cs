@@ -17,7 +17,7 @@ namespace MainApp.BLL.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)//TODO dodanie uzytkownika do tabeli tylko poprzez migracje!!
         {
             //TODO dodac to jesli baza nie istnieje dodaje do bazy z seed i wlasciwosci do bazy
-            modelBuilder.Seed();//wczytanie wejsciowych danych do bazy z serwisu
+            //modelBuilder.Seed();//wczytanie wejsciowych danych do bazy z serwisu
             //modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);//nakladanie wlasciwosci na baze
         }
     }

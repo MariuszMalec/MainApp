@@ -29,7 +29,9 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: EventController
-
+        //--------------------------------------------------------------------------------------
+        //view events form mainApp
+        //--------------------------------------------------------------------------------------
         [HttpGet]
         [Route("GeAllEventsFromMainApp")]
         public async Task<ActionResult> GeAllEventsFromMainApp()
@@ -40,7 +42,7 @@ namespace MainApp.Web.Controllers
         }
 
         //--------------------------------------------------------------------------------------
-        //sent events to Api
+        //Api get events
         //--------------------------------------------------------------------------------------
         [HttpGet]
         [Route("SentEvents")]
@@ -58,6 +60,8 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult<List<Event>>> Index()
         {
 
+            await SentCurrentEvents();
+
             HttpClient client = httpClientFactory.CreateClient();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
@@ -73,10 +77,9 @@ namespace MainApp.Web.Controllers
             return View(events.OrderByDescending(e=>e.CreatedDate).Take(20));
         }
 
-        //TODO jak aktywowac poslanie eventow do api
-
+        //TODO jak aktywowac poslanie eventow do api dziwny obieg wymyslilem ale dziala.
         //--------------------------------------------------------------------------------------
-        //sent events to api tutaj blad 405 gdy post niby niedozowpolona metoda
+        //sent current events from mainApp to Api
         //--------------------------------------------------------------------------------------
         // GET: TrainerController/Create
         [HttpGet]
