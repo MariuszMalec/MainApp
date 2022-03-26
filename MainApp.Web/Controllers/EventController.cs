@@ -79,24 +79,20 @@ namespace MainApp.Web.Controllers
         //sent events to api tutaj blad 405 gdy post niby niedozowpolona metoda
         //--------------------------------------------------------------------------------------
         // GET: TrainerController/Create
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] IEnumerable<Event> events)
+        [HttpGet]
+        [Route("SentCurrentEvents")]
+        public async Task<IActionResult> SentCurrentEvents()
         {
-            var models = await _eventService.GetAll();
-
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking/ActiveEvents");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(models), Encoding.UTF8, "application/json");
-
             var result = await client.SendAsync(request);
 
-            return View(models);
+            return RedirectToAction(nameof(Index));
         }
-
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using MainApp.BLL.Entities;
+﻿using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
@@ -20,12 +21,15 @@ namespace MainApp.Web.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
         private EventService _eventService;
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, EventService eventService)
+        private ApplicationDbContext _context;
+
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, EventService eventService, ApplicationDbContext context)
         {
             _logger = logger;
             _accountService = accountService;
             _userService = userService;
             _eventService = eventService;
+            _context = context;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -201,6 +205,10 @@ namespace MainApp.Web.Controllers
         }
         public async Task<IActionResult> Logout()
         {
+            //kasowanie eventow
+            _context.Events.RemoveRange(_context.Events);
+            _context.SaveChanges();
+
             var userEmail = this.HttpContext.User.Identity.Name;
             await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
             await HttpContext.SignOutAsync();

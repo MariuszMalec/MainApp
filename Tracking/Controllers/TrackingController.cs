@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Tracking.Context;
 using Tracking.Models;
 using Tracking.Services;
 
@@ -23,12 +24,14 @@ namespace Tracking.Controllers
         private readonly ILogger<TrackingController> _logger;
         private const string MainAppUrl = "https://localhost:5001";
         private EventService _eventService;
+        private readonly MainApplicationContext _context;
 
-        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, EventService eventService)
+        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, EventService eventService, MainApplicationContext context)
         {
             this.httpClientFactory = httpClientFactory;
             _logger = logger;
             _eventService = eventService;
+            _context = context;
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -51,6 +54,10 @@ namespace Tracking.Controllers
         public async Task<ActionResult<List<Event>>> GetEvents()
         {
 
+            //TODO wyczyscic baze events z APi
+            _context.Events.RemoveRange(_context.Events);
+            _context.SaveChanges();
+
             _logger.LogInformation("Sciagam dane z bazy danych MainApp...");
 
             HttpClient client = httpClientFactory.CreateClient();
@@ -66,38 +73,22 @@ namespace Tracking.Controllers
             var events = JsonConvert.DeserializeObject<List<Event>>(content);
 
             //Zapis do bazy
-            var eventSave = new List<Event>() { };
             foreach (var item in events)
             {
                 _eventService.Insert(item);
             }
+
             return Ok(events);
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Insert([FromBody] IEnumerable<Event> events)
+        [HttpGet]
+        [Route("ActiveEvents")]
+        public async Task<IActionResult> ActiveEvents()
         {
-            if (events == null)
-                return BadRequest("Brak uzytkownika!");
-
-            //var getEvents = events.ToString();
-
-            //var eventy = JsonConvert.DeserializeObject<IEnumerable<Event>>(getEvents).ToList();
-
-            //foreach (var item in eventy)
-            //{
-            //    _logger.LogInformation(item.Action);
-            //}
-
-            //var content = await result.Content.ReadAsStringAsync();
-
-            //var users = JsonConvert.DeserializeObject<List<Event>>(content);
-
-            //_userService.Insert(user);
-            return Ok($"Added events to database");
+            await GetEvents();
+            return Ok($"Sent events to view");
         }
-
 
     }
 }
