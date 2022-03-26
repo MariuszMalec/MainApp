@@ -37,6 +37,8 @@ namespace Tracking
 
             services.AddTransient<TrainerService>();
 
+            services.AddTransient<EventService>();
+
             services.AddDbContext<MainApplicationContext>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

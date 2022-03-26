@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -27,7 +28,6 @@ namespace MainApp.Web.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
-
         // GET: EventController
 
         [HttpGet]
@@ -35,8 +35,8 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult> GeAllEventsFromMainApp()
         {
             _logger.LogInformation("Sciagam dane z bazy z MainApp...");//TODO user is empty???
-            var models = await _eventService.GetAll();
-            return View(models);
+            var events = await _eventService.GetAll();
+            return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
         }
 
         //--------------------------------------------------------------------------------------
@@ -68,10 +68,12 @@ namespace MainApp.Web.Controllers
 
             var content = await result.Content.ReadAsStringAsync();
 
-            var users = JsonConvert.DeserializeObject<List<Event>>(content);
+            var events = JsonConvert.DeserializeObject<List<Event>>(content);
 
-            return View(users);
+            return View(events.OrderByDescending(e=>e.CreatedDate).Take(20));
         }
+
+        //TODO jak aktywowac poslanie eventow do api
 
         //--------------------------------------------------------------------------------------
         //sent events to api tutaj blad 405 gdy post niby niedozowpolona metoda

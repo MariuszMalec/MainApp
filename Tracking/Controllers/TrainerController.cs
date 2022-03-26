@@ -33,7 +33,7 @@ namespace Tracking.Controllers
             if (user == null)
                 return BadRequest("Brak uzytkownika!");
             _userService.Insert(user);
-            //return Created($"User with id {user.Id} added");
+            //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }
 

@@ -6,35 +6,35 @@ namespace Tracking.Services
 {
     public class TrainerService
     {
-        private readonly IRepository<Trainer> Users;
+        private readonly IRepository<Trainer> Trainers;
 
-        public TrainerService(IRepository<Trainer> users)
+        public TrainerService(IRepository<Trainer> trainers)
         {
-            Users = users;
+            Trainers = trainers;
         }
         public IEnumerable<Trainer> GetAll()
         {
-            return Users.GetAll();
+            return Trainers.GetAll();
         }
 
         public void Insert(Trainer user)
         {
-            Users.Insert(user);
+            Trainers.Insert(user);
         }
 
-        public User Get(int id)
+        public Trainer Get(int id)
         {
-            return Users.Get(id);
+            return Trainers.Get(id);
         }
 
         public void Update(Trainer user)
         {
-            Users.Update(user);
+            Trainers.Update(user);
         }
         public void Delete(int id)
         {
-            var user = Users.Get(id);
-            Users.Delete(user);
+            var user = Trainers.Get(id);
+            Trainers.Delete(user);
         }
     }
 }

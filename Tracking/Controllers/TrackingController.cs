@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Tracking.Models;
+using Tracking.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,11 +22,13 @@ namespace Tracking.Controllers
         IHttpClientFactory httpClientFactory;
         private readonly ILogger<TrackingController> _logger;
         private const string MainAppUrl = "https://localhost:5001";
+        private EventService _eventService;
 
-        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger)
+        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, EventService eventService)
         {
             this.httpClientFactory = httpClientFactory;
             _logger = logger;
+            _eventService = eventService;
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -34,9 +37,9 @@ namespace Tracking.Controllers
         // GET: api/<GetEventsController>
         [HttpGet]
         public IActionResult Get()
-        {   
-            List<Event> events = new List<Event>() { new Event() {Action = "Gowno", Email="sdsd", CreatedDate = DateTime.UtcNow, User = null } };
-
+        {
+            //List<Event> events = new List<Event>() { new Event() {Action = "Gowno", Email="sdsd", CreatedDate = DateTime.UtcNow, User = null } };
+            var events = _eventService.GetAll();
             return Ok(events);
         }
 
@@ -62,8 +65,12 @@ namespace Tracking.Controllers
 
             var events = JsonConvert.DeserializeObject<List<Event>>(content);
 
-            //_logger.LogInformation($"Uzytkownik wyswietlil liste o godz {DateTime.Now}");
-
+            //Zapis do bazy
+            var eventSave = new List<Event>() { };
+            foreach (var item in events)
+            {
+                _eventService.Insert(item);
+            }
             return Ok(events);
         }
 

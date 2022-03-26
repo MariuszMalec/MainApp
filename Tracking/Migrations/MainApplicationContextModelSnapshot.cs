@@ -16,6 +16,31 @@ namespace Tracking.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.15");
 
+            modelBuilder.Entity("Tracking.Models.Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Action")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Events");
+                });
+
             modelBuilder.Entity("Tracking.Models.Trainer", b =>
                 {
                     b.Property<int>("Id")
@@ -45,7 +70,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5197),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9701),
                             Email = "ps@example.com",
                             FirstName = "Patryk",
                             LastName = "Szwermer",
@@ -54,7 +79,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5468),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9951),
                             Email = "ps@example.com",
                             FirstName = "Przemyslaw",
                             LastName = "sawicki",
@@ -63,7 +88,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5471),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9954),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dabrowski",
@@ -72,7 +97,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5472),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9955),
                             Email = "pk@example.com",
                             FirstName = "Piotr",
                             LastName = "Katny",
@@ -81,7 +106,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5474),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9957),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dudzic",
@@ -90,7 +115,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5477),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9960),
                             Email = "mk@example.com",
                             FirstName = "Maciej",
                             LastName = "Krakowiak",
@@ -99,12 +124,47 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2022, 3, 26, 11, 56, 13, 272, DateTimeKind.Utc).AddTicks(5479),
+                            CreatedDate = new DateTime(2022, 3, 26, 19, 23, 45, 357, DateTimeKind.Utc).AddTicks(9961),
                             Email = "jk@example.com",
                             FirstName = "Jakub",
                             LastName = "Nowikowski",
                             Phone = ""
                         });
+                });
+
+            modelBuilder.Entity("Tracking.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Tracking.Models.Event", b =>
+                {
+                    b.HasOne("Tracking.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
