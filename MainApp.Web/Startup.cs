@@ -2,17 +2,13 @@ using MainApp.BLL.Context;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using MainApp.Web.Middleware;
+using MainApp.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MainApp.Web
 {
@@ -35,7 +31,7 @@ namespace MainApp.Web
 
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<UserService>();
-            services.AddTransient<TrainerService>();
+            services.AddTransient<TrainersService>();
             services.AddTransient<EventService>();
             services.AddHttpClient();
 
