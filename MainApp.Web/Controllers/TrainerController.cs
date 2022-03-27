@@ -70,6 +70,7 @@ namespace MainApp.Web.Controllers
 
             var email = this.HttpContext.User.Identity.Name;
             string userEmail = await _eventService.InsertEvent(ActivityActions.detail, this.HttpContext, email);
+
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
 
             HttpClient client = httpClientFactory.CreateClient();
@@ -114,6 +115,8 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
+                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
+
                 HttpClient client = httpClientFactory.CreateClient();
 
                 string userEmail = await _eventService.InsertEvent(ActivityActions.create, this.HttpContext, model.Email);
@@ -132,8 +135,6 @@ namespace MainApp.Web.Controllers
 
                 var result = await client.SendAsync(request);
 
-                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -145,6 +146,7 @@ namespace MainApp.Web.Controllers
         // GET: UserController/Edit/5
         public async Task<ActionResult<TrainerView>> Edit(int id)
         {
+
             HttpClient client = httpClientFactory.CreateClient();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
@@ -179,6 +181,8 @@ namespace MainApp.Web.Controllers
                 {
                     return View(model);
                 }
+
+                _logger.LogInformation($"Edit trainer with id {model.Id} at {DateTime.Now}");
 
                 HttpClient client = httpClientFactory.CreateClient();
 
@@ -254,6 +258,7 @@ namespace MainApp.Web.Controllers
                 var result = await client.SendAsync(request);
 
                 string userEmail = await _eventService.InsertEvent(ActivityActions.delete, this.HttpContext, model.Email);
+
                 _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction(nameof(Index));
