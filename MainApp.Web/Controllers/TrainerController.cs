@@ -2,6 +2,7 @@
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace MainApp.Web.Controllers
         {
             var userEmail = this.HttpContext.User.Identity.Name;
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
+            _logger.LogInformation("Sciagam dane z bazy danych API...");
             return View(trainers);
         }
 
@@ -38,6 +40,7 @@ namespace MainApp.Web.Controllers
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction(nameof(Index));
             }
+            _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             return View(model);
         }
 
@@ -60,6 +63,7 @@ namespace MainApp.Web.Controllers
                 }
 
                 var check = await _trainerService.CreateTrainer(model, this.HttpContext);
+                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
 
                 if (check == false)
                 {
@@ -101,6 +105,7 @@ namespace MainApp.Web.Controllers
                 }
 
                 var check = await _trainerService.EditTrainer(id, model, this.HttpContext);
+                _logger.LogInformation($"Edit trainer with id {model.Id} at {DateTime.Now}");
 
                 if (check == false)
                 {
@@ -137,6 +142,8 @@ namespace MainApp.Web.Controllers
             try
             {
                 var check = await _trainerService.DeleteTrainer(id, model, this.HttpContext);
+
+                _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 if (check == false)
                 {

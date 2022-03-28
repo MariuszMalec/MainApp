@@ -42,7 +42,7 @@ namespace MainApp.BLL.Services
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
-            await Insert(new Event { CreatedDate = DateTime.UtcNow, User = user, Email = userEmail, Action = activityActions.ToString() });
+            await Insert(new Event { CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString() });
             return userEmail;
         }
 

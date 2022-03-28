@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -25,6 +26,23 @@ namespace MainApp.Web.Services
             this.httpClientFactory = httpClientFactory;
             _userService = userService;
         }
+
+        public async Task<List<Event>> GetAll()
+        {
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var result = await client.SendAsync(request);
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var events = JsonConvert.DeserializeObject<List<Event>>(content);
+
+            return events;
+        }
         public async Task Insert(Event myEvent)
         {
             HttpClient client = httpClientFactory.CreateClient();
@@ -44,7 +62,7 @@ namespace MainApp.Web.Services
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
-            return new Event { CreatedDate = DateTime.UtcNow, User = user, Email = userEmail, Action = activityActions.ToString()};
+            return new Event { CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
         }
 
 

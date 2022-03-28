@@ -4,7 +4,7 @@ using Tracking.Models;
 
 namespace Tracking.Repositories
 {
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T> where T : IBaseEntity
     {
         IEnumerable<T> GetAll();
         IQueryable<T> GetAllQueryable();

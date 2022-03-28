@@ -77,14 +77,12 @@ namespace MainApp.Web.Controllers
                     {
                         _logger.LogInformation($"User {request.Email} created successfully");
 
-                        //await _userToApiService.CreateUser(request, user);//wyslanie do Api usera ale chyba nie potrzebne
+                        //await _userToApiService.CreateUser(request, user);//wyslanie do Api usera ale chyba nie potrzebnie
 
-                        //TODO tutj trzeba poslac rowniez event!!
+                        await _userService.Insert(user);
 
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, request.Email);
                         await _trackingService.Insert(myEvent);
-
-                        await _userService.Insert(user);
 
                         return RedirectToAction("Login");
                     }
@@ -131,9 +129,9 @@ namespace MainApp.Web.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
                 _logger.LogInformation($"User {userName} login successfully");
-                var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
 
-                //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();
+                var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
+                await _trackingService.Insert(myEvent);
 
                 return RedirectToAction("Index", "Account", new { email = userName, role = authResult.RoleName }); // TODO dodac index w account!
 
@@ -222,13 +220,11 @@ namespace MainApp.Web.Controllers
         }
         public async Task<IActionResult> Logout()
         {
-            //kasowanie eventow
-            //_context.Events.RemoveRange(_context.Events);
-            //_context.SaveChanges();
-
             var userEmail = this.HttpContext.User.Identity.Name;
             var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
+            await _trackingService.Insert(myEvent);
             await HttpContext.SignOutAsync();
+            _logger.LogInformation($"User {userEmail} logout successfully");
             return Redirect("/");
         }
     }
