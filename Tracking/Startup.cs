@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tracking.Context;
+using Tracking.Models;
 using Tracking.Repositories;
 using Tracking.Services;
 
@@ -35,7 +36,9 @@ namespace Tracking
             services.AddHttpClient();
             services.AddHttpContextAccessor();
 
-            services.AddTransient<TrainerService>();
+            services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
+
+            services.AddTransient<IRepositoryService<User>, UserService>();
 
             services.AddTransient<EventService>();
 

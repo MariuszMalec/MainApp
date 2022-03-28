@@ -52,7 +52,7 @@ namespace MainApp.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
         {
-            context?.Database.Migrate();
+            context.Database.Migrate();
 
             if (env.IsDevelopment())
             {

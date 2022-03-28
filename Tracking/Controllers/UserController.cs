@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using Tracking.Models;
 using Tracking.Services;
@@ -9,11 +10,11 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TrainerController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IRepositoryService<Trainer> _userService;
+        private readonly IRepositoryService<User> _userService;
 
-        public TrainerController(IRepositoryService<Trainer> userService)
+        public UserController(IRepositoryService<User> userService)
         {
             _userService = userService;
         }
@@ -28,7 +29,7 @@ namespace Tracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insert([FromBody] Trainer user)
+        public IActionResult Insert([FromBody] User user)
         {
             if (user == null)
                 return BadRequest("Brak uzytkownika!");
@@ -47,7 +48,7 @@ namespace Tracking.Controllers
         }
 
         [HttpPost("{id}")]
-        public IActionResult Edit(Trainer user)
+        public IActionResult Edit(User user)
         {
             if (user == null)
                 return BadRequest($"Brak uzytkownika!");
@@ -64,6 +65,5 @@ namespace Tracking.Controllers
             _userService.Delete(id);
             return Ok($"User with id {id} deleted");
         }
-
     }
 }

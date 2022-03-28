@@ -4,30 +4,30 @@ using Tracking.Repositories;
 
 namespace Tracking.Services
 {
-    public class TrainerService : IRepositoryService<Trainer>
+    public class UserService : IRepositoryService<User>
     {
-        private readonly IRepository<Trainer> Persons;
+        private readonly IRepository<User> Persons;
 
-        public TrainerService(IRepository<Trainer> persons)
+        public UserService(IRepository<User> persons)
         {
             Persons = persons;
         }
-        public IEnumerable<Trainer> GetAll()
+        public IEnumerable<User> GetAll()
         {
             return Persons.GetAll();
         }
 
-        public void Insert(Trainer person)
+        public void Insert(User person)
         {
             Persons.Insert(person);
         }
 
-        public Trainer Get(int id)
+        public User Get(int id)
         {
             return Persons.Get(id);
         }
 
-        public void Update(Trainer person)
+        public void Update(User person)
         {
             Persons.Update(person);
         }

@@ -4,7 +4,7 @@ using Tracking.Repositories;
 
 namespace Tracking.Services
 {
-    public class EventService
+    public class EventService : IRepositoryService<Event>
     {
         private readonly IRepository<Event> Models;
 
