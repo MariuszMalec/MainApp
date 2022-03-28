@@ -23,20 +23,21 @@ namespace Tracking.Controllers
         IHttpClientFactory httpClientFactory;
         private readonly ILogger<TrackingController> _logger;
         private const string MainAppUrl = "https://localhost:5001";
-        private EventService _eventService;
+        private TrackingService _eventService;
         private readonly MainApplicationContext _context;
 
-        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, EventService eventService, MainApplicationContext context)
+        private readonly IRepositoryService<User> _userService;
+
+        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, TrackingService eventService, MainApplicationContext context, IRepositoryService<User> userService)
         {
             this.httpClientFactory = httpClientFactory;
             _logger = logger;
             _eventService = eventService;
             _context = context;
+            _userService = userService;
         }
 
-        //------------------------------------------------------------------------------------------------------------
-        //mainApp pobiera te ponizsze dane
-        //------------------------------------------------------------------------------------------------------------
+
         // GET: api/<GetEventsController>
         [HttpGet]
         public IActionResult Get()
@@ -45,51 +46,16 @@ namespace Tracking.Controllers
             return Ok(events);
         }
 
-        //---------------------------------------------------------
-        //wziecie eventow z mainApp
-        //---------------------------------------------------------
-        [HttpGet]
-        [Route("GetEvents")]
-        public async Task<ActionResult<List<Event>>> GetEvents()
+        [HttpPost]
+        public IActionResult Insert([FromBody] Event myEvent)
         {
-
-            //TODO wyczyscic baze events z APi
-            _context.Events.RemoveRange(_context.Events);
-            _context.SaveChanges();
-
-            _logger.LogInformation("Sciagam dane z bazy danych MainApp...");
-
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{MainAppUrl}/SentEvents");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var events = JsonConvert.DeserializeObject<List<Event>>(content);
-
-            //Zapis do bazy
-            foreach (var item in events)
-            {
-                _eventService.Insert(item);
-            }
-
-            return Ok(events);
+            if (myEvent == null)
+                return BadRequest("Brak eventa!");
+            _eventService.Insert(myEvent);
+            //return Ok($"User with id {user.Id} added");
+            return CreatedAtAction(nameof(Get), new { id = myEvent.Id }, myEvent);
         }
 
-        //---------------------------------------------------------
-        //mainApp wrzuca bierzace eventy
-        //---------------------------------------------------------
-        [HttpGet]
-        [Route("ActiveEvents")]
-        public async Task<IActionResult> ActiveEvents()
-        {
-            await GetEvents();
-            return Ok($"Sent events to view");
-        }
 
     }
 }

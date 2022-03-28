@@ -30,6 +30,12 @@ namespace MainApp.Web
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
 
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<TrackingService>();
+
+            
+            services.AddTransient<UserToApiService>();//narazie nieuzywane
+
+            //do wyrzucenia chyba
             services.AddTransient<UserService>();
             services.AddTransient<TrainersService>();
             services.AddTransient<EventService>();

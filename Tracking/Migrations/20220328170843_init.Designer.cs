@@ -9,7 +9,7 @@ using Tracking.Context;
 namespace Tracking.Migrations
 {
     [DbContext(typeof(MainApplicationContext))]
-    [Migration("20220326221039_init")]
+    [Migration("20220328170843_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 388, DateTimeKind.Local).AddTicks(1481),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 331, DateTimeKind.Local).AddTicks(952),
                             Email = "ps@example.com",
                             FirstName = "Patryk",
                             LastName = "Szwermer",
@@ -81,7 +81,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3438),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3872),
                             Email = "ps@example.com",
                             FirstName = "Przemyslaw",
                             LastName = "sawicki",
@@ -90,7 +90,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3464),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3896),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dabrowski",
@@ -99,7 +99,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3468),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3900),
                             Email = "pk@example.com",
                             FirstName = "Piotr",
                             LastName = "Katny",
@@ -108,7 +108,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3471),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3903),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dudzic",
@@ -117,7 +117,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3477),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3909),
                             Email = "mk@example.com",
                             FirstName = "Maciej",
                             LastName = "Krakowiak",
@@ -126,7 +126,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3479),
+                            CreatedDate = new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3912),
                             Email = "jk@example.com",
                             FirstName = "Jakub",
                             LastName = "Nowikowski",
@@ -150,6 +150,9 @@ namespace Tracking.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")

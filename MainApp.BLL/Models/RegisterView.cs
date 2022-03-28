@@ -15,6 +15,8 @@ namespace MainApp.BLL.Models
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 
+        public string? PhoneNumber { get; set; }
+
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }

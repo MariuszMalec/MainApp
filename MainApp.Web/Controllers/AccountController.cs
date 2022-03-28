@@ -2,14 +2,15 @@
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
-using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
+using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,16 +21,23 @@ namespace MainApp.Web.Controllers
         private readonly UserService _userService;
         private readonly ILogger<AccountController> _logger;
         private readonly IAccountService _accountService;
-        private EventService _eventService;
+        private readonly TrackingService _trackingService;
         private ApplicationDbContext _context;
+        IHttpClientFactory httpClientFactory;
+        private const string AppiUrl = "https://localhost:44311/api";
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, EventService eventService, ApplicationDbContext context)
+        private readonly UserToApiService _userToApiService;
+
+
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, ApplicationDbContext context, IHttpClientFactory httpClientFactory, UserToApiService userToApiService, TrackingService trackingService)
         {
             _logger = logger;
             _accountService = accountService;
             _userService = userService;
-            _eventService = eventService;
             _context = context;
+            this.httpClientFactory = httpClientFactory;
+            _userToApiService = userToApiService;
+            _trackingService = trackingService;
         }
         // GET: AccountController
         public ActionResult Index()
@@ -51,7 +59,7 @@ namespace MainApp.Web.Controllers
                 //TODO: add scope
                 using var log = _logger.BeginScope("UserEmailCheckInRegistration");
                 _logger.LogDebug("Checking if user exists {userEmail}", request.Email);
-                var userCheck = await _userService.GetById(request.Id);
+                var userCheck = await _userService.GetByEmail(request.Email);
 
                 if (userCheck == null)
                 {
@@ -68,8 +76,16 @@ namespace MainApp.Web.Controllers
                     if (user != null)
                     {
                         _logger.LogInformation($"User {request.Email} created successfully");
-                        await _eventService.InsertEvent(ActivityActions.register, this.HttpContext, request.Email);
+
+                        //await _userToApiService.CreateUser(request, user);//wyslanie do Api usera ale chyba nie potrzebne
+
+                        //TODO tutj trzeba poslac rowniez event!!
+
+                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, request.Email);
+                        await _trackingService.Insert(myEvent);
+
                         await _userService.Insert(user);
+
                         return RedirectToAction("Login");
                     }
                     else
@@ -81,7 +97,7 @@ namespace MainApp.Web.Controllers
                 }
                 else
                 {
-                    _logger.LogInformation($"User with this email {request.Email} already exists");
+                    _logger.LogWarning($"User with this email {request.Email} already exists");
                     ModelState.AddModelError("message", "Email already exists.");
                     return View(request);
                 }
@@ -89,6 +105,7 @@ namespace MainApp.Web.Controllers
             return View(request);
 
         }
+
 
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
@@ -114,7 +131,7 @@ namespace MainApp.Web.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
 
                 _logger.LogInformation($"User {userName} login successfully");
-                await _eventService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
+                var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
 
                 //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();
 
@@ -206,11 +223,11 @@ namespace MainApp.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             //kasowanie eventow
-            _context.Events.RemoveRange(_context.Events);
-            _context.SaveChanges();
+            //_context.Events.RemoveRange(_context.Events);
+            //_context.SaveChanges();
 
             var userEmail = this.HttpContext.User.Identity.Name;
-            await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
+            var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
             await HttpContext.SignOutAsync();
             return Redirect("/");
         }

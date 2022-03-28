@@ -34,6 +34,7 @@ namespace Tracking.Migrations
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -66,37 +67,37 @@ namespace Tracking.Migrations
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 1, new DateTime(2022, 3, 26, 23, 10, 39, 388, DateTimeKind.Local).AddTicks(1481), "ps@example.com", "Patryk", "Szwermer", "" });
+                values: new object[] { 1, new DateTime(2022, 3, 28, 19, 8, 43, 331, DateTimeKind.Local).AddTicks(952), "ps@example.com", "Patryk", "Szwermer", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 2, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3438), "ps@example.com", "Przemyslaw", "sawicki", "" });
+                values: new object[] { 2, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3872), "ps@example.com", "Przemyslaw", "sawicki", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 3, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3464), "md@example.com", "Marcin", "Dabrowski", "" });
+                values: new object[] { 3, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3896), "md@example.com", "Marcin", "Dabrowski", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 4, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3468), "pk@example.com", "Piotr", "Katny", "" });
+                values: new object[] { 4, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3900), "pk@example.com", "Piotr", "Katny", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 5, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3471), "md@example.com", "Marcin", "Dudzic", "" });
+                values: new object[] { 5, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3903), "md@example.com", "Marcin", "Dudzic", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 6, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3477), "mk@example.com", "Maciej", "Krakowiak", "" });
+                values: new object[] { 6, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3909), "mk@example.com", "Maciej", "Krakowiak", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 7, new DateTime(2022, 3, 26, 23, 10, 39, 391, DateTimeKind.Local).AddTicks(3479), "jk@example.com", "Jakub", "Nowikowski", "" });
+                values: new object[] { 7, new DateTime(2022, 3, 28, 19, 8, 43, 334, DateTimeKind.Local).AddTicks(3912), "jk@example.com", "Jakub", "Nowikowski", "" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_UserId",
