@@ -144,7 +144,7 @@ namespace MainApp.Web.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch
             {
