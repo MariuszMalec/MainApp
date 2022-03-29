@@ -9,28 +9,57 @@
 <ul class="navbar-nav flex-grow-1">
     @if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
     {
-        <li class="nav-item">
-            <a class="btn btn-nav" asp-area="" asp-controller="account" asp-action="Register">Register</a>
+        <li>
+            <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Register">
+                <i class="bi bi-person-circle me-2"></i>
+                Register
+            </a>
         </li>
-        <li class="nav-item">
-            <a style="margin-left:1.35rem; margin-right:1.35rem;" class="btn btn-nav" asp-controller="account" asp-action="Login">Login</a>
+        <li>
+            <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Login">
+                <i class="bi bi-person me-2"></i>
+                Login
+            </a>
         </li>
+
     }
     else
     {
         var userEmail = this.HttpContextAccessor.HttpContext.User.Identity.Name;
-        var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();     
+        var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();    
         
-        <li class="nav-item">
-           <a class="nav-link text-dark" asp-area="" asp-controller="Trainer" asp-action="Index">Trainers</a>
+        <li>
+            <a class="nav-link text-dark border border-primary rounded" asp-area="" asp-controller="Home" asp-action="Index">
+               <i class="bi bi-house "></i>
+                Home
+            </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="event" asp-action="Index">Get activity from Api</a>
-        </li>
 
         <li class="nav-item">
-            <a style="margin-left:1.35rem;" class="btn btn-nav" asp-area="" asp-controller="account" asp-action="LogOut">Logout</a>
+            <a class="nav-link text-dark" title="Manage">Hello @User.Identity.Name  </a>
         </li>
+
+        <li>
+            <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="Trainer" asp-action="Index">
+                <i class="bi bi-person-circle me-2"></i>
+                Trainers
+            </a>
+        </li>
+
+        <li>
+            <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="event" asp-action="Index">
+                <i class="bi bi-bag me-2"></i>
+                Get events from Api
+            </a>
+        </li>
+
+        <li>
+            <a class="nav-link text-dark border border-danger rounded" asp-area="" asp-controller="account" asp-action="LogOut">
+                <i class="bi bi-person me-2"></i>
+                Logout
+            </a>
+        </li>
+
     }
 </ul>
