@@ -27,10 +27,10 @@ namespace MainApp.BLL.Services
 
                     return new LoginResult { UserName = userName, RoleName = "user", Success = true };//TODO poprawid , dodac Rolename
 
-                    //if (user.Role != null)
-                    //{
-                    //    return new LoginResult { UserName = userName, RoleName = user.Role.Name, Success = true };
-                    //}
+                    if (user.Role != null)
+                    {
+                        return new LoginResult { UserName = userName, RoleName = user.Role.Name, Success = true };
+                    }
                 }
             }
 

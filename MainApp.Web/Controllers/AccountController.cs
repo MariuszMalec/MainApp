@@ -68,6 +68,7 @@ namespace MainApp.Web.Controllers
                         FirstName = request.FirstName,
                         LastName = request.LastName,
                         Email = request.Email,
+                        Role = _context.Roles.Find(2)
                     };
 
                     var password = Base64EncodeDecode.Base64Encode(request.Password);

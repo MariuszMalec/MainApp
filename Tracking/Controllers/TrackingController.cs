@@ -56,6 +56,16 @@ namespace Tracking.Controllers
             return CreatedAtAction(nameof(Get), new { id = myEvent.Id }, myEvent);
         }
 
+        [HttpDelete("DeleteAllEvents")]
+        public IActionResult Delete()
+        {
+            var user = _userService.Get(id);
+            if (user == null)
+                return BadRequest($"Brak uzytkownika!");
+            _userService.Delete(id);
+            return Ok($"User with id {id} deleted");
+        }
+
 
     }
 }

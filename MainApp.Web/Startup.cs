@@ -1,4 +1,5 @@
 using MainApp.BLL.Context;
+using MainApp.BLL.DataStorage;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using MainApp.Web.Middleware;
@@ -59,6 +60,8 @@ namespace MainApp.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
         {
             context.Database.Migrate();
+
+            LoadAdmin.SeedDatabase(context);
 
             if (env.IsDevelopment())
             {
