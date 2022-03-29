@@ -43,6 +43,10 @@ namespace Tracking.Controllers
         public IActionResult Get()
         {
             var events = _eventService.GetAll();
+            if (!events.Any())
+            {
+                return NotFound("List of events is empty!");
+            }
             return Ok(events);
         }
 
@@ -57,13 +61,13 @@ namespace Tracking.Controllers
         }
 
         [HttpDelete("DeleteAllEvents")]
-        public IActionResult Delete()
+        public IActionResult DeleteAllEvents()
         {
-            var user = _userService.Get(id);
-            if (user == null)
-                return BadRequest($"Brak uzytkownika!");
-            _userService.Delete(id);
-            return Ok($"User with id {id} deleted");
+            if (!_context.Events.Any())
+                return BadRequest("Brak eventow!");
+            _context.Events.RemoveRange(_context.Events);
+            _context.SaveChanges();
+            return Ok($"All events were deleted!");
         }
 
 

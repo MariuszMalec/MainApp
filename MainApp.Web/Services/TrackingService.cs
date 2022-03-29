@@ -56,6 +56,22 @@ namespace MainApp.Web.Services
             var result = await client.SendAsync(requestUser);
         }
 
+        public async Task<bool> DeleteAllEvents()
+        {
+
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Tracking/DeleteAllEvents");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            //request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+            var result = await client.SendAsync(request);
+
+            return true;
+        }
+
         public async Task<Event> InsertEvent(ActivityActions activityActions, HttpContext httpContext, string email)
         {
             var userEmail = httpContext.User.Identity.Name;

@@ -35,5 +35,24 @@ namespace MainApp.Web.Controllers
             List<Event> events = await _trackingService.GetAll();
             return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
         }
+
+        // POST: UserController/Delete/5
+        [HttpPost("DeleteAllEvents")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllEvents()
+        {
+            try
+            {
+                await _trackingService.DeleteAllEvents();
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
     }
 }
