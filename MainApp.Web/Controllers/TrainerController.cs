@@ -38,7 +38,7 @@ namespace MainApp.Web.Controllers
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EmptyList");
             }
             _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             return View(model);
@@ -67,7 +67,7 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {model.Id} doesn't exist!");
+                    _logger.LogWarning($"Trainer can't be created, email exist yet!");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -87,7 +87,7 @@ namespace MainApp.Web.Controllers
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EmptyList");
             }
             return View(model);
         }
@@ -129,7 +129,7 @@ namespace MainApp.Web.Controllers
             if (model == null)
             {
                 _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("EmptyList");
             }
             return View(model);
         }
@@ -143,13 +143,13 @@ namespace MainApp.Web.Controllers
             {
                 var check = await _trainerService.DeleteTrainer(id, model, this.HttpContext);
 
-                _logger.LogWarning($"Delete trainer with id {model.Id}");
-
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {model.Id} doesn't exist!");
-                    return RedirectToAction(nameof(Index));
+                    _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                    return RedirectToAction("EmptyList");
                 }
+
+                _logger.LogWarning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction("Index");
             }
@@ -157,6 +157,11 @@ namespace MainApp.Web.Controllers
             {
                 return View();
             }
+        }
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
         }
     }
 }

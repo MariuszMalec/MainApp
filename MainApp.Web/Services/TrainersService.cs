@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -66,6 +67,11 @@ namespace MainApp.Web.Services
 
             var result = await client.SendAsync(request);
 
+            if (!result.IsSuccessStatusCode)
+            {             
+                return null;
+            }
+
             var content = await result.Content.ReadAsStringAsync();
 
             var model = JsonConvert.DeserializeObject<TrainerView>(content);
@@ -83,9 +89,9 @@ namespace MainApp.Web.Services
 
             var userEmail = httpContext.User.Identity.Name;
 
-            if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
-            {
-                _logger.LogWarning($"Trainer can't be created, email exist yet!");//TODO wyswietlenie komunikatu
+            var emailTrainers = await GetAll(userEmail, httpContext);
+            if (emailTrainers.Any(e=>e.Email == model.Email))
+            { 
                 return false;
             }
 
@@ -109,12 +115,6 @@ namespace MainApp.Web.Services
             HttpClient client = httpClientFactory.CreateClient();
 
             var userEmail = httpContext.User.Identity.Name;
-
-            if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
-            {
-                _logger.LogWarning($"Trainer can't be edit, email exist yet!");
-                return false;
-            }
 
             var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Trainer/{id}");
 
@@ -142,6 +142,11 @@ namespace MainApp.Web.Services
             request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var result = await client.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return false;
+            }
 
             var myEvent = await _trackingService.InsertEvent(ActivityActions.delete, httpContext, model.Email);
             await _trackingService.Insert(myEvent);

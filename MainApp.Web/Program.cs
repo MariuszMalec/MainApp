@@ -22,12 +22,10 @@ namespace MainApp.Web
             //    .AddJsonFile("appsettings.json", false, true)
             //    .Build();
 
-
             Log.Logger = new LoggerConfiguration()
                 //.ReadFrom.Configuration(configuration)
-                //.Enrich.FromLogContext()
-                //.WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u5}] {Message:lj} {Properties:j}{NewLine}{Exception}").MinimumLevel.Information()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u5}] {Message:lj} {NewLine}").MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
                 .WriteTo.File(@".\logfile.log").Filter.ByIncludingOnly(Matching.FromSource<TrainerController>()).MinimumLevel.Information()
                 .CreateLogger();
 
@@ -36,7 +34,7 @@ namespace MainApp.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.UseSerilog()
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
