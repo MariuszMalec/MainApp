@@ -1,0 +1,1 @@
+﻿delete from [Events] where id > 0
