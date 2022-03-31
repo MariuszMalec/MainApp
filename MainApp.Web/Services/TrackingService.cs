@@ -61,13 +61,16 @@ namespace MainApp.Web.Services
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Tracking/DeleteAllEvents");
+            var request = new HttpRequestMessage(HttpMethod.Get  , $"{AppiUrl}/Tracking/DeleteAllEvents");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            //request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-
             var result = await client.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return false;
+            }
 
             return true;
         }

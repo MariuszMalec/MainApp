@@ -37,13 +37,21 @@ namespace MainApp.Web.Controllers
         }
 
         // POST: UserController/Delete/5
-        [HttpPost("DeleteAllEvents")]
+        [HttpGet("DeleteAllEvents")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAllEvents()
         {
             try
             {
-                await _trackingService.DeleteAllEvents();
+                var check = await _trackingService.DeleteAllEvents();
+
+                if (check == false)
+                {
+                    return new ContentResult()
+                    {
+                        Content = "Not found events!"
+                    };
+                }
 
                 return RedirectToAction("Index");
             }
@@ -51,6 +59,12 @@ namespace MainApp.Web.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult DeleteEvemts()
+        {
+
+            return View();
         }
 
 
