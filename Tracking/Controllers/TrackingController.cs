@@ -21,10 +21,12 @@ namespace Tracking.Controllers
     public class TrackingController : ControllerBase
     {
         private readonly IRepositoryService<Event> _trackingService;
+        private readonly MainApplicationContext _context;
 
-        public TrackingController(IRepositoryService<Event> trackingService)
+        public TrackingController(IRepositoryService<Event> trackingService, MainApplicationContext context)
         {
             _trackingService = trackingService;
+            _context = context;
         }
 
         // GET: api/<GetEventsController>
@@ -69,15 +71,15 @@ namespace Tracking.Controllers
         }
 
 
-        //[HttpDelete("DeleteAllEvents")]
-        //public IActionResult DeleteAllEvents()
-        //{
-        //    if (!_context.Events.Any())
-        //        return BadRequest("Brak eventow!");
-        //    _context.Events.RemoveRange(_context.Events);
-        //    _context.SaveChanges();
-        //    return Ok($"All events were deleted!");
-        //}
+        [HttpDelete("DeleteAllEvents")]
+        public IActionResult DeleteAllEvents()
+        {
+            if (!_context.Events.Any())
+                return BadRequest("Brak eventow!");
+            _context.Events.RemoveRange(_context.Events);
+            _context.SaveChanges();
+            return Ok($"All events were deleted!");
+        }
 
 
     }
