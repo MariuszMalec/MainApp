@@ -1,5 +1,4 @@
-﻿using MainApp.BLL.DataStorage;
-using MainApp.BLL.Entities;
+﻿using MainApp.BLL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MainApp.BLL.Context
@@ -7,11 +6,7 @@ namespace MainApp.BLL.Context
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-        public DbSet<Trainer> Trainers { get; set; }
-
         public DbSet<User> Users { get; set; }
-
-        public DbSet<Event> Events { get; set; }
         public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)//TODO dodanie uzytkownika do tabeli tylko poprzez migracje!!

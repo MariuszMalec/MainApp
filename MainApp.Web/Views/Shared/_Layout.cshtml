@@ -1,4 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using MainApp.BLL.Context
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject ApplicationDbContext _context
+
+
+@{
+    var user = this.HttpContextAccessor.HttpContext.User.Identity.Name;
+    var userFullName = "Brak zalogowanego uzytkownika";
+    if (user != null)
+    {
+        userFullName = $"{user}";
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,14 +30,11 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
-
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/icons8-learning-64.png" class="d-inline-block align-middle rounded" width="50" alt="Logo"> MainApp.Web </a>
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -37,59 +48,30 @@
                     </ul>
                 </div>
 
+                @{
+                   if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                   {
+    
+                     var userEmail = this.HttpContextAccessor.HttpContext.User.Identity.Name;
+                     var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();
 
+                     bool isAdmin = this.HttpContextAccessor.HttpContext.User.IsInRole("Admin");
 
-
-                   <div class="dropdown">
+                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="~/34247_user_icon.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                            <strong>userFullName</strong>
+                            <strong>@userFullName</strong>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                           @if (true)
+                            @if (!isAdmin)
                             {
-                            <li>
-                                <a class="nav-link text-white" asp-controller="Profile" asp-action="Index">
-                                    <i class="bi bi-person-circle me-2"></i>
-                                    Profile
-                                </a>
-                            </li>
+                                <li>
+                                    <a class="nav-link text-white" asp-controller="User" asp-action="Index">
+                                        <i class="bi bi-person-circle me-2"></i>
+                                        User from Api
+                                    </a>
+                                </li>
                             }
-
-
-                            <li>
-                                <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Register">
-                                    <i class="bi bi-person-circle me-2"></i>
-                                    Register
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Login">
-                                    <i class="bi bi-person me-2"></i>
-                                    Login
-                                </a>
-                            </li>
-
-
-                            <li>
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Register" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="bi bi-box-arrow-right me-2"></i>
-                                        Register
-                                    </button>
-                                </form>
-                            </li>
-
-
-                            <li>
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="bi bi-box-arrow-right me-2"></i>
-                                        Login
-                                    </button>
-                                </form>
-                            </li>
-
 
                             <li>
                                 <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="account" asp-action="Logout">
@@ -98,19 +80,25 @@
                                 </a>
                             </li>
 
-                                                        <li>
-                                <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="Roles" asp-action="Create">
-                                    <i class="bi bi-person me-2"></i>
-                                    Roles
-                                </a>
-                            </li>
 
                         </ul>
-                    </div>
+                      </div>
+                    }
+                    else
+                    {
 
+                            <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="account" asp-action="register">
+                                <i class="bi bi-plus-square me-2"></i>
+                                Register
+                            </a>
 
+                            <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="account" asp-action="Login">
+                                <i class="bi bi-arrow-right-square me-2"></i>
+                               Login
+                            </a>
 
-
+                    }
+                }
 
             </div>
         </nav>

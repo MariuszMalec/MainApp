@@ -14,7 +14,7 @@ namespace MainApp.Web.Services
     {
         private readonly ILogger<UserToApiService> _logger;
         IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
+        private const string AppiUrl = "https://localhost:7001/api";
 
         public UserToApiService(ILogger<UserToApiService> logger, IHttpClientFactory httpClientFactory)
         {

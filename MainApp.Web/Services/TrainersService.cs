@@ -22,7 +22,7 @@ namespace MainApp.Web.Services
         private readonly ILogger<TrainersService> _logger;
         private readonly TrackingService _trackingService;
         IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
+        private const string AppiUrl = "https://localhost:7001/api";
 
         public TrainersService(IHttpClientFactory httpClientFactory, ILogger<TrainersService> logger, TrackingService trackingService)
         {

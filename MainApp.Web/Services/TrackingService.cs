@@ -18,7 +18,7 @@ namespace MainApp.Web.Services
         private readonly ILogger<TrackingService> _logger;
         private readonly UserService _userService;
         IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
+        private const string AppiUrl = "https://localhost:7001/api";
 
         public TrackingService(ILogger<TrackingService> logger, IHttpClientFactory httpClientFactory, UserService userService)
         {
@@ -81,7 +81,7 @@ namespace MainApp.Web.Services
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
-            return new Event { CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
+            return new Event { CreatedDate = DateTime.Now, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
         }
 
 

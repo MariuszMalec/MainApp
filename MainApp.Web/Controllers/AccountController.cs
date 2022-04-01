@@ -24,7 +24,6 @@ namespace MainApp.Web.Controllers
         private readonly TrackingService _trackingService;
         private ApplicationDbContext _context;
         IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
 
         private readonly UserToApiService _userToApiService;
 
