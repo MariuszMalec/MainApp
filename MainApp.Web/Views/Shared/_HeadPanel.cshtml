@@ -2,7 +2,27 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject ApplicationDbContext _context
 
-<ul class="navbar-nav flex-grow-1">
+@{
+    var userEmail = HttpContextAccessor.HttpContext.User.Identity.Name;
+    var userFullName = "";
+    if (userEmail != null)
+    {
+        userFullName = $"{userEmail}";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@*<ul class="navbar-nav flex-grow-1">
 
     @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
     {
@@ -23,4 +43,4 @@
             </div>
         }
     }
-</ul>
+</ul>*@
