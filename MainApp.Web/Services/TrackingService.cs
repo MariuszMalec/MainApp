@@ -61,9 +61,55 @@ namespace MainApp.Web.Services
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get  , $"{AppiUrl}/Tracking/DeleteAllEvents");
+            var request = new HttpRequestMessage(HttpMethod.Post  , $"{AppiUrl}/Tracking/DeleteAllEvents");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var result = await client.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<Event> GetEventById(int id, string userEmail, HttpContext httpContext)
+        {
+
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking/{id}");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Headers.Add("Accept", "application/json");
+
+            var result = await client.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var model = JsonConvert.DeserializeObject<Event>(content);
+
+            return model;
+        }
+
+        public async Task<bool> DeleteEvent(int id, Event model, HttpContext httpContext)
+        {
+
+            HttpClient client = httpClientFactory.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Tracking/{model.Id}");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             var result = await client.SendAsync(request);
 

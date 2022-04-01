@@ -37,9 +37,9 @@ namespace MainApp.Web.Controllers
         }
 
         // POST: UserController/Delete/5
-        [HttpGet("DeleteAllEvents")]
+        [HttpPost("DeleteAllEvents")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAllEvents()
+        public async Task<IActionResult> DeleteAllEvents([FromBody] List<Event> events)
         {
             try
             {
@@ -61,12 +61,49 @@ namespace MainApp.Web.Controllers
             }
         }
 
-        public ActionResult DeleteEvemts()
+        // GET: UserController/Delete/5
+        public async Task<ActionResult<Event>> Delete(int id)
         {
-
-            return View();
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var model = await _trackingService.GetEventById(id, userEmail, this.HttpContext);
+            if (model == null)
+            {
+                _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
+            }
+            return View(model);
         }
 
+        // POST: UserController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, Event model)
+        {
+            try
+            {
+                var check = await _trackingService.DeleteEvent(id, model, this.HttpContext);
+
+                if (check == false)
+                {
+                    _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                    return RedirectToAction("EmptyList");
+                }
+
+                _logger.LogWarning($"Delete event with id {model.Id}");
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
 
     }
 }

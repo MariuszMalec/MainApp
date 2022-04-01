@@ -40,7 +40,7 @@ namespace Tracking
 
             services.AddTransient<IRepositoryService<User>, UserService>();
 
-            services.AddTransient<TrackingService>();
+            services.AddTransient<IRepositoryService<Event>, TrackingService>();
 
             services.AddDbContext<MainApplicationContext>();
 

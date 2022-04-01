@@ -20,29 +20,18 @@ namespace Tracking.Controllers
     [ApiController]
     public class TrackingController : ControllerBase
     {
-        IHttpClientFactory httpClientFactory;
-        private readonly ILogger<TrackingController> _logger;
-        private const string MainAppUrl = "https://localhost:5001";
-        private TrackingService _eventService;
-        private readonly MainApplicationContext _context;
+        private readonly IRepositoryService<Event> _trackingService;
 
-        private readonly IRepositoryService<User> _userService;
-
-        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, TrackingService eventService, MainApplicationContext context, IRepositoryService<User> userService)
+        public TrackingController(IRepositoryService<Event> trackingService)
         {
-            this.httpClientFactory = httpClientFactory;
-            _logger = logger;
-            _eventService = eventService;
-            _context = context;
-            _userService = userService;
+            _trackingService = trackingService;
         }
-
 
         // GET: api/<GetEventsController>
         [HttpGet]
         public IActionResult Get()
         {
-            var events = _eventService.GetAll();
+            var events = _trackingService.GetAll();
             if (!events.Any())
             {
                 return NotFound("List of events is empty!");
@@ -50,25 +39,45 @@ namespace Tracking.Controllers
             return Ok(events);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetEvent(int id)
+        {
+            var myEvent = _trackingService.Get(id);
+            if (myEvent == null)
+                return BadRequest($"Brak eventa!");
+            return Ok(myEvent);
+        }
+
         [HttpPost]
         public IActionResult Insert([FromBody] Event myEvent)
         {
             if (myEvent == null)
                 return BadRequest("Brak eventa!");
-            _eventService.Insert(myEvent);
+            _trackingService.Insert(myEvent);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = myEvent.Id }, myEvent);
         }
 
-        [HttpDelete("DeleteAllEvents")]
-        public IActionResult DeleteAllEvents()
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            if (!_context.Events.Any())
-                return BadRequest("Brak eventow!");
-            _context.Events.RemoveRange(_context.Events);
-            _context.SaveChanges();
-            return Ok($"All events were deleted!");
+            var myEvent = _trackingService.Get(id);
+            if (myEvent == null)
+                return BadRequest($"Brak uzytkownika!");
+            _trackingService.Delete(id);
+            return Ok($"User with id {id} deleted");
         }
+
+
+        //[HttpDelete("DeleteAllEvents")]
+        //public IActionResult DeleteAllEvents()
+        //{
+        //    if (!_context.Events.Any())
+        //        return BadRequest("Brak eventow!");
+        //    _context.Events.RemoveRange(_context.Events);
+        //    _context.SaveChanges();
+        //    return Ok($"All events were deleted!");
+        //}
 
 
     }
