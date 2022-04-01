@@ -28,13 +28,12 @@ namespace MainApp.Web.Controllers
         private readonly UserToApiService _userToApiService;
 
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, ApplicationDbContext context, IHttpClientFactory httpClientFactory, UserToApiService userToApiService, TrackingService trackingService)
+        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, ApplicationDbContext context, UserToApiService userToApiService, TrackingService trackingService)
         {
             _logger = logger;
             _accountService = accountService;
             _userService = userService;
             _context = context;
-            this.httpClientFactory = httpClientFactory;
             _userToApiService = userToApiService;
             _trackingService = trackingService;
         }
