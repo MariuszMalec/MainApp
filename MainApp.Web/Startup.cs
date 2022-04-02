@@ -1,16 +1,18 @@
 using MainApp.BLL.Context;
-using MainApp.BLL.DataStorage;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using MainApp.Web.Middleware;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
 using System.IO;
 
 namespace MainApp.Web
@@ -32,37 +34,45 @@ namespace MainApp.Web
             var connectionString = Configuration.GetConnectionString("Default");
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
 
-            services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<TrackingService>();
        
-            services.AddTransient<UserToApiService>();//narazie nieuzywane
-
             //do wyrzucenia chyba
             services.AddTransient<UserService>();
             services.AddTransient<TrainersService>();
-            services.AddTransient<EventService>();
             services.AddHttpClient();
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddRazorPages();
 
-            services.AddAuthentication(CookieScheme).
-                AddCookie(CookieScheme, options =>
-                {
-                    options.AccessDeniedPath = "/account/AccessDenied";
-                    options.LoginPath = "/account/login";
-                    options.LogoutPath = "/account/logout";
-                });
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireDigit = false;
+                options.User.RequireUniqueEmail = false;
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+            })
+           .AddRoles<ApplicationRoles>()
+           .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddHttpContextAccessor();
             services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRoles> roleManager)
         {
-            context.Database.Migrate();
 
-            LoadAdmin.SeedDatabase(context);
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
+            {
+                var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context?.Database.Migrate();
+                SeedData.SeedClient(context, userManager, roleManager);
+            }
 
             if (env.IsDevelopment())
             {

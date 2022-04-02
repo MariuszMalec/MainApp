@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Entities
 {
-    public class User : Person
+    public interface IEntity
     {
-        public virtual Role Role { get; set; }
-        public string PasswordHash { get; set; }
+        int Id { get; set; }
+        DateTime Created { get; set; }
     }
 }

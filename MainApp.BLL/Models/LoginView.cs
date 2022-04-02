@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Models
 {
-    public class LoginResult
+    public class LoginView
     {
-        public bool Success { get; set; }
-        public string RoleName { get; set; }
-        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

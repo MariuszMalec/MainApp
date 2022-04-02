@@ -1,16 +1,28 @@
-﻿@using MainApp.BLL.Context
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@inject ApplicationDbContext _context
+﻿@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "Brak zalogowanego uzytkownika";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+    }
+}
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome @userFullName</h1>
 </div>
 
-    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+
+
+    @if (SignInManager.IsSignedIn(User))
     {
         <div class="row">
             <div class="col-sm-6">

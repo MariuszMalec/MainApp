@@ -9,37 +9,37 @@ namespace MainApp.BLL.Services
 {
     public class UserService
     {
-        private readonly IRepository<User> Users;
+        private readonly IRepository<ApplicationUser> Users;
 
-        public UserService(IRepository<User> users)
+        public UserService(IRepository<ApplicationUser> users)
         {
             Users = users;
         }
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<ApplicationUser>> GetAll()
         {
             return await Users.GetAll();
         }
 
-        public async Task Insert(User user)
+        public async Task Insert(ApplicationUser user)
         {
             await Users.Insert(user);
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<ApplicationUser> GetById(int id)
         {
             return await Users.GetById(id);
         }
 
-        public async Task Delete(User user)
+        public async Task Delete(ApplicationUser user)
         {
             await Users.Delete(user);
         }
-        public async Task Update(User user)
+        public async Task Update(ApplicationUser user)
         {
             await Users.Update(user);
         }
 
-        public async Task<User> GetByEmail(string userEmail)
+        public async Task<ApplicationUser> GetByEmail(string userEmail)
         {
             return await Users.GetAllQueryable().FirstOrDefaultAsync(n => n.Email == userEmail);
         }

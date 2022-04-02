@@ -37,6 +37,11 @@ namespace MainApp.Web.Services
 
             var result = await client.SendAsync(request);
 
+            if (!result.IsSuccessStatusCode)
+            {
+                return new List<Event> ();
+            }
+
             var content = await result.Content.ReadAsStringAsync();
 
             var events = JsonConvert.DeserializeObject<List<Event>>(content);

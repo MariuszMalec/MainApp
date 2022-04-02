@@ -68,7 +68,7 @@ namespace MainApp.Web.Controllers
                 if (check == false)
                 {
                     _logger.LogWarning($"Trainer can't be created, email exist yet!");
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("EmailExistYet");
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -161,6 +161,11 @@ namespace MainApp.Web.Controllers
         public ActionResult EmptyList(int id)
         {
             ViewBag.Id = id;
+            return View();
+        }
+
+        public ActionResult EmailExistYet()
+        {
             return View();
         }
     }

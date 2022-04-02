@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MainApp.BLL.Models
 {
-    public class RegisterView : Entity
+    public class RegisterView
     {
         [Required(ErrorMessage = "Please enter first name")]
-        [StringLength(25)]
+        [MinLength(2)]
+        [MaxLength(28)]
         [Display(Name = "First name")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Please provide last name")]
-        [StringLength(25)]
+        [MinLength(2)]
+        [MaxLength(28)]
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 

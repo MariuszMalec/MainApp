@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MainApp.BLL.Entities
+namespace MainApp.BLL.Enums
 {
-    public class Role : Entity
+    public enum Roles
     {
-        public string Name { get; set; }
+        User,
+        Admin
     }
 }

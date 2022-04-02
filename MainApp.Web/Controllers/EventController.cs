@@ -33,7 +33,12 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult<List<Event>>> Index()
         {
             List<Event> events = await _trackingService.GetAll();
+            if (events.Count() == 0)
+            {
+                return RedirectToAction("EmptyList");
+            }
             return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
+
         }
 
         // POST: UserController/Delete/5

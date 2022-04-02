@@ -1,6 +1,7 @@
-﻿@using MainApp.BLL.Context
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@inject ApplicationDbContext _context
+﻿@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "users list";
@@ -8,7 +9,7 @@
 
 <div class="container-fluid">
     <ul class="navbar-nav flex-grow-1">
-        @if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        @if (!SignInManager.IsSignedIn(User))
         {
             <hr />
             <li>
