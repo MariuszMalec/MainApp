@@ -218,6 +218,11 @@ namespace MainApp.Web.Controllers
             return LocalRedirect("/Account/AccessDenied");
         }
 
+        //public IActionResult AccessDenied(string returnUrl = null)
+        //{
+        //    return View();
+        //}
+
         public async Task<IActionResult> Logout()
         {
             _logger.LogInformation($"User logout at {DateTime.Now}");

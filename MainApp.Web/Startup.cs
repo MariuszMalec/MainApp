@@ -43,6 +43,8 @@ namespace MainApp.Web
 
             services.AddRazorPages();
 
+
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
