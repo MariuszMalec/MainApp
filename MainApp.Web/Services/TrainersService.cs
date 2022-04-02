@@ -153,5 +153,15 @@ namespace MainApp.Web.Services
 
             return true;
         }
+
+        public async Task<bool> CheckIfEmailExis(string email, HttpContext httpContext)
+        {
+            var emailTrainers = await GetAll(email, httpContext);
+            if (emailTrainers.Any(e => e.Email == email))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

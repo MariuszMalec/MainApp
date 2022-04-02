@@ -1,5 +1,6 @@
 ﻿using MainApp.BLL.Models;
 using MainApp.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,7 +13,6 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<TrainerController> _logger;
         private TrainersService _trainerService;
-
 
         public TrainerController(ILogger<TrainerController> logger, TrainersService trainerService)
         {
@@ -122,6 +122,7 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: UserController/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<TrainerView>> Delete(int id)
         {
             var userEmail = this.HttpContext.User.Identity.Name;

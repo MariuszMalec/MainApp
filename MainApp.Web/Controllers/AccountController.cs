@@ -63,10 +63,6 @@ namespace MainApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                var userCheck = _userManager.FindByEmailAsync(model.Email);
-                if (userCheck == null)
-                {
                     var user = new ApplicationUser()
                     {
                         FirstName = model.FirstName,
@@ -98,15 +94,7 @@ namespace MainApp.Web.Controllers
                         }
                         return View(model);
                     }
-                }
-                else
-                {
-                    _logger.LogWarning("User with this email already exists");
-                    ModelState.AddModelError("message", "Email already exists.");
-                    return View(model);
-                }
             }
-
             //LogContext.PushProperty("UserName", model.Email);
             Serilog.Log.Information("Registration of the user - {userName} failed at {registrationDate}", model.Email, DateTime.Now);
             ModelState.AddModelError("", "Invalid Register.");
@@ -221,6 +209,13 @@ namespace MainApp.Web.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        [Route("/AccessDenied")]
+        public ActionResult AccessDenied()
+        {
+            return LocalRedirect("/Account/AccessDenied");
         }
 
         public async Task<IActionResult> Logout()

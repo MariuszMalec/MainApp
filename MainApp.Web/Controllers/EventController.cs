@@ -1,6 +1,7 @@
 ﻿using MainApp.BLL.Entities;
 using MainApp.BLL.Services;
 using MainApp.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -67,6 +68,7 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: UserController/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Event>> Delete(int id)
         {
             var userEmail = this.HttpContext.User.Identity.Name;
