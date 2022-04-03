@@ -34,6 +34,10 @@ namespace MainApp.Web
             var connectionString = Configuration.GetConnectionString("Default");
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
 
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+
+
             services.AddTransient<TrackingService>();
        
             //do wyrzucenia chyba
@@ -42,8 +46,6 @@ namespace MainApp.Web
             services.AddHttpClient();
 
             services.AddRazorPages();
-
-
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
@@ -75,6 +77,11 @@ namespace MainApp.Web
                 context?.Database.Migrate();
                 SeedData.SeedClient(context, userManager, roleManager);
             }
+
+
+
+
+
 
             if (env.IsDevelopment())
             {
@@ -115,6 +122,7 @@ namespace MainApp.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

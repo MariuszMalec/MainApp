@@ -102,14 +102,16 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginView model)
+        public async Task<IActionResult> Login(LoginView model, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
@@ -211,17 +213,17 @@ namespace MainApp.Web.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/AccessDenied")]
-        public ActionResult AccessDenied()
-        {
-            return LocalRedirect("/Account/AccessDenied");
-        }
-
-        //public IActionResult AccessDenied(string returnUrl = null)
+        //[HttpGet]
+        //[Route("/AccessDenied")]
+        //public ActionResult AccessDenied()
         //{
-        //    return View();
+        //    return LocalRedirect("/Account/AccessDenied");
         //}
+
+        public IActionResult AccessDenied(string returnUrl = null)
+        {
+            return View();
+        }
 
         public async Task<IActionResult> Logout()
         {
