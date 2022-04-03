@@ -1,12 +1,38 @@
-﻿@using MainApp.BLL.Context
-@using MainApp.BLL.Services
-@model IEnumerable<MainApp.BLL.Entities.Event>
+﻿@model IEnumerable<MainApp.BLL.Entities.Event>
+@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "Brak zalogowanego uzytkownika";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+    }
+}
+
+
 <h1>Activity user's</h1>
+
+
+<div class="card mt-5 shadow-lg">
+   <div class="card-header">
+         List of events
+   </div>
+      <div class="card-body">
+         <div class="d-flex">
+            <h5 class="card-title"> @userFullName </h5>
+         </div>
+         <p class="card-text">
+            <div class="row">
+               <div class="col">
+
 
 <table class="table">
     <thead>
@@ -51,3 +77,10 @@
 }
     </tbody>
 </table>
+
+            </div>
+         </div>
+       </p>
+     <a href="/Home/index" class="btn btn-primary">Go to Home</a>
+  </div>
+</div>
