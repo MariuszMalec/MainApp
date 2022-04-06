@@ -55,7 +55,7 @@ namespace Tracking
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MainApplicationContext context)
         {
-            context?.Database.Migrate();
+            //context?.Database.Migrate();//TODO aby dzialal test integration musi to byc zakomentowane?
 
             if (env.IsDevelopment())
             {

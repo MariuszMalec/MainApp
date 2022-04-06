@@ -1,11 +1,11 @@
-﻿using MainApp.BLL.Context;
-using MainApp.Web;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using Tracking;
+using Tracking.Context;
 
 namespace MainAppIntegrationTests
 {
@@ -17,21 +17,20 @@ namespace MainAppIntegrationTests
             {
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
-                        typeof(DbContextOptions<ApplicationDbContext>));
+                        typeof(DbContextOptions<MainApplicationContext>));
                 if (descriptor != null)
                     services.Remove(descriptor);
-                services.AddDbContext<ApplicationDbContext>(options =>
+                services.AddDbContext<MainApplicationContext>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryUsersTest");
                 });
                 var sp = services.BuildServiceProvider();
                 using (var scope = sp.CreateScope())
-                using (var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+                using (var appContext = scope.ServiceProvider.GetRequiredService<MainApplicationContext>())
                 {
                     try
                     {                        
                         appContext.Database.EnsureCreated();
-                        SeedData.SeedAdmin(appContext);
                     }
                     catch (Exception ex)
                     {
