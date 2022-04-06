@@ -31,9 +31,9 @@ namespace Tracking.Controllers
 
         // GET: api/<GetEventsController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var events = _trackingService.GetAll();
+            var events = await _trackingService.GetAll();
             if (!events.Any())
             {
                 return NotFound("List of events is empty!");

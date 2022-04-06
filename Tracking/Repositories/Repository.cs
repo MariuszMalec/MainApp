@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Tracking.Context;
 using Tracking.Models;
 
@@ -16,9 +17,9 @@ namespace Tracking.Repositories
             _context = context;
             entities = context.Set<T>();
         }
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return entities.AsEnumerable();
+            return await entities.ToListAsync();
         }
 
         public IQueryable<T> GetAllQueryable()

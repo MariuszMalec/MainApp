@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Tracking.Models;
 using Tracking.Services;
 
@@ -20,9 +21,9 @@ namespace Tracking.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var users = _userService.GetAll();
+            var users = await _userService.GetAll();
             if (!users.Any())
                 return BadRequest($"Brak uzytkowników!");
             return Ok(users);

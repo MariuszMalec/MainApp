@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
@@ -22,11 +23,30 @@ namespace MainAppUnitTests.TrainerTests
     {
         private readonly UserService _sut; 
         private readonly Mock<IRepository<ApplicationUser>> _userMockRepo = new Mock<IRepository<ApplicationUser>>();
+        private readonly IRepository<ApplicationUser> Users;
+        private readonly ApplicationDbContext _context;
 
         public TrainerServiceTests()
         {
             _sut = new UserService(_userMockRepo.Object);
         }
+
+
+        [Fact]
+        public async Task GetUsers_ShoudReturnUsers_WhenUsersExist()
+        {
+            // Arrange
+            var userFromDataBase = _context.Users.ToList();
+
+            _userMockRepo.Setup(x => x.GetAll()).ReturnsAsync(userFromDataBase);
+
+            // Act
+            var users = await _sut.GetAll();
+
+            // Assert
+            users.Should().NotBeEmpty();
+        }
+
 
         [Fact]
         public async Task GetById_ShoudReturnUser_WhenUserExist()

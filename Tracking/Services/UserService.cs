@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tracking.Models;
 using Tracking.Repositories;
 
@@ -12,9 +13,9 @@ namespace Tracking.Services
         {
             Persons = persons;
         }
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return Persons.GetAll();
+            return await Persons.GetAll();
         }
 
         public void Insert(User person)

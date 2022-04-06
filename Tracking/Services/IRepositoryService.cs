@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tracking.Models;
 
 namespace Tracking.Services
 {
     public interface IRepositoryService<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAll();
 
         void Insert(T person);
 
