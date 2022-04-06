@@ -22,7 +22,7 @@ namespace MainAppIntegrationTests
                     services.Remove(descriptor);
                 services.AddDbContext<MainApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryUsersTest");
+                    options.UseInMemoryDatabase("InMemoryTrainersTest");
                 });
                 var sp = services.BuildServiceProvider();
                 using (var scope = sp.CreateScope())

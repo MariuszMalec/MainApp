@@ -75,13 +75,8 @@ namespace MainApp.Web
             {
                 var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 context?.Database.Migrate();
-                SeedData.SeedClient(context, userManager, roleManager);
+                SeedData.SeedUser(context, userManager, roleManager);
             }
-
-
-
-
-
 
             if (env.IsDevelopment())
             {

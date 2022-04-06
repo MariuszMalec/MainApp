@@ -9,7 +9,7 @@ namespace MainApp.BLL.Context
     public class SeedData
     {
 
-        public static async void SeedClient(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRoles> roleManager)
+        public static async void SeedUser(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRoles> roleManager)
         {
             if (context.Users.Any())
             {

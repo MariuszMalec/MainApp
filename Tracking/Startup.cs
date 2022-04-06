@@ -36,6 +36,9 @@ namespace Tracking
             services.AddHttpClient();
             services.AddHttpContextAccessor();
 
+            var connectionString = Configuration.GetConnectionString("Default");
+            services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
+
             services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 
             services.AddTransient<IRepositoryService<User>, UserService>();
@@ -55,7 +58,11 @@ namespace Tracking
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MainApplicationContext context)
         {
-            //context?.Database.Migrate();//TODO aby dzialal test integration musi to byc zakomentowane?
+
+            if (env.IsDevelopment())
+            {
+                //context?.Database.Migrate();//TODO aby dzialal test integration musi to byc zakomentowane? czemu??
+            }
 
             if (env.IsDevelopment())
             {
