@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MainApp.BLL\MainApp.BLL.csproj" />
     <ProjectReference Include="..\MainApp.Web\MainApp.Web.csproj" />
+    <ProjectReference Include="..\Tracking\Tracking.csproj" />
   </ItemGroup>
 
 </Project>

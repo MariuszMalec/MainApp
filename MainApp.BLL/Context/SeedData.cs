@@ -34,5 +34,24 @@ namespace MainApp.BLL.Context
             }
         }
 
+        public static async void SeedAdmin(ApplicationDbContext context)
+        {
+            if (context.Users.Any())
+            {
+                return;
+            }
+
+            var admin = new ApplicationUser()
+            {
+                UserName = "Admin@example.com",
+                Email = "Admin@example.com",
+                FirstName = "Admin",
+                LastName = "Admin",
+                Created = DateTime.Now
+            };
+            context.AddRange(admin);
+            await context.SaveChangesAsync();
+        }
+
     }
 }
