@@ -1,24 +1,20 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Tracking;
 using Tracking.Controllers;
 using Tracking.Models;
 using Tracking.Services;
 using Xunit;
 
-namespace MainAppIntegrationTests
+namespace MainAppUnitTests.TrainerTests
 {
-    public class TrainerControllerIntegrationsTests
+    public class TrainerControllerTests
     {
 
         [Fact]
-        public async Task Index_ReturnsTrainersFromController_WhenStatusOK()
+        public async Task Index_ReturnsNoTrainers_WhenStatusIsNotOkObjectResult()
         {
             // Arrange
             var mockRepo = new Mock<IRepositoryService<Trainer>>();
@@ -32,7 +28,27 @@ namespace MainAppIntegrationTests
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
+        }
 
+        [Fact]
+        public async Task Insert_ReturnsNoTrainer_WhenSatusIsNotOkCreatedAtActionResult()
+        {
+            // Arrange
+            var trainer = new Trainer
+            {
+                Id = 1,
+                FirstName = "Piotr"
+            };
+
+            var mockRepo = new Mock<IRepositoryService<Trainer>>();
+            mockRepo.Setup(repo => repo.Insert(trainer));        
+            var controller = new TrainerController(mockRepo.Object);
+
+            // Act
+            var result = await controller.Insert(trainer);
+
+            // Assert
+            Assert.IsType<CreatedAtActionResult>(result);
         }
 
         private List<Trainer> GetTrainers()

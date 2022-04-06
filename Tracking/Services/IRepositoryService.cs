@@ -8,7 +8,7 @@ namespace Tracking.Services
     {
         Task<IEnumerable<T>> GetAll();
 
-        void Insert(T person);
+        Task Insert(T person);
 
         T Get(int id);
 

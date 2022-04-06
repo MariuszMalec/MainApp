@@ -18,9 +18,9 @@ namespace Tracking.Services
             return await Models.GetAll();
         }
 
-        public void Insert(Event model)
+        public async Task Insert(Event model)
         {
-            Models.Insert(model);
+            await Models.Insert(model);
         }
 
         public Event Get(int id)

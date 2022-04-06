@@ -30,11 +30,11 @@ namespace Tracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insert([FromBody] User user)
+        public async Task<IActionResult> Insert([FromBody] User user)
         {
             if (user == null)
                 return BadRequest("Brak uzytkownika!");
-            _userService.Insert(user);
+            await _userService.Insert(user);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }

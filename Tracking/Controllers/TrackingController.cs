@@ -51,11 +51,11 @@ namespace Tracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insert([FromBody] Event myEvent)
+        public async Task<IActionResult> Insert([FromBody] Event myEvent)
         {
             if (myEvent == null)
                 return BadRequest("Brak eventa!");
-            _trackingService.Insert(myEvent);
+            await _trackingService.Insert(myEvent);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = myEvent.Id }, myEvent);
         }

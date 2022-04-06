@@ -18,9 +18,9 @@ namespace Tracking.Services
             return await Persons.GetAll();
         }
 
-        public void Insert(User person)
+        public async Task Insert(User person)
         {
-            Persons.Insert(person);
+            await Persons.Insert(person);
         }
 
         public User Get(int id)

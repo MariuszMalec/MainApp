@@ -61,7 +61,8 @@ namespace Tracking
 
             if (env.IsDevelopment())
             {
-                //context?.Database.Migrate();//TODO aby dzialal test integration musi to byc zakomentowane? czemu??
+                //TODO aby dzialal test integration musi to byc zakomentowane? czemu??
+                //context?.Database.Migrate();
             }
 
             if (env.IsDevelopment())

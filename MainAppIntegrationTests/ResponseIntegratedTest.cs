@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -18,10 +16,10 @@ namespace MainAppIntegrationTests
             => _client = factory.CreateClient();
 
         [Fact]
-        public async Task Index_ReturnsByUrlTrainers_WhenStatusOK()
+        public async Task Index_ReturnsWrongResponse_WhenIsNotStatusOK()
         {
             // Arrange
-            var response = await _client.GetAsync($"{AppiUrl}/Trainer");
+            var response = await _client.GetAsync($"{AppiUrl}/Trainer");//TODO zmien na enpoint ktorego nie ma w api
             //response.EnsureSuccessStatusCode();
 
             // Act
