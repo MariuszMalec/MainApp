@@ -11,12 +11,10 @@ namespace MainApp.Web.Controllers
 {
     public class TrainerController : Controller
     {
-        private readonly ILogger<TrainerController> _logger;
         private TrainersService _trainerService;
 
-        public TrainerController(ILogger<TrainerController> logger, TrainersService trainerService)
+        public TrainerController(TrainersService trainerService)
         {
-            _logger = logger;
             _trainerService = trainerService;
 
         }
@@ -26,7 +24,7 @@ namespace MainApp.Web.Controllers
         {
             var userEmail = this.HttpContext.User.Identity.Name;
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
-            _logger.LogInformation("Sciagam dane z bazy danych API...");
+            Serilog.Log.Information("Sciagam dane z bazy danych API...");
             return View(trainers);
         }
 
@@ -37,10 +35,10 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                Serilog.Log.Warning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
-            _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
+            Serilog.Log.Information($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             return View(model);
         }
 
@@ -63,11 +61,11 @@ namespace MainApp.Web.Controllers
                 }
 
                 var check = await _trainerService.CreateTrainer(model, this.HttpContext);
-                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
+                Serilog.Log.Information($"Create new trainer with id {model.Id} at {DateTime.Now}");
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer can't be created, email exist yet!");
+                    Serilog.Log.Warning($"Trainer can't be created, email exist yet!");
                     return RedirectToAction("EmailExistYet");
                 }
 
@@ -86,7 +84,7 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                Serilog.Log.Information($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -105,11 +103,11 @@ namespace MainApp.Web.Controllers
                 }
 
                 var check = await _trainerService.EditTrainer(id, model, this.HttpContext);
-                _logger.LogInformation($"Edit trainer with id {model.Id} at {DateTime.Now}");
+                Serilog.Log.Information($"Edit trainer with id {model.Id} at {DateTime.Now}");
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {model.Id} doesn't exist!");
+                    Serilog.Log.Warning($"Trainer with Id {model.Id} doesn't exist!");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -129,7 +127,7 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                Serilog.Log.Warning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -146,11 +144,11 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                    Serilog.Log.Information($"Trainer with Id {id} doesn't exist!");
                     return RedirectToAction("EmptyList");
                 }
 
-                _logger.LogWarning($"Delete trainer with id {model.Id}");
+                Serilog.Log.Warning($"Delete trainer with id {model.Id}");
 
                 return RedirectToAction("Index");
             }
