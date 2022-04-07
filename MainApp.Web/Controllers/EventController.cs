@@ -43,9 +43,9 @@ namespace MainApp.Web.Controllers
         }
 
         // POST: UserController/Delete/5
-        [HttpPost("DeleteAllEvents")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAllEvents([FromBody] List<Event> events)
+        [HttpGet("Event/DeleteAllEvents")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllEvents()
         {
             try
             {

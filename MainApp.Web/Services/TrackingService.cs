@@ -66,7 +66,7 @@ namespace MainApp.Web.Services
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Post  , $"{AppiUrl}/Tracking/DeleteAllEvents");
+            var request = new HttpRequestMessage(HttpMethod.Delete  , $"{AppiUrl}/Tracking/DeleteAllEvents");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
