@@ -42,10 +42,16 @@ namespace MainApp.Web.Controllers
 
         }
 
-        // POST: UserController/Delete/5
         [HttpGet("Event/DeleteAllEvents")]
+        public IActionResult DeleteAllEvents()
+        {
+            return View();
+        }
+
+        // POST: UserController/Delete/5
+        [HttpPost("Event/RemoveAllEvents")]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAllEvents()
+        public async Task<IActionResult> RemoveAllEvents()
         {
             try
             {
