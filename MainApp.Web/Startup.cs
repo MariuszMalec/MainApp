@@ -1,3 +1,4 @@
+using AutoMapper;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
@@ -63,11 +64,15 @@ namespace MainApp.Web
 
             services.AddHttpContextAccessor();
             services.AddAuthorization();
+
+            var profileAssembly = typeof(Startup).Assembly;
+            services.AddAutoMapper(profileAssembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRoles> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRoles> roleManager, IMapper mapper)
         {
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
             {

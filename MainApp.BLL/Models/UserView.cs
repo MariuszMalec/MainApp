@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MainApp.BLL.Models
 {
-    public class TrainerView : Entity
+    public class UserView
     {
         [Required(ErrorMessage = "Please enter first name")]
         [MinLength(2)]
