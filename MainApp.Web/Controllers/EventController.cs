@@ -31,14 +31,37 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Event>>> Index()
+        public async Task<ActionResult<List<Event>>> Index(string sortOrder)
         {
             List<Event> events = await _trackingService.GetAll();
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            var sortedEvents = from s in events
+                               select s;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    sortedEvents = sortedEvents.OrderByDescending(s => s.Action);
+                    break;
+                case "Date":
+                    sortedEvents = sortedEvents.OrderBy(s => s.CreatedDate);
+                    break;
+                case "date_desc":
+                    sortedEvents = sortedEvents.OrderByDescending(s => s.CreatedDate);
+                    break;
+                default:
+                    sortedEvents = sortedEvents.OrderBy(s => s.Action);
+                    break;
+            }
+
             if (events.Count() == 0)
             {
                 return RedirectToAction("EmptyList");
             }
-            return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
+            return View(sortedEvents.Take(20));
 
         }
 

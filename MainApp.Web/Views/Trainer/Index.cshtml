@@ -43,7 +43,7 @@
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.ActionLink("LastName", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)

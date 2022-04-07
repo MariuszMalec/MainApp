@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -20,12 +21,27 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: TrainerController
-        public async Task<ActionResult<List<TrainerView>>> Index()
+        public async Task<ActionResult<List<TrainerView>>> Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
             var userEmail = this.HttpContext.User.Identity.Name;
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
+
+            var sortedTrainers = from s in trainers
+                           select s;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    sortedTrainers = sortedTrainers.OrderByDescending(s => s.LastName);
+                    break;
+                default:
+                    sortedTrainers = sortedTrainers.OrderBy(s => s.LastName);
+                    break;
+            }
+
             Serilog.Log.Information("Sciagam dane z bazy danych API...");
-            return View(trainers);
+            return View(sortedTrainers);
         }
 
         // GET: UserController/Details/5
