@@ -10,7 +10,7 @@
 
 @{
     var user = await UserManager.GetUserAsync(User);
-    var userFullName = "Brak zalogowanego uzytkownika";
+    var userFullName = "";
     if (user != null)
     {
         userFullName = $"{user.FirstName} {user.LastName}";

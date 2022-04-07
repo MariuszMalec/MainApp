@@ -9,7 +9,7 @@
 
 @{
     var user = await UserManager.GetUserAsync(User);
-    var userFullName = "Brak zalogowanego uzytkownika";
+    var userFullName = "";
     if (user != null)
     {
         userFullName = $"{user.FirstName} {user.LastName}";
@@ -18,6 +18,11 @@
 
 <div class="text-center bg-info">
     <h1 class="display-4">Welcome @userFullName</h1>
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <h2 class="display-5">Register or login</h2>
+    }
+
 </div>
 
     @if (SignInManager.IsSignedIn(User))
