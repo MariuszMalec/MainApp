@@ -39,8 +39,6 @@ namespace MainApp.Web
 
 
             services.AddTransient<TrackingService>();
-       
-            //do wyrzucenia chyba
             services.AddTransient<UserService>();
             services.AddTransient<TrainersService>();
             services.AddHttpClient();

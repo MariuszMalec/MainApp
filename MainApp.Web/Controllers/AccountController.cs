@@ -28,19 +28,21 @@ namespace MainApp.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly TrackingService _trackingService;
 
         private readonly ILogger<AccountController> _logger;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
-            ApplicationDbContext applicationDbContext, IRepository<ApplicationUser> userRepository)
+            ApplicationDbContext applicationDbContext, IRepository<ApplicationUser> userRepository, TrackingService trackingService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _applicationDbContext = applicationDbContext;
             _userRepository = userRepository;
+            _trackingService = trackingService;
         }
 
 
@@ -80,6 +82,8 @@ namespace MainApp.Web.Controllers
                         await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                         //LogContext.PushProperty("UserName", model.Email);
                         Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
+                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);
+                        await _trackingService.Insert(myEvent);
                         return RedirectToAction("Index", "Home");
 
                     }
@@ -118,8 +122,9 @@ namespace MainApp.Web.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-
                     Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
+                    var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
+                    await _trackingService.Insert(myEvent);
                     return RedirectToAction("Index", "Home");
 
                 }
@@ -229,6 +234,9 @@ namespace MainApp.Web.Controllers
         {
             _logger.LogInformation($"User logout at {DateTime.Now}");
             Serilog.Log.Information($"User logout at {DateTime.Now}");
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, HttpContext, userEmail);
+            await _trackingService.Insert(myEvent);
             await _signInManager.SignOutAsync();
             return RedirectToAction("login", "account");
         }
