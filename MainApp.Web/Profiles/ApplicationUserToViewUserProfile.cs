@@ -9,6 +9,7 @@ namespace MainApp.Web.Profiles
         public ApplicationUserToViewUserProfile()
         {
             CreateMap<ApplicationUser, UserView>()
+                //.ForMember(d => d.UserRole, o => o.MapFrom(s => $"admin"))
                 ;
         }
     }

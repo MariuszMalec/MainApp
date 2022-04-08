@@ -16,5 +16,6 @@ namespace MainApp.BLL.Models
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public string UserRole { get; set; }
     }
 }

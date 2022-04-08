@@ -1,11 +1,17 @@
 ﻿using AutoMapper;
+using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
+using MainApp.BLL.ExtentionsMethod;
 using MainApp.BLL.Models;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -16,10 +22,15 @@ namespace MainApp.Web.Controllers
     {
         private UserService _userService;
         private readonly IMapper _mapper;
-        public UserController(UserService userService, IMapper mapper)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
+
+        public UserController(UserService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userService = userService;
             _mapper = mapper;
+            _userManager = userManager;
+            _context = context;
         }
         // GET: UserController1
         public async Task<IActionResult> Index()
@@ -29,7 +40,27 @@ namespace MainApp.Web.Controllers
             {
                 return View("No users!");
             }
+
+            //var roleLoggedUser = ExtentionsMethod.GetRoles((ClaimsIdentity)User.Identity);//tylko zalogowanego
+
+            foreach (var item in users)
+            {
+                //userId = await _userManager.GetUserIdAsync(item);
+
+                var userByMail = await _userManager.FindByEmailAsync(item.Email);
+
+                var roleUser = await _context.UserRoles.Where(x=>x.UserId == userByMail.Id).Select(x=>x.RoleId).FirstOrDefaultAsync();
+
+                var roleName = await _context.Roles.Where(x=>x.Id == roleUser).Select(x=>x.Name).FirstOrDefaultAsync();
+
+                if (roleName != null)
+                {
+                    item.UserRole = roleName;
+                }
+            }
+
             var model = _mapper.Map<List<UserView>>(users);
+
             return View(model);
         }
 

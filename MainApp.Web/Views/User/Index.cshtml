@@ -1,4 +1,11 @@
-﻿@model IEnumerable<MainApp.BLL.Models.UserView>
+﻿@using MainApp.BLL.Context
+@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<MainApp.BLL.Models.UserView>
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Index";
@@ -21,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -38,6 +48,18 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @{
+                   var userByMail = await UserManager.FindByEmailAsync(item.Email);
+
+                   var roleUser = await _context.UserRoles.Where(x=>x.UserId == userByMail.Id).Select(x=>x.RoleId).FirstOrDefaultAsync();
+
+                   var roleName = await _context.Roles.Where(x=>x.Id == roleUser).Select(x=>x.Name).FirstOrDefaultAsync();
+
+                }
+                @roleName
+                @*@item.UserRole*@
             </td>
         </tr>
 }

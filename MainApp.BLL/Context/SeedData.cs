@@ -22,7 +22,8 @@ namespace MainApp.BLL.Context
                 Email = "Admin@example.com",
                 FirstName = "Admin",
                 LastName = "Admin",
-                Created = DateTime.Now
+                Created = DateTime.Now,
+                UserRole = Roles.Admin.ToString()
             };
 
             var result = await userManager.CreateAsync(admin, "Admin@13");

@@ -105,6 +105,9 @@ namespace MainApp.BLL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserRole")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

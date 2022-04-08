@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MainApp.BLL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220407221241_init")]
+    [Migration("20220408163656_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,6 +105,9 @@ namespace MainApp.BLL.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserRole")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
