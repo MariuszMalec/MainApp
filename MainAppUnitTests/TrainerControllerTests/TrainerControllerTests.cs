@@ -67,6 +67,7 @@ namespace MainAppUnitTests.TrainerTests
                 FirstName = "TestTwo"
             });
             return sessions;
+            //return new List<Trainer>();
         }
 
     }
