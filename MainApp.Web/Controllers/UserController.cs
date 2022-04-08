@@ -43,25 +43,30 @@ namespace MainApp.Web.Controllers
 
             //var roleLoggedUser = ExtentionsMethod.GetRoles((ClaimsIdentity)User.Identity);//tylko zalogowanego
 
+            await SetRolesForUsers(users);
+
+            var model = _mapper.Map<List<UserView>>(users);
+
+            return View(model);
+        }
+
+        private async Task SetRolesForUsers(IEnumerable<ApplicationUser> users)
+        {
             foreach (var item in users)
             {
                 //userId = await _userManager.GetUserIdAsync(item);
 
                 var userByMail = await _userManager.FindByEmailAsync(item.Email);
 
-                var roleUser = await _context.UserRoles.Where(x=>x.UserId == userByMail.Id).Select(x=>x.RoleId).FirstOrDefaultAsync();
+                var roleUser = await _context.UserRoles.Where(x => x.UserId == userByMail.Id).Select(x => x.RoleId).FirstOrDefaultAsync();
 
-                var roleName = await _context.Roles.Where(x=>x.Id == roleUser).Select(x=>x.Name).FirstOrDefaultAsync();
+                var roleName = await _context.Roles.Where(x => x.Id == roleUser).Select(x => x.Name).FirstOrDefaultAsync();
 
                 if (roleName != null)
                 {
                     item.UserRole = roleName;
                 }
             }
-
-            var model = _mapper.Map<List<UserView>>(users);
-
-            return View(model);
         }
 
         // GET: UserController1/Details/5
