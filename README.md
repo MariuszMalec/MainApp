@@ -22,6 +22,11 @@
 - models
 - repository
 - Services
+4. MainAppIntegrationTests
+- test index reqest
+5. MainAppUnitTests
+- testing trainer controller
+- testing trainer service
 
 ## Start projektu
 
