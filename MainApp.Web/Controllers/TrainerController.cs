@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
+    [Authorize(Roles = "Admin,User")]
     public class TrainerController : Controller
     {
         private TrainersService _trainerService;

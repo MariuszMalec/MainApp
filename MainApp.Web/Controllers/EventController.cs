@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
+    [Authorize(Roles = "Admin,User")]
     public class EventController : Controller
     {
         private readonly ILogger<EventController> _logger;
