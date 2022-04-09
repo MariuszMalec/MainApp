@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public class UserService
+    public class UserService : IPersonService
     {
         private readonly IRepository<ApplicationUser> Users;
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.ExtentionsMethod;
@@ -20,12 +21,12 @@ namespace MainApp.Web.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
-        private UserService _userService;
+        private IPersonService _userService;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public UserController(UserService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public UserController(IPersonService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userService = userService;
             _mapper = mapper;

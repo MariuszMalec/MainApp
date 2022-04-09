@@ -1,4 +1,5 @@
 using AutoMapper;
+using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
@@ -40,7 +41,7 @@ namespace MainApp.Web
 
 
             services.AddTransient<TrackingService>();
-            services.AddTransient<UserService>();
+            services.AddTransient<IPersonService, UserService>();
             services.AddTransient<TrainersService>();
             services.AddHttpClient();
 

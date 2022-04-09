@@ -1,6 +1,6 @@
-﻿using MainApp.BLL.Entities;
+﻿using MainApp.BLL;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
-using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -16,11 +16,11 @@ namespace MainApp.Web.Services
     public class TrackingService
     {
         private readonly ILogger<TrackingService> _logger;
-        private readonly UserService _userService;
+        private readonly IPersonService _userService;
         IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
 
-        public TrackingService(ILogger<TrackingService> logger, IHttpClientFactory httpClientFactory, UserService userService)
+        public TrackingService(ILogger<TrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
