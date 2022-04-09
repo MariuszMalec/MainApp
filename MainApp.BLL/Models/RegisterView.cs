@@ -16,7 +16,10 @@ namespace MainApp.BLL.Models
         [MaxLength(28)]
         [Display(Name = "Last name")]
         public string LastName { get; set; }
-
+        [DataType(DataType.PhoneNumber)]
+        //[RegularExpression(@"^(\d{10})$", ErrorMessage = "Not a valid phone number")]
+        [Display(Name = "Mobile Phone number")]
+        [RegularExpression(@"^\d{3}-\d{3}-\d{3}$", ErrorMessage = "Not a valid mobile phone number. Format ###-###-###")]
         public string? PhoneNumber { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
