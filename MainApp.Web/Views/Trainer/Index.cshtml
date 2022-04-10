@@ -20,7 +20,7 @@
 <h1>Trainers</h1>
 
 <p>
-    <a class="btn btn-warning" asp-action="Create">Create New</a>
+    <a class="btn btn-success" asp-action="Create"><img class="rounded" alt="Image placeholder" src="~/icons8-add-user-male-32X32.png">Create New</a>
 </p>
 
 <div class="card mt-5 shadow-lg">
@@ -75,6 +75,36 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
+
+            <td>
+                @{
+                    if(item.LastName.Contains("Szwermer"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/avatar32X32.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Krakowiak"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/gamer32X32.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Dabrowski"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/hacker32X32.png">
+                       </a>             
+                    }
+                    else
+                    {
+                        <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/man32X32.png">
+                        </a>
+                    }
+                }
+            </td>
+
             <td>
                 <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> 
