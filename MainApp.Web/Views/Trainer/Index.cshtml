@@ -60,6 +60,54 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+
+            <td>
+                @{
+                    if(item.LastName.Contains("Szwermer"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_iconX42.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Krakowiak"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/gamer32X32.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Dabrowski"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/hacker32X32.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Sawicki"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/628291_avatar_headset_male_man_person_icon.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Katny"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/628290_avatar_male_man_mature_old_icon.png">
+                       </a>             
+                    }
+                    else if(item.LastName.Contains("Cebula"))
+                    {
+                       <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/6415365_account_avatar_profile_user_iconX32.png">
+                       </a>             
+                    }
+                    else
+                    {
+                        <a href="#" class="avatar">
+                           <img class="rounded" alt="Image placeholder" src="~/man32X32.png">
+                        </a>
+                    }
+                }
+            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
@@ -75,36 +123,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
-
-            <td>
-                @{
-                    if(item.LastName.Contains("Szwermer"))
-                    {
-                       <a href="#" class="avatar">
-                           <img class="rounded" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_iconX32.png">
-                       </a>             
-                    }
-                    else if(item.LastName.Contains("Krakowiak"))
-                    {
-                       <a href="#" class="avatar">
-                           <img class="rounded" alt="Image placeholder" src="~/gamer32X32.png">
-                       </a>             
-                    }
-                    else if(item.LastName.Contains("Dabrowski"))
-                    {
-                       <a href="#" class="avatar">
-                           <img class="rounded" alt="Image placeholder" src="~/hacker32X32.png">
-                       </a>             
-                    }
-                    else
-                    {
-                        <a href="#" class="avatar">
-                           <img class="rounded" alt="Image placeholder" src="~/man32X32.png">
-                        </a>
-                    }
-                }
-            </td>
-
             <td>
                 <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> 
