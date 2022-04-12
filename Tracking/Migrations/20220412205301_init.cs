@@ -61,57 +61,62 @@ namespace Tracking.Migrations
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 1, new DateTime(2022, 4, 12, 20, 42, 18, 465, DateTimeKind.Local).AddTicks(5419), "pssg@example.com", "Patryk", "Szwermer", "" });
+                values: new object[] { 1, new DateTime(2022, 4, 12, 22, 53, 1, 219, DateTimeKind.Local).AddTicks(4744), "pssg@example.com", "Patryk", "Szwermer", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 2, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9326), "ps@example.com", "Przemyslaw", "Sawicki", "" });
+                values: new object[] { 2, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3916), "ps@example.com", "Przemyslaw", "Sawicki", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 3, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9351), "md@example.com", "Marcin", "Dabrowski", "" });
+                values: new object[] { 3, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3940), "md@example.com", "Marcin", "Dabrowski", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 4, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9355), "pk@example.com", "Piotr", "Katny", "" });
+                values: new object[] { 4, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3944), "pk@example.com", "Piotr", "Katny", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 5, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9358), "md@example.com", "Marcin", "Dudzic", "" });
+                values: new object[] { 5, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3946), "md@example.com", "Marcin", "Dudzic", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 6, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9363), "mk@example.com", "Maciej", "Krakowiak", "" });
+                values: new object[] { 6, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3951), "mk@example.com", "Maciej", "Krakowiak", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 7, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9365), "mc@example.com", "Mateusz", "Cebula", "" });
+                values: new object[] { 7, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3954), "mc@example.com", "Mateusz", "Cebula", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 8, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9368), "jk@example.com", "Jakub", "Nowikowski", "" });
+                values: new object[] { 8, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3956), "jk@example.com", "Jakub", "Nowikowski", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 9, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9371), "jc@example.com", "Jan", "Choma", "" });
+                values: new object[] { 9, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3959), "jc@example.com", "Jan", "Choma", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 10, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9406), "mp@example.com", "Marcin", "Przypek", "" });
+                values: new object[] { 10, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3962), "mp@example.com", "Marcin", "Przypek", "" });
 
             migrationBuilder.InsertData(
                 table: "Trainers",
                 columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
-                values: new object[] { 11, new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9409), "mt@example.com", "Maciej", "Tyszka", "" });
+                values: new object[] { 11, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3965), "ms@example.com", "Michal", "Sosnowski", "" });
+
+            migrationBuilder.InsertData(
+                table: "Trainers",
+                columns: new[] { "Id", "CreatedDate", "Email", "FirstName", "LastName", "PhoneNumber" },
+                values: new object[] { 12, new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3967), "mt@example.com", "Maciej", "Tyszka", "" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -19,7 +19,8 @@ namespace Tracking.Context
             new Trainer {Id = 8, FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now},
             new Trainer {Id = 9, FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now},
             new Trainer {Id = 10, FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now},
-            new Trainer {Id = 11, FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now}
+            new Trainer {Id = 11, FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now},
+            new Trainer {Id = 12, FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.Now}
         };
 
         public static List<Trainer> GetAll()

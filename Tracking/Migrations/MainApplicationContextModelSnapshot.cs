@@ -68,7 +68,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 465, DateTimeKind.Local).AddTicks(5419),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 219, DateTimeKind.Local).AddTicks(4744),
                             Email = "pssg@example.com",
                             FirstName = "Patryk",
                             LastName = "Szwermer",
@@ -77,7 +77,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9326),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3916),
                             Email = "ps@example.com",
                             FirstName = "Przemyslaw",
                             LastName = "Sawicki",
@@ -86,7 +86,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9351),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3940),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dabrowski",
@@ -95,7 +95,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9355),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3944),
                             Email = "pk@example.com",
                             FirstName = "Piotr",
                             LastName = "Katny",
@@ -104,7 +104,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9358),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3946),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dudzic",
@@ -113,7 +113,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9363),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3951),
                             Email = "mk@example.com",
                             FirstName = "Maciej",
                             LastName = "Krakowiak",
@@ -122,7 +122,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9365),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3954),
                             Email = "mc@example.com",
                             FirstName = "Mateusz",
                             LastName = "Cebula",
@@ -131,7 +131,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9368),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3956),
                             Email = "jk@example.com",
                             FirstName = "Jakub",
                             LastName = "Nowikowski",
@@ -140,7 +140,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9371),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3959),
                             Email = "jc@example.com",
                             FirstName = "Jan",
                             LastName = "Choma",
@@ -149,7 +149,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9406),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3962),
                             Email = "mp@example.com",
                             FirstName = "Marcin",
                             LastName = "Przypek",
@@ -158,7 +158,16 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedDate = new DateTime(2022, 4, 12, 20, 42, 18, 468, DateTimeKind.Local).AddTicks(9409),
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3965),
+                            Email = "ms@example.com",
+                            FirstName = "Michal",
+                            LastName = "Sosnowski",
+                            PhoneNumber = ""
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3967),
                             Email = "mt@example.com",
                             FirstName = "Maciej",
                             LastName = "Tyszka",
