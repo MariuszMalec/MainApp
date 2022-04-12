@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -135,8 +136,27 @@ namespace MainApp.Web.Services
             return new Event { CreatedDate = DateTime.Now, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
         }
 
-
+        public async Task<List<Event>> SelectedEvents(string sortOrder, string searchString, List<Event> events)
+        {
+            Enum.TryParse<ActivityActions>(searchString, out var selectedAction);
+            if (!String.IsNullOrEmpty(selectedAction.ToString()))
+            {
+                if (selectedAction.ToString() != "All")
+                {
+                    events = events.Where(s => s.Action.Contains(selectedAction.ToString())).ToList();
+                }
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    events = events.OrderByDescending(s => s.Action).ToList();
+                    break;
+                default:
+                    events = events.OrderBy(s => s.Action).ToList();
+                    break;
+            }
+            await Task.Yield();
+            return events;
+        }
     }
-
-
 }

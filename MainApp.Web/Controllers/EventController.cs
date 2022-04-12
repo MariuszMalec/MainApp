@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
 using MainApp.BLL.Services;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,7 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Event>>> Index(string sortOrder)
+        public async Task<ActionResult<List<Event>>> Index(string sortOrder, string searchString)
         {
             List<Event> events = await _trackingService.GetAll();
 
@@ -40,8 +41,13 @@ namespace MainApp.Web.Controllers
             {
                 return RedirectToAction("EmptyList");
             }
-            return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
 
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            events = await _trackingService.SelectedEvents(sortOrder, searchString, events);
+
+            return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
         }
 
         [HttpGet("Event/DeleteAllEvents")]
