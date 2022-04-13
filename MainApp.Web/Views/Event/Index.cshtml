@@ -38,11 +38,13 @@
         <p>
             <div>
                 @*Find action by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />*@
-                <label class="col-form-label">Find action by name:</label>
+                <img class="rounded" alt="Image placeholder" src="~/icons8-search-in-list-32.png"/>
+                <label class="col-form-label">Select action:</label>
                     <select name="SearchString" asp-items="Html.GetEnumSelectList<ActivityActions>()" class="form-control">
                 </select>
-                <img class="rounded" alt="Image placeholder" src="~/icons8-search-in-list-32.png"/>
-                <input type="submit" value="Search" class="btn btn-primary"/>
+                
+                <input type="submit" value="Search" class="btn btn-primary" />
+                
                 <a class="btn btn-danger" asp-action="Index">Back to Full List</a>          
             </div>         
         </p>

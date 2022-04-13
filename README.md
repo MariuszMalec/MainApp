@@ -23,13 +23,12 @@
 - repository
 - Services
 4. MainAppIntegrationTests
-- test index reqest
+- test index request
 5. MainAppUnitTests
 - testing trainer controller
 - testing trainer service
 
 ## Start projektu
-
 1. prawy przycisk na solucji "Set Startup Projects"
 2. wybieramy MainApp.Web i Tracking
 3. Start
