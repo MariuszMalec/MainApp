@@ -1,18 +1,11 @@
 ﻿using MainApp.BLL.Entities;
-using MainApp.BLL.Enums;
-using MainApp.BLL.Services;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -22,13 +15,10 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<EventController> _logger;
         private readonly TrackingService _trackingService;
-        IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
 
-        public EventController(ILogger<EventController> logger, IHttpClientFactory httpClientFactory, TrackingService trackingService)
+        public EventController(ILogger<EventController> logger, TrackingService trackingService)
         {
             _logger = logger;
-            this.httpClientFactory = httpClientFactory;
             _trackingService = trackingService;
         }
 

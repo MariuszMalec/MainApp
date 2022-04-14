@@ -2,7 +2,7 @@
 
 namespace MainApp.BLL.Models
 {
-    public class Event : Entity
+    public class EventView : Entity
     {
         public string Action { get; set; }
         public string? Email { get; set; }
