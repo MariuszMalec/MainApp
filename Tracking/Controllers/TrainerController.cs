@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using Tracking.Models;
 using Tracking.Services;
 
@@ -11,28 +12,28 @@ namespace Tracking.Controllers
     [ApiController]
     public class TrainerController : ControllerBase
     {
-        private readonly TrainerService _userService;
+        private readonly IRepositoryService<Trainer> _userService;
 
-        public TrainerController(TrainerService userService)
+        public TrainerController(IRepositoryService<Trainer> userService)
         {
             _userService = userService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var users = _userService.GetAll();
+            var users = await _userService.GetAll();
             if (!users.Any())
                 return BadRequest($"Brak uzytkowników!");
             return Ok(users);
         }
 
         [HttpPost]
-        public IActionResult Insert([FromBody] Trainer user)
+        public async Task<IActionResult> Insert([FromBody] Trainer user)
         {
             if (user == null)
                 return BadRequest("Brak uzytkownika!");
-            _userService.Insert(user);
+            await _userService.Insert(user);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }

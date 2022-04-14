@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Repositories
 {
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T> where T : IEntity
     {
         Task<IEnumerable<T>> GetAll();
         IQueryable<T> GetAllQueryable();

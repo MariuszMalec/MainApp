@@ -8,9 +8,14 @@ namespace Tracking.Context
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public MainApplicationContext(DbContextOptions options)
+        : base(options)
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=.\\Database\\MainAppDb.db");
+            //optionsBuilder.UseSqlite("Data Source=.\\Database\\MainAppDb.db");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

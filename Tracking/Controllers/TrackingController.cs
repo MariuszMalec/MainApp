@@ -20,76 +20,67 @@ namespace Tracking.Controllers
     [ApiController]
     public class TrackingController : ControllerBase
     {
-        IHttpClientFactory httpClientFactory;
-        private readonly ILogger<TrackingController> _logger;
-        private const string MainAppUrl = "https://localhost:5001";
-        private EventService _eventService;
+        private readonly IRepositoryService<Event> _trackingService;
         private readonly MainApplicationContext _context;
 
-        public TrackingController(IHttpClientFactory httpClientFactory, ILogger<TrackingController> logger, EventService eventService, MainApplicationContext context)
+        public TrackingController(IRepositoryService<Event> trackingService, MainApplicationContext context)
         {
-            this.httpClientFactory = httpClientFactory;
-            _logger = logger;
-            _eventService = eventService;
+            _trackingService = trackingService;
             _context = context;
         }
 
-        //------------------------------------------------------------------------------------------------------------
-        //mainApp pobiera te ponizsze dane
-        //------------------------------------------------------------------------------------------------------------
         // GET: api/<GetEventsController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var events = _eventService.GetAll();
+            var events = await _trackingService.GetAll();
+            if (!events.Any())
+            {
+                return NotFound("List of events is empty!");
+            }
             return Ok(events);
         }
 
-        //---------------------------------------------------------
-        //wziecie eventow z mainApp
-        //---------------------------------------------------------
-        [HttpGet]
-        [Route("GetEvents")]
-        public async Task<ActionResult<List<Event>>> GetEvents()
+        [HttpGet("{id}")]
+        public IActionResult GetEvent(int id)
         {
+            var myEvent = _trackingService.Get(id);
+            if (myEvent == null)
+                return BadRequest($"Brak eventa!");
+            return Ok(myEvent);
+        }
 
-            //TODO wyczyscic baze events z APi
+        [HttpPost]
+        public async Task<IActionResult> Insert([FromBody] Event myEvent)
+        {
+            if (myEvent == null)
+                return BadRequest("Brak eventa!");
+            await _trackingService.Insert(myEvent);
+            //return Ok($"User with id {user.Id} added");
+            return CreatedAtAction(nameof(Get), new { id = myEvent.Id }, myEvent);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var myEvent = _trackingService.Get(id);
+            if (myEvent == null)
+                return BadRequest($"Brak uzytkownika!");
+            _trackingService.Delete(id);
+            return Ok($"User with id {id} deleted");
+        }
+
+
+        [HttpDelete("DeleteAllEvents")]
+        public IActionResult DeleteAllEvents()
+        {
+            if (!_context.Events.Any())
+                return BadRequest("Brak eventow!");
             _context.Events.RemoveRange(_context.Events);
             _context.SaveChanges();
-
-            _logger.LogInformation("Sciagam dane z bazy danych MainApp...");
-
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{MainAppUrl}/SentEvents");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var events = JsonConvert.DeserializeObject<List<Event>>(content);
-
-            //Zapis do bazy
-            foreach (var item in events)
-            {
-                _eventService.Insert(item);
-            }
-
-            return Ok(events);
+            return Ok($"All events were deleted!");
         }
 
-        //---------------------------------------------------------
-        //mainApp wrzuca bierzace eventy
-        //---------------------------------------------------------
-        [HttpGet]
-        [Route("ActiveEvents")]
-        public async Task<IActionResult> ActiveEvents()
-        {
-            await GetEvents();
-            return Ok($"Sent events to view");
-        }
 
     }
 }

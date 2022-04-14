@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tracking.Context;
+using Tracking.Models;
 using Tracking.Repositories;
 using Tracking.Services;
 
@@ -35,9 +36,14 @@ namespace Tracking
             services.AddHttpClient();
             services.AddHttpContextAccessor();
 
-            services.AddTransient<TrainerService>();
+            var connectionString = Configuration.GetConnectionString("Default");
+            services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
 
-            services.AddTransient<EventService>();
+            services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
+
+            services.AddTransient<IRepositoryService<User>, UserService>();
+
+            services.AddTransient<IRepositoryService<Event>, TrackingService>();
 
             services.AddDbContext<MainApplicationContext>();
 
@@ -52,7 +58,12 @@ namespace Tracking
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MainApplicationContext context)
         {
-            context?.Database.Migrate();
+
+            if (env.IsDevelopment())
+            {
+                //TODO aby dzialal test integration musi to byc zakomentowane? czemu??
+                context?.Database.Migrate();
+            }
 
             if (env.IsDevelopment())
             {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : Entity
+    public class Repository<T> : IRepository<T> where T : class, IEntity
     {
         private readonly ApplicationDbContext _context;
         private DbSet<T> entities;

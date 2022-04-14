@@ -1,0 +1,12 @@
+﻿<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+
+<div>
+    <h4>Events</h4>
+    <hr />
+    <form asp-controller="Event" asp-action="RemoveAllEvents">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to events list</a>
+    </form>
+</div>

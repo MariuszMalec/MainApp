@@ -1,0 +1,68 @@
+﻿@using MainApp.BLL.Enums
+@model MainApp.BLL.Models.ActivityStatisticsView
+
+@{
+    ViewData["Title"] = "Index";
+    var activityNames = Model.ActivitySums.Select(x=>x.Key);
+    var activityValues = Model.ActivitySums.Select(x=>x.Value);
+}
+
+<h1>Activity statistics</h1>
+
+    <div class="container " style="position: relative; width: 50%">
+        <h3 align="center">Current activities</h3>
+        <canvas id="myChart"></canvas>
+    </div>
+
+<script>
+
+    var models = @Html.Raw(Json.Serialize(@activityNames));
+    var labels = [];
+    for (var i = 0; i < models.length; i++) {
+        var obj = models[i];
+        labels.push(obj);
+    };
+
+    var models = @Html.Raw(Json.Serialize(@activityValues));
+    var dataValues = [];
+    for (var i = 0; i < models.length; i++) {
+        var obj = models[i];
+        dataValues.push(obj);
+    };
+
+ const ctx = document.getElementById('myChart').getContext('2d');
+ const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Activity',
+            data: dataValues,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>

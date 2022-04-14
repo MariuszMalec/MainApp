@@ -1,40 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tracking.Models;
 using Tracking.Repositories;
 
 namespace Tracking.Services
 {
-    public class TrainerService
+    public class TrainerService : IRepositoryService<Trainer>
     {
-        private readonly IRepository<Trainer> Trainers;
+        private readonly IRepository<Trainer> Persons;
 
-        public TrainerService(IRepository<Trainer> trainers)
+        public TrainerService(IRepository<Trainer> persons)
         {
-            Trainers = trainers;
+            Persons = persons;
         }
-        public IEnumerable<Trainer> GetAll()
+        public async Task<IEnumerable<Trainer>> GetAll()
         {
-            return Trainers.GetAll();
+            return await Persons.GetAll();
         }
 
-        public void Insert(Trainer user)
+        public async Task Insert(Trainer person)
         {
-            Trainers.Insert(user);
+            await Persons.Insert(person);
         }
 
         public Trainer Get(int id)
         {
-            return Trainers.Get(id);
+            return Persons.Get(id);
         }
 
-        public void Update(Trainer user)
+        public void Update(Trainer person)
         {
-            Trainers.Update(user);
+            Persons.Update(person);
         }
         public void Delete(int id)
         {
-            var user = Trainers.Get(id);
-            Trainers.Delete(user);
+            var person = Persons.Get(id);
+            Persons.Delete(person);
         }
     }
 }

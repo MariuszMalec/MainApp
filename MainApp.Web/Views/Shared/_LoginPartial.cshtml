@@ -1,44 +1,30 @@
-﻿@using MainApp.BLL.Context
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@inject ApplicationDbContext _context
+﻿@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "users list";
 }
 
-<ul class="navbar-nav flex-grow-1">
-    @if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <a class="btn btn-nav" asp-area="" asp-controller="account" asp-action="Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a style="margin-left:1.35rem; margin-right:1.35rem;" class="btn btn-nav" asp-controller="account" asp-action="Login">Login</a>
-        </li>
-    }
-    else
-    {
-        var userEmail = this.HttpContextAccessor.HttpContext.User.Identity.Name;
-        var findIdUser = _context.Users.Where(u=>u.Email == userEmail).Select(u=>u.Id).FirstOrDefault();     
-        
-        <li class="nav-item">
-           <a class="nav-link text-dark" asp-area="" asp-controller="Trainer" asp-action="Index">Trainers</a>
-        </li>
+<div class="container-fluid">
+    <ul class="navbar-nav flex-grow-1">
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <hr />
+            <li>
+                <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Register">
+                    <i class="bi bi-person-circle me-2"></i>
+                    Register
+                </a>
+            </li>           
+            <li>
+                <a class="nav-link text-dark border border-success rounded" asp-area="" asp-controller="account" asp-action="Login">
+                    <i class="bi bi-box-arrow-in-left"></i>
+                    Login
+                </a>
+            </li>
 
-@*        <li class="nav-item">
-           <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="GeAllEventsFromMainApp">Activity from MainApp</a>
-        </li>*@
-
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="event" asp-action="Index">Get activity from Api</a>
-        </li>
-
-@*        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="SentCurrentEvents">Send activity to Api</a>
-        </li>*@
-
-        <li class="nav-item">
-            <a style="margin-left:1.35rem;" class="btn btn-nav" asp-area="" asp-controller="account" asp-action="LogOut">Logout</a>
-        </li>
-    }
-</ul>
+        }
+    </ul>
+</div>

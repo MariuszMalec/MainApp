@@ -1,100 +1,119 @@
 ﻿using MainApp.BLL.Entities;
-using MainApp.BLL.Services;
-using Microsoft.AspNetCore.Http;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
+    [Authorize(Roles = "Admin,User")]
     public class EventController : Controller
     {
         private readonly ILogger<EventController> _logger;
-        private EventService _eventService;
-        IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
+        private readonly TrackingService _trackingService;
 
-        public EventController(ILogger<EventController> logger, EventService eventService, IHttpClientFactory httpClientFactory)
+        public EventController(ILogger<EventController> logger, TrackingService trackingService)
         {
             _logger = logger;
-            _eventService = eventService;
-            this.httpClientFactory = httpClientFactory;
+            _trackingService = trackingService;
         }
 
-        // GET: EventController
-        //--------------------------------------------------------------------------------------
-        //view events form mainApp
-        //--------------------------------------------------------------------------------------
         [HttpGet]
-        [Route("GeAllEventsFromMainApp")]
-        public async Task<ActionResult> GeAllEventsFromMainApp()
+        public async Task<ActionResult<List<Event>>> Index(string sortOrder, string searchString)
         {
-            _logger.LogInformation("Sciagam dane z bazy z MainApp...");//TODO user is empty???
-            var events = await _eventService.GetAll();
+            List<Event> events = await _trackingService.GetAll();
+
+            if (events.Count() == 0)
+            {
+                return RedirectToAction("EmptyList");
+            }
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            events = await _trackingService.SelectedEvents(sortOrder, searchString, events);
+
             return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
         }
 
-        //--------------------------------------------------------------------------------------
-        //Api get events
-        //--------------------------------------------------------------------------------------
-        [HttpGet]
-        [Route("SentEvents")]
-        public async Task<IActionResult> SentEvents()
+        [HttpGet("Event/DeleteAllEvents")]
+        public IActionResult DeleteAllEvents()
         {
-            _logger.LogInformation("Sciagam dane z bazy z MainApp...");
-            var models = await _eventService.GetAll();
-            return Ok(models);
+            return View();
         }
 
-        //--------------------------------------------------------------------------------------
-        //get events from api
-        //--------------------------------------------------------------------------------------
-        [HttpGet]
-        public async Task<ActionResult<List<Event>>> Index()
+        // POST: UserController/Delete/5
+        [HttpPost("Event/RemoveAllEvents")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveAllEvents()
         {
+            try
+            {
+                var check = await _trackingService.DeleteAllEvents();
 
-            await SentCurrentEvents();
+                if (check == false)
+                {
+                    return new ContentResult()
+                    {
+                        Content = "Not found events!"
+                    };
+                }
 
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var events = JsonConvert.DeserializeObject<List<Event>>(content);
-
-            return View(events.OrderByDescending(e=>e.CreatedDate).Take(20));
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
-        //TODO jak aktywowac poslanie eventow do api dziwny obieg wymyslilem ale dziala.
-        //--------------------------------------------------------------------------------------
-        //sent current events from mainApp to Api
-        //--------------------------------------------------------------------------------------
-        // GET: TrainerController/Create
-        [HttpGet]
-        [Route("SentCurrentEvents")]
-        public async Task<IActionResult> SentCurrentEvents()
+        // GET: UserController/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Event>> Delete(int id)
         {
-            HttpClient client = httpClientFactory.CreateClient();
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var model = await _trackingService.GetEventById(id, userEmail, this.HttpContext);
+            if (model == null)
+            {
+                _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
+            }
+            return View(model);
+        }
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking/ActiveEvents");
+        // POST: UserController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, Event model)
+        {
+            try
+            {
+                var check = await _trackingService.DeleteEvent(id, model, this.HttpContext);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                if (check == false)
+                {
+                    _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                    return RedirectToAction("EmptyList");
+                }
 
-            var result = await client.SendAsync(request);
+                _logger.LogWarning($"Delete event with id {model.Id}");
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
         }
 
     }

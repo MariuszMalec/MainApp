@@ -4,90 +4,105 @@ using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
+using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
+    //[Authorize]
     public class AccountController : Controller
     {
-        private readonly UserService _userService;
-        private readonly ILogger<AccountController> _logger;
-        private readonly IAccountService _accountService;
-        private EventService _eventService;
-        private ApplicationDbContext _context;
+        private readonly IRepository<ApplicationUser> _userRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly TrackingService _trackingService;
 
-        public AccountController(ILogger<AccountController> logger, IAccountService accountService, UserService userService, EventService eventService, ApplicationDbContext context)
+        private readonly ILogger<AccountController> _logger;
+        public AccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ILogger<AccountController> logger,
+            ApplicationDbContext applicationDbContext, IRepository<ApplicationUser> userRepository, TrackingService trackingService)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _logger = logger;
-            _accountService = accountService;
-            _userService = userService;
-            _eventService = eventService;
-            _context = context;
+            _applicationDbContext = applicationDbContext;
+            _userRepository = userRepository;
+            _trackingService = trackingService;
         }
+
+
         // GET: AccountController
         public ActionResult Index()
         {
             return View();
         }
 
+
         [HttpGet]
         public IActionResult Register()
         {
+
             return View();
         }
 
-        [HttpPost, AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterView request)
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterView model)
         {
             if (ModelState.IsValid)
             {
-                //TODO: add scope
-                using var log = _logger.BeginScope("UserEmailCheckInRegistration");
-                _logger.LogDebug("Checking if user exists {userEmail}", request.Email);
-                var userCheck = await _userService.GetById(request.Id);
-
-                if (userCheck == null)
-                {
-                    var user = new User
+                    var user = new ApplicationUser()
                     {
-                        FirstName = request.FirstName,
-                        LastName = request.LastName,
-                        Email = request.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        UserName = model.Email,
+                        Email = model.Email,
+                        Created = DateTime.Now
                     };
-
-                    var password = Base64EncodeDecode.Base64Encode(request.Password);
-                    user.PasswordHash = password;
-
-                    if (user != null)
+                    //LogContext.PushProperty("UserName", model.Email);// co to jest??
+                    Serilog.Log.Information("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
                     {
-                        _logger.LogInformation($"User {request.Email} created successfully");
-                        await _eventService.InsertEvent(ActivityActions.register, this.HttpContext, request.Email);
-                        await _userService.Insert(user);
-                        return RedirectToAction("Login");
+                        await _userManager.AddToRoleAsync(user, "User");
+                        await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
+                        //LogContext.PushProperty("UserName", model.Email);
+                        Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
+                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);
+                        await _trackingService.Insert(myEvent);
+                        return RedirectToAction("Index", "Home");
+
                     }
                     else
                     {
-                        _logger.LogWarning($"Adding new user {request.Email} not successfully");
-                        ModelState.AddModelError("message", "Error with adding new user");
-                        return View(request);
+                        if (result.Errors.Count() > 0)
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError("message", error.Description);
+                            }
+                        }
+                        return View(model);
                     }
-                }
-                else
-                {
-                    _logger.LogInformation($"User with this email {request.Email} already exists");
-                    ModelState.AddModelError("message", "Email already exists.");
-                    return View(request);
-                }
             }
-            return View(request);
-
+            //LogContext.PushProperty("UserName", model.Email);
+            Serilog.Log.Information("Registration of the user - {userName} failed at {registrationDate}", model.Email, DateTime.Now);
+            ModelState.AddModelError("", "Invalid Register.");
+            return View(model);
         }
 
         [HttpGet]
@@ -98,41 +113,40 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginView model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            var authResult = await ValidateLogin(userName, password);
-            // Normally Identity handles sign in, but you can do it directly
-            if (authResult.Success == true)
+            if (ModelState.IsValid)
             {
-                var claims = new List<Claim>//TODO rolename!!
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+                if (result.Succeeded)
                 {
-                    new Claim("user", authResult.UserName),
-                    new Claim("role", authResult.RoleName)
-                };
+                    var user = await _userManager.FindByNameAsync(model.Email);
+                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
+                    var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
+                    await _trackingService.Insert(myEvent);
+                    return RedirectToAction("Index", "Home");
 
-                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
-
-                _logger.LogInformation($"User {userName} login successfully");
-                await _eventService.InsertEvent(ActivityActions.loggin, this.HttpContext, userName);
-
-                //var findUserId = _plannerContext.Users.Where(u => u.Email == authResult.UserName).Select(u => u.Id).FirstOrDefault();
-
-                return RedirectToAction("Index", "Account", new { email = userName, role = authResult.RoleName }); // TODO dodac index w account!
-
+                }
+                else if (result.IsLockedOut)
+                {
+                    Serilog.Log.Error("User {email} account locked!!", model.Email);
+                    _logger.LogError("User {email} account locked!!", model.Email);
+                    return View("AccountLocked");
+                }
+                else
+                {
+                    ModelState.AddModelError("message", "Invalid login attempt");
+                    Serilog.Log.Error($"invalid login attempt for user {model.Email}");
+                    _logger.LogWarning($"invalid login attempt for user {model.Email}");
+                    return View(model);
+                }
             }
-            else
-            {
-                _logger.LogWarning($"invalid login attempt for user {userName}");
-            }
 
-            return View("UserIsNotRegistered", "Account");
-        }
+            ModelState.AddModelError("", "Invalid ID or Password");
 
-        private async Task<LoginResult> ValidateLogin(string userName, string password)
-        {
-            var authResult = await _accountService.ValidateUser(userName, password);
-            return authResult;
+            Serilog.Log.Information("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
+            return View(model);
         }
 
         // GET: AccountController/Details/5
@@ -203,16 +217,28 @@ namespace MainApp.Web.Controllers
                 return View();
             }
         }
+
+        //[HttpGet]
+        //[Route("/AccessDenied")]
+        //public ActionResult AccessDenied()
+        //{
+        //    return LocalRedirect("/Account/AccessDenied");
+        //}
+
+        public IActionResult AccessDenied(string returnUrl = null)
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Logout()
         {
-            //kasowanie eventow
-            _context.Events.RemoveRange(_context.Events);
-            _context.SaveChanges();
-
+            _logger.LogInformation($"User logout at {DateTime.Now}");
+            Serilog.Log.Information($"User logout at {DateTime.Now}");
             var userEmail = this.HttpContext.User.Identity.Name;
-            await _eventService.InsertEvent(ActivityActions.logout, this.HttpContext, userEmail);
-            await HttpContext.SignOutAsync();
-            return Redirect("/");
+            var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, HttpContext, userEmail);
+            await _trackingService.Insert(myEvent);
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("login", "account");
         }
     }
 }

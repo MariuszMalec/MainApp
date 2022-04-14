@@ -1,100 +1,63 @@
-﻿using MainApp.BLL.Context;
-using MainApp.BLL.Entities;
-using MainApp.BLL.Enums;
-using MainApp.BLL.Models;
-using MainApp.BLL.Repositories;
-using MainApp.BLL.Services;
-using MainApp.Web.Models;
-using Microsoft.AspNetCore.Http;
+﻿using MainApp.BLL.Models;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
+    [Authorize(Roles = "Admin,User")]
     public class TrainerController : Controller
     {
-        private readonly ILogger<TrainerController> _logger;
-        private TrainerService _trainserService;
-        private UserService _userService;
-        private EventService _eventService;
+        private TrainersService _trainerService;
 
-        IHttpClientFactory httpClientFactory;
-        private const string AppiUrl = "https://localhost:44311/api";
-
-        public TrainerController(ILogger<TrainerController> logger, TrainerService trainserService, EventService eventService, UserService userService, IHttpClientFactory httpClientFactory)
+        public TrainerController(TrainersService trainerService)
         {
-            _logger = logger;
-            _trainserService = trainserService;
-            _eventService = eventService;
-            _userService = userService;
-            this.httpClientFactory = httpClientFactory;
+            _trainerService = trainerService;
+
         }
 
         // GET: TrainerController
-        public async Task<ActionResult<List<TrainerView>>> Index()
+        public async Task<ActionResult<List<TrainerView>>> Index(string sortOrder)
         {
-
-            _logger.LogInformation("Sciagam dane z bazy danych API...");
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
             var userEmail = this.HttpContext.User.Identity.Name;
-            await _eventService.InsertEvent(ActivityActions.ViewTrainers, this.HttpContext, userEmail);
+            List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
 
-            HttpClient client = httpClientFactory.CreateClient();
+            var sortedTrainers = from s in trainers
+                           select s;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    sortedTrainers = sortedTrainers.OrderByDescending(s => s.LastName);
+                    break;
+                default:
+                    sortedTrainers = sortedTrainers.OrderBy(s => s.LastName);
+                    break;
+            }
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var trainers = JsonConvert.DeserializeObject<List<TrainerView>>(content);
-
-            //_logger.LogInformation($"Uzytkownik wyswietlil liste o godz {DateTime.Now}");
-
-            return View(trainers);
+            Serilog.Log.Information("Sciagam dane z bazy danych API...");
+            return View(sortedTrainers);
         }
-
 
         // GET: UserController/Details/5
         public async Task<ActionResult<TrainerView>> Details(int id)
         {
-
-            var email = this.HttpContext.User.Identity.Name;
-            string userEmail = await _eventService.InsertEvent(ActivityActions.detail, this.HttpContext, email);
-            _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
-
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Headers.Add("Accept", "application/json");
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var model = JsonConvert.DeserializeObject<TrainerView>(content);
-
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                Serilog.Log.Warning($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
             }
-
+            Serilog.Log.Information($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             return View(model);
         }
-
 
         // GET: TrainerController/Create
         public ActionResult Create()
@@ -114,25 +77,14 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
-                HttpClient client = httpClientFactory.CreateClient();
+                var check = await _trainerService.CreateTrainer(model, this.HttpContext);
+                Serilog.Log.Information($"Create new trainer with id {model.Id} at {DateTime.Now}");
 
-                string userEmail = await _eventService.InsertEvent(ActivityActions.create, this.HttpContext, model.Email);
-
-                if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
+                if (check == false)
                 {
-                    _logger.LogWarning($"Trainer can't be created, email exist yet!");//TODO wyswietlenie komunikatu
-                    return RedirectToAction("Create");
+                    Serilog.Log.Warning($"Trainer can't be created, email exist yet!");
+                    return RedirectToAction("EmailExistYet");
                 }
-                
-                var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Trainer");
-
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-
-                var result = await client.SendAsync(request);
-
-                _logger.LogInformation($"Create new trainer with id {model.Id} at {DateTime.Now}");
 
                 return RedirectToAction(nameof(Index));
             }
@@ -145,26 +97,13 @@ namespace MainApp.Web.Controllers
         // GET: UserController/Edit/5
         public async Task<ActionResult<TrainerView>> Edit(int id)
         {
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Headers.Add("Accept", "application/json");
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var model = JsonConvert.DeserializeObject<TrainerView>(content);
-
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                Serilog.Log.Information($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
             }
-
             return View(model);
         }
 
@@ -180,22 +119,14 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
-                HttpClient client = httpClientFactory.CreateClient();
+                var check = await _trainerService.EditTrainer(id, model, this.HttpContext);
+                Serilog.Log.Information($"Edit trainer with id {model.Id} at {DateTime.Now}");
 
-                string userEmail = await _eventService.InsertEvent(ActivityActions.edit, this.HttpContext, model.Email);
-                if (userEmail == (string)model.Email)//TODO wziecie maily z bazy i sprawdzenie wszystkich!
+                if (check == false)
                 {
-                    _logger.LogWarning($"Trainer can't be edit, email exist yet!");
-                    return RedirectToAction("Edit");
+                    Serilog.Log.Warning($"Trainer with Id {model.Id} doesn't exist!");
+                    return RedirectToAction(nameof(Index));
                 }
-
-                var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Trainer/{id}");
-
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-
-                var result = await client.SendAsync(request);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -206,28 +137,16 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: UserController/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<TrainerView>> Delete(int id)
         {
-            HttpClient client = httpClientFactory.CreateClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{id}");
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Headers.Add("Accept", "application/json");
-
-            var result = await client.SendAsync(request);
-
-            var content = await result.Content.ReadAsStringAsync();
-
-            var model = JsonConvert.DeserializeObject<TrainerView>(content);
-
+            var userEmail = this.HttpContext.User.Identity.Name;
+            var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
-                return RedirectToAction(nameof(Index));
+                Serilog.Log.Warning($"Trainer with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
             }
-
             return View(model);
         }
 
@@ -238,31 +157,32 @@ namespace MainApp.Web.Controllers
         {
             try
             {
-                //if (!ModelState.IsValid)
-                //{
-                //    return View(model);
-                //}
+                var check = await _trainerService.DeleteTrainer(id, model, this.HttpContext);
 
-                HttpClient client = httpClientFactory.CreateClient();
+                if (check == false)
+                {
+                    Serilog.Log.Information($"Trainer with Id {id} doesn't exist!");
+                    return RedirectToAction("EmptyList");
+                }
 
-                var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Trainer/{model.Id}");
+                Serilog.Log.Warning($"Delete trainer with id {model.Id}");
 
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-
-                var result = await client.SendAsync(request);
-
-                string userEmail = await _eventService.InsertEvent(ActivityActions.delete, this.HttpContext, model.Email);
-                _logger.LogWarning($"Delete trainer with id {model.Id}");
-
-                return RedirectToAction(nameof(Index));
-
+                return RedirectToAction("Index");
             }
             catch
             {
                 return View();
             }
+        }
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
+        }
+
+        public ActionResult EmailExistYet()
+        {
+            return View();
         }
     }
 }

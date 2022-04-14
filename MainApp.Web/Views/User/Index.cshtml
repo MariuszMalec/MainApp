@@ -1,0 +1,87 @@
+﻿@using MainApp.BLL.Context
+@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<MainApp.BLL.Models.UserView>
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext _context
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @{
+                        var userByMail = await UserManager.FindByEmailAsync(item.Email);
+
+                        var roleUser = await _context.UserRoles.Where(x=>x.UserId == userByMail.Id).Select(x=>x.RoleId).FirstOrDefaultAsync();
+
+                        var roleName = await _context.Roles.Where(x=>x.Id == roleUser).Select(x=>x.Name).FirstOrDefaultAsync();
+
+                        if (roleName.Contains("Admin"))
+                        {
+                            <img class="rounded" alt="Image placeholder" src="~/icons8-admin-settings-male-32.png">
+                        }
+                        else
+                        {
+                            <img class="rounded" alt="Image placeholder" src="~/icons8-person-32.png">
+                        }
+
+                        var userLocked = await UserManager.IsLockedOutAsync(userByMail);
+                        if (userLocked)
+                        {
+                            <img class="rounded" alt="Image placeholder" src="~/icons8-locked-user-32.png">
+                        }
+                    }
+              
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @roleName
+                @*@item.UserRole*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

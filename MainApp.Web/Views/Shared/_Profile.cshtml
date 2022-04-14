@@ -1,0 +1,73 @@
+﻿@using MainApp.BLL.Context
+@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject ApplicationDbContext _context
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "users list";
+}
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+    }
+}
+<div class="dropdown text-nowrap font-weight-bolder font-italic txt-cursive">
+<ul class="navbar-nav flex-grow-1">
+
+    
+                   @if (SignInManager.IsSignedIn(User))
+                   {
+    
+                       bool isAdmin = await SignInManager.UserManager.IsInRoleAsync(user, "Admin");
+
+                      
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="~/icons8-user-avatar-32.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                            <strong>@userFullName</strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+
+                            @if (isAdmin)
+                            {
+                                <li>
+                                    <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="Event" asp-action="DeleteAllEvents">
+                                        <i class="bi bi-trash me-2"></i>
+                                        Delete events
+                                    </a>
+                                    <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="User" asp-action="Index">
+                                        @*<i class="bi bi-people me-2"></i>*@
+                                        <img class="rounded" alt="Image placeholder" src="~/icons8-users-32.png">
+                                        View users
+                                    </a>
+                                </li>
+                            }
+
+                            <li>
+                                <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="activity" asp-action="Index">
+                                    <i class="bi bi-eye"></i>
+                                    Users activity
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="nav-link text-dark border border-warning rounded" asp-area="" asp-controller="account" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Logout
+                                </a>
+                            </li>
+
+
+                        </ul>
+                      
+                    }
+                   
+
+                
+ </ul>
+  </div>

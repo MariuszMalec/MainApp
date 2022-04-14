@@ -1,24 +1,26 @@
-﻿using MainApp.BLL.DataStorage;
-using MainApp.BLL.Entities;
+﻿using MainApp.BLL.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MainApp.BLL.Context
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRoles, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-        public DbSet<Trainer> Trainers { get; set; }
+        public override DbSet<ApplicationUser> Users { get; set; }
 
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<Event> Events { get; set; }
-
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)//TODO dodanie uzytkownika do tabeli tylko poprzez migracje!!
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
-            //TODO dodac to jesli baza nie istnieje dodaje do bazy z seed i wlasciwosci do bazy
-            //modelBuilder.Seed();//wczytanie wejsciowych danych do bazy z serwisu
-            //modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);//nakladanie wlasciwosci na baze
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //optionsBuilder.UseSqlite("Data Source=C:\\Temp\\Databases\\ApplicationUsers.db");//TODO to samo w appsettings.json jest
+
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>().ToTable("ApplicationUsers");
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
