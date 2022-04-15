@@ -23,19 +23,19 @@ namespace Tracking.Services
             await Persons.Insert(person);
         }
 
-        public Trainer Get(int id)
+        public async Task<Trainer> Get(int id)
         {
-            return Persons.Get(id);
+            return await Persons.Get(id);
         }
 
-        public void Update(Trainer person)
+        public async Task Update(Trainer person)
         {
-            Persons.Update(person);
+            await Persons.Update(person);
         }
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var person = Persons.Get(id);
-            Persons.Delete(person);
+            var person = await Persons.Get(id);
+            await Persons.Delete(person);
         }
     }
 }

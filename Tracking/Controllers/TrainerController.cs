@@ -39,30 +39,30 @@ namespace Tracking.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUser(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
-            var user = _userService.Get(id);
+            var user = await _userService.Get(id);
             if (user == null)
                 return BadRequest($"Brak uzytkownika!");
             return Ok(user);
         }
 
         [HttpPost("{id}")]
-        public IActionResult Edit(Trainer user)
+        public async Task<IActionResult> Edit(Trainer user)
         {
             if (user == null)
                 return BadRequest($"Brak uzytkownika!");
-            _userService.Update(user);
+            await _userService.Update(user);
             return Ok($"User with id {user.Id} edited");
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var user = _userService.Get(id);
+            var user = await _userService.Get(id);
             if (user == null)
                 return BadRequest($"Brak uzytkownika!");
-            _userService.Delete(id);
+            await _userService.Delete(id);
             return Ok($"User with id {id} deleted");
         }
 
