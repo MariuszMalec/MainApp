@@ -17,7 +17,7 @@ namespace MainApp.BLL.Models
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
         [DataType(DataType.PhoneNumber)]
-        [Display(Name = "Mobile Phone number")]
+        [Display(Name = "Mobile Phone")]
         [RegularExpression(@"^\d{3}-\d{3}-\d{3}$", ErrorMessage = "Not a valid mobile phone number. Format ###-###-###")]
         public string? PhoneNumber { get; set; }
     }

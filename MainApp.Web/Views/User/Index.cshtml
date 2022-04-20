@@ -11,7 +11,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>List of users</h1>
+
+<div class="card mt-5 shadow-lg">
+   <div class="card-header">
+         List of users
+   </div>
+      <div class="card-body">
+         <p class="card-text">
+            <div class="row">
+               <div class="col">
 
 <table class="table">
     <thead>
@@ -81,7 +90,19 @@
                 @roleName
                 @*@item.UserRole*@
             </td>
+            <td>
+                @*<a class="btn btn-success" asp-action="Edit" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a> 
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a> *@
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a>
+            </td>
         </tr>
 }
     </tbody>
 </table>
+
+            </div>
+         </div>
+       </p>
+     <a href="/Home/index" class="btn btn-primary">Go to Home</a>
+  </div>
+</div>

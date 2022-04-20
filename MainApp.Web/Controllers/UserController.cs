@@ -119,24 +119,44 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: UserController1/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult<UserView>> Delete(int id)
         {
-            return View();
+            var user = await _userService.GetById(id);
+            if (user == null)
+            {
+                Serilog.Log.Warning($"User with Id {id} doesn't exist!");
+                return RedirectToAction("EmptyList");
+            }
+            if (user.UserRole.Contains("Admin"))
+            {
+                Serilog.Log.Warning($"You can't delete admin!");
+                return RedirectToAction("AccessDenied", "Account");
+            }
+            var model = _mapper.Map<UserView>(user);
+            return View(model);
         }
 
         // POST: UserController1/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, UserView model)
         {
             try
             {
+                var user = await _userService.GetById(id);
+                await _userService.Delete(user);
+                Serilog.Log.Warning($"Delete user with id {id}");
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
         }
     }
 }
