@@ -27,9 +27,9 @@ namespace Tracking.Repositories
             return entities.AsQueryable();
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return entities.SingleOrDefault(s => s.Id == id);
+            return await entities.SingleOrDefaultAsync(s => s.Id == id);
         }
         public async Task Insert(T entity)
         {
@@ -41,23 +41,23 @@ namespace Tracking.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
             entities.Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity");
             }
             entities.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

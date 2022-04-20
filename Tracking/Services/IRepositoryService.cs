@@ -10,10 +10,10 @@ namespace Tracking.Services
 
         Task Insert(T person);
 
-        T Get(int id);
+        Task<T> Get(int id);
 
-        void Update(T person);
+        Task Update(T person);
 
-        void Delete(int id);
+        Task Delete(int id);
     }
 }

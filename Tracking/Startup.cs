@@ -61,7 +61,7 @@ namespace Tracking
 
             if (env.IsDevelopment())
             {
-                //TODO aby dzialal test integration musi to byc zakomentowane? czemu??
+                //TODO aby dzialal test integration musi to byc zakomentowane. Nie mozna uzywac wielu proviederow
                 context?.Database.Migrate();
             }
 

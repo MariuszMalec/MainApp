@@ -23,19 +23,19 @@ namespace Tracking.Services
             await Models.Insert(model);
         }
 
-        public Event Get(int id)
+        public async Task<Event> Get(int id)
         {
-            return Models.Get(id);
+            return await Models.Get(id);
         }
 
-        public void Update(Event model)
+        public async Task Update(Event model)
         {
-            Models.Update(model);
+            await Models.Update(model);
         }
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var model = Models.Get(id);
-            Models.Delete(model);
+            var model = await Models.Get(id);
+            await Models.Delete(model);
         }
     }
 }

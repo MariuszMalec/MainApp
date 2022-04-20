@@ -71,7 +71,8 @@ namespace MainApp.Web.Controllers
                         LastName = model.LastName,
                         UserName = model.Email,
                         Email = model.Email,
-                        Created = DateTime.Now
+                        Created = DateTime.Now,
+                        UserRole = "User"
                     };
                     //LogContext.PushProperty("UserName", model.Email);// co to jest??
                     Serilog.Log.Information("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);

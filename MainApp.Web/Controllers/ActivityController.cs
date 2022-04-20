@@ -103,5 +103,10 @@ namespace MainApp.Web.Controllers
                 return View();
             }
         }
+
+        public ActionResult EmptyList()
+        {
+            return View();
+        }
     }
 }

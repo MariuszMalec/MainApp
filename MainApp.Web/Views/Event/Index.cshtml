@@ -58,7 +58,7 @@
                 @Html.DisplayNameFor(model => model.UserId)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Action)</a>
+                @Html.DisplayNameFor(model => model.Action)
             </th>
 
             <th>
@@ -88,7 +88,7 @@
                 @item.Email
             </td>
             <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
+                <a asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete event"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a> 
             </td>
         </tr>
 }

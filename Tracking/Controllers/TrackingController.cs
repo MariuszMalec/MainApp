@@ -42,9 +42,9 @@ namespace Tracking.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetEvent(int id)
+        public async Task<IActionResult> GetEvent(int id)
         {
-            var myEvent = _trackingService.Get(id);
+            var myEvent = await _trackingService.Get(id);
             if (myEvent == null)
                 return BadRequest($"Brak eventa!");
             return Ok(myEvent);
@@ -61,23 +61,23 @@ namespace Tracking.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var myEvent = _trackingService.Get(id);
+            var myEvent = await _trackingService.Get(id);
             if (myEvent == null)
                 return BadRequest($"Brak uzytkownika!");
-            _trackingService.Delete(id);
+            await _trackingService.Delete(id);
             return Ok($"User with id {id} deleted");
         }
 
 
         [HttpDelete("DeleteAllEvents")]
-        public IActionResult DeleteAllEvents()
+        public async Task<IActionResult> DeleteAllEvents()
         {
             if (!_context.Events.Any())
                 return BadRequest("Brak eventow!");
             _context.Events.RemoveRange(_context.Events);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok($"All events were deleted!");
         }
 

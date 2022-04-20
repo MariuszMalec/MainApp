@@ -26,7 +26,7 @@
 - test index request
 5. MainAppUnitTests
 - testing trainer controller
-- testing trainer service
+- testing user service
 
 ## Start projektu
 1. prawy przycisk na solucji "Set Startup Projects"
