@@ -9,20 +9,36 @@
 <div>
     <h4>TrainerView</h4>
 
-    @{
-        if(Model.LastName.Contains("Szwermer"))
-        {
-           <a href="#" class="avatar">
-                 <img class="rounded" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_icon.png">
-           </a>         
-        }
-        else if(Model.LastName.Contains("Sawicki"))
-        {
-            <a href="#" class="avatar">
-               <img class="rounded" alt="Image placeholder" src="~/628291_avatar_headset_male_man_person_iconX512.png">
-            </a>             
-        }
-    }
+        <div class="container mt-3">
+             <div class="container">
+                  <div class="row">
+                       <div class="col">
+                        @if(Model.LastName.Contains("Szwermer"))
+                        {
+                            <img class="shape-circle-image" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_icon.png">      
+                        }
+                        else if(Model.LastName.Contains("Sawicki"))
+                        {
+                            <img class="shape-circle-image" alt="Image placeholder" src="~/628291_avatar_headset_male_man_person_iconX512.png"> 
+                        }
+                        else if(Model.LastName.Contains("Dabrowski"))
+                        {
+                             <img class="shape-circle-image" alt="Image placeholder" src="~/hackerX512.png"> 
+                 
+                        }
+                        else if(Model.LastName.Contains("Katny"))
+                        {
+                             <img class="shape-circle-image" alt="Image placeholder" src="~/628290_avatar_male_man_mature_old_iconX512.png">            
+                        }
+
+                        else if(Model.LastName.Contains("Admin"))
+                        {
+                             <img class="shape-circle-image" alt="Image placeholder" src="~/icons8-administrator-male-500.png">            
+                        }
+                        </div>
+                 </div>
+             </div>
+        </div> 
 
     <hr />
     <dl class="row">
