@@ -80,12 +80,11 @@ namespace MainApp.Web.Controllers
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, "User");
-                        await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
-                        //LogContext.PushProperty("UserName", model.Email);
+                        //await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                         Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);
                         await _trackingService.Insert(myEvent);
-                        return RedirectToAction("Index","Home");
+                        return RedirectToAction("Login");
 
                     }
                     else
