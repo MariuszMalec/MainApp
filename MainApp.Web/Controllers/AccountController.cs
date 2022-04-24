@@ -85,7 +85,7 @@ namespace MainApp.Web.Controllers
                         Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);
                         await _trackingService.Insert(myEvent);
-                        return RedirectToAction("Login");
+                        return RedirectToAction("Index","Home");
 
                     }
                     else

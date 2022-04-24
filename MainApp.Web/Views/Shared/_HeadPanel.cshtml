@@ -3,12 +3,27 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
  
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+    }
+}
+
 <div class="container-fluid">
 
     <ul class="navbar-nav flex-grow-1">
 
         @if (SignInManager.IsSignedIn(User))
         {
+
+
+            bool isAdmin = await SignInManager.UserManager.IsInRoleAsync(user, "Admin");
+
+            bool isLoggin = User.Identity.IsAuthenticated;
+
             <li>
                 <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-house "></i>
