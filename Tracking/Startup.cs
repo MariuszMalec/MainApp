@@ -62,7 +62,7 @@ namespace Tracking
             if (env.IsDevelopment())
             {
                 //TODO aby dzialal test integration musi to byc zakomentowane. Nie mozna uzywac wielu proviederow
-                context?.Database.Migrate();
+                //context?.Database.Migrate();
             }
 
             if (env.IsDevelopment())
