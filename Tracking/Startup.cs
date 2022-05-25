@@ -65,7 +65,12 @@ namespace Tracking
                 //context?.Database.Migrate();
             }
 
-            if (env.IsDevelopment())
+            if (env.IsEnvironment("Mariusz"))
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            if (env.IsDevelopment() && !env.IsEnvironment("Mariusz"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
