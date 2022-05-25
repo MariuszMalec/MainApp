@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
+using SendEmail.API.Models;
+using SendEmail.API.Services;
 
 namespace SendEmail.API.Controllers
 {
@@ -13,23 +15,18 @@ namespace SendEmail.API.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]string body)
+        private readonly IEmailService _emailService;
+
+        public EmailController(IEmailService emailService)
         {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("tina.heidenreich27@ethereal.email"));
-            email.To.Add(MailboxAddress.Parse("tina.heidenreich27@ethereal.email"));
-            email.Subject = "M.M test";
-            email.Body = new TextPart(TextFormat.Html) { Text = body};
+            _emailService = emailService;
+        }
 
-            using var smtp = new SmtpClient();
-            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);//smtp.gmail.com , smtp.office365.com
-            smtp.Authenticate("tina.heidenreich27@ethereal.email", "K8sxNh7hdYjSJABGtZ");
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
-
+        [HttpPost]
+        public async Task<IActionResult> Post(EmailDto reqeuest)
+        {
+            await _emailService.SendEmail(reqeuest);
             return Ok("Email was send");
-
         }
     }
 }
