@@ -27,6 +27,8 @@
 5. MainAppUnitTests
 - testing trainer controller
 - testing user service
+6. SendEmail.API
+- testing to send mail using MailKit
 
 ## Start projektu
 1. prawy przycisk na solucji "Set Startup Projects"
