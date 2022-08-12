@@ -43,6 +43,7 @@ namespace MainApp.Web
             services.AddTransient<TrackingService>();
             services.AddTransient<IPersonService, UserService>();
             services.AddTransient<TrainersService>();
+            services.AddTransient<EmailService>();
             services.AddHttpClient();
 
             services.AddRazorPages();

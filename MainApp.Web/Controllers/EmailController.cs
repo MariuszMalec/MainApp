@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL.Entities;
+using MainApp.Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,6 +9,13 @@ namespace MainApp.Web.Controllers
 {
     public class EmailController : Controller
     {
+        private EmailService _emailService;
+
+        public EmailController(EmailService emailService)
+        {
+            _emailService = emailService;
+        }
+
         // GET: EmailController
         public ActionResult Index()
         {
@@ -29,7 +37,7 @@ namespace MainApp.Web.Controllers
         // POST: EmailController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Email model)
+        public async Task<ActionResult> Create(Email model)
         {
             try
             {
@@ -38,12 +46,16 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
+                var check = await _emailService.CreateEmail(model);
                 Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
-                return Ok($"send mail!");
 
-                
+                if (check == false)
+                {
+                    Serilog.Log.Warning($"Email was not send!");
+                    return BadRequest("No send email!");
+                }              
 
-                //return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
