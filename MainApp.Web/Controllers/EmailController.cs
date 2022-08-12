@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MainApp.BLL.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
@@ -26,11 +29,21 @@ namespace MainApp.Web.Controllers
         // POST: EmailController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Email model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
+                return Ok($"send mail!");
+
+                
+
+                //return RedirectToAction(nameof(Index));
             }
             catch
             {

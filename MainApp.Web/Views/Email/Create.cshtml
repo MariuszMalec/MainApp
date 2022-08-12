@@ -28,21 +28,16 @@
                 <span asp-validation-for="Body" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Send Email" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src=https://images.unsplash.com/photo-1586769852351-8791d2bb43be?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">Sending email ...</h5>
-    <p class="card-text">Go to email and check</p>
-    <a class="btn btn-primary" href="/Home/index">Go to home</a>
-  </div>
-</div>
