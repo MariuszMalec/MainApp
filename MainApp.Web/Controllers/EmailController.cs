@@ -55,12 +55,17 @@ namespace MainApp.Web.Controllers
                     return BadRequest("No send email!");
                 }              
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(EmailWasSendCorrect));
             }
             catch
             {
                 return View();
             }
+        }
+
+        public ActionResult EmailWasSendCorrect()
+        {
+            return View();
         }
 
         // GET: EmailController/Edit/5
