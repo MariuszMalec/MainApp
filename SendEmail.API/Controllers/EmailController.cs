@@ -25,7 +25,11 @@ namespace SendEmail.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(EmailDto reqeuest)
         {
-            await _emailService.SendEmail(reqeuest);
+            var sendMailIsCorrect = await _emailService.SendEmail(reqeuest);
+
+            if (!sendMailIsCorrect)
+                return BadRequest("Email was not send!");
+
             return Ok("Email was send");
         }
     }

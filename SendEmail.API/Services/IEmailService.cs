@@ -4,6 +4,6 @@ namespace SendEmail.API.Services
 {
     public interface IEmailService
     {
-        Task SendEmail(EmailDto request);
+        Task<bool> SendEmail(EmailDto request);
     }
 }

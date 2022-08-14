@@ -21,7 +21,7 @@ namespace SendEmail.API.Services
 
         public IConfiguration Config { get; }
 
-        public async Task SendEmail(EmailDto request)
+        public async Task<bool> SendEmail(EmailDto request)
         {
             //get from other api events
             HttpClient client = _httpClientFactory.CreateClient();//dodane aby wyciagnac dane z tracking api
@@ -43,11 +43,17 @@ namespace SendEmail.API.Services
             //email.Body = new TextPart(TextFormat.Html) { Text = request.Body };//to co wstawisz w swg
 
             //wysyla na mail kto sie logowal jako ostatni
-            email.Body = new TextPart(TextFormat.Html) { Text = events.Where(x=>x.Action == "loggin").Select(x=>x.Email).LastOrDefault()};
+            //email.Body = new TextPart(TextFormat.Html) { Text = events.Where(x=>x.Action == "loggin").Select(x=>x.Email).LastOrDefault()};
+            email.Body = new TextPart(TextFormat.Html) { Text = request.Body }; //TODO narazie test tylko pozniej chcem wyslac eventy logowan
 
             using var smtp = new SmtpClient();//remember use reference MailKit.Net.Smtp! More safetly!!
 
             smtp.Connect(_config.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);//smtp.gmail.com , smtp.office365.com
+
+            if (!smtp.IsConnected)
+            {
+                return false;
+            }
 
             //var authenticate = smtp.IsAuthenticated;//TODO to przestalo dzialac z dniem 30.05.2022!!
             //if (!authenticate)
@@ -56,8 +62,13 @@ namespace SendEmail.API.Services
             //}
 
             smtp.Authenticate(_config.GetSection("EmailUserName").Value, _config.GetSection("EmailPassword").Value);
+
+            if (!smtp.IsAuthenticated)
+                return false;
+
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
+            return true;
         }
     }
 }
