@@ -18,7 +18,7 @@ namespace MainApp.Web.Services
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> CreateEmail(Email model)
+        public async Task<Email> CreateEmail(Email model)
         {
 
             HttpClient client = httpClientFactory.CreateClient();
@@ -31,7 +31,10 @@ namespace MainApp.Web.Services
 
             var result = await client.SendAsync(request);
 
-            return true;
+            if (!result.IsSuccessStatusCode)
+                return null;
+
+            return model;
         }
     }
 }

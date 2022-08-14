@@ -46,15 +46,22 @@ namespace MainApp.Web.Controllers
                     return View(model);
                 }
 
-                var check = await _emailService.CreateEmail(model);
-                Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
+                var isSend = await _emailService.CreateEmail(model);
 
-                if (check == false)
+                if (isSend == null)
                 {
                     Serilog.Log.Warning($"Email was not send!");
-                    return BadRequest("No send email!");
-                }              
+                    if (model.Body == null)
+                        return BadRequest("Email was not send! Body is empty");
+                    if (model.Subject == null)
+                        return BadRequest("Email was not send! Subject is empty");
+                    if (model.To == null)
+                        return BadRequest("Email can't be empty!");
+                    if (isSend == null)
+                        return BadRequest("Email can't be send! Check internet connection");
+                }
 
+                Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
                 return RedirectToAction(nameof(EmailWasSendCorrect));
             }
             catch

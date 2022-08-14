@@ -43,7 +43,7 @@ namespace SendEmail.API.Services
             //email.Body = new TextPart(TextFormat.Html) { Text = request.Body };//to co wstawisz w swg
 
             //wysyla na mail kto sie logowal jako ostatni
-            //email.Body = new TextPart(TextFormat.Html) { Text = events.Where(x=>x.Action == "loggin").Select(x=>x.Email).LastOrDefault()};
+            //email.Body = new TextPart(TextFormat.Html) { Text = $"Last logged user was {events.Where(x=>x.Action == "loggin").Select(x=>x.Email).LastOrDefault()}"};
             email.Body = new TextPart(TextFormat.Html) { Text = request.Body }; //TODO narazie test tylko pozniej chcem wyslac eventy logowan
 
             using var smtp = new SmtpClient();//remember use reference MailKit.Net.Smtp! More safetly!!
