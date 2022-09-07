@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 using Tracking.Context;
 using Tracking.Models;
 using Xunit;
@@ -10,10 +11,11 @@ namespace MainAppUnitTests.DataBaseTests
 {
     public class DataBaseTests
     {   
+        private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
         [Fact]
         public void CheckDataBase_ReturnError_WhenNotTrainersExist()
         {
-            var connection = new SqliteConnection("Data Source=C:\\temp\\Databases\\MainAppDb.db");
+            var connection = new SqliteConnection($"Data Source={_repoUser}");
             connection.Open();
 
             try
@@ -49,7 +51,7 @@ namespace MainAppUnitTests.DataBaseTests
         [Fact]
         public void AddTrainer_ShoudReturnError_WhenUserIdIsDuplicated()
         {
-            var connection = new SqliteConnection("Data Source=C:\\temp\\Databases\\MainAppDb.db");
+            var connection = new SqliteConnection($"Data Source={_repoUser}");
             connection.Open();
 
             try
