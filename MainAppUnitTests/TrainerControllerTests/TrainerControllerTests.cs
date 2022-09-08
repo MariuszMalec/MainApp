@@ -14,7 +14,30 @@ namespace MainAppUnitTests.TrainerTests
     {
 
         [Fact]
-        public async Task Index_ReturnsNoTrainers_WhenStatusIsNotOkObjectResult()
+        public async Task GetUser_ReturnNoTrainer_WhenNotExist()
+        {
+            // Arrange
+            var userView = new Trainer () 
+            { 
+                Id = 1,
+                FirstName="Hej",
+                LastName = "Ho"
+            };
+            var mockRepo = new Mock<IRepositoryService<Trainer>>();
+            mockRepo.Setup(r => r.Get(1))
+                .ReturnsAsync(userView);
+            ;
+            var controller = new TrainerController(mockRepo.Object);
+
+            // Act
+            var result = await controller.GetUser(1) as OkObjectResult;
+
+            // Assert
+            Assert.Equal(userView,result.Value);
+        }
+
+        [Fact]
+        public async Task Get_ReturnsNoTrainers_WhenStatusIsNotOkObjectResult()
         {
             // Arrange
             var mockRepo = new Mock<IRepositoryService<Trainer>>();
