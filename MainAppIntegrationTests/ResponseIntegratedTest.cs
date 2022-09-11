@@ -1,5 +1,10 @@
 ﻿using FluentAssertions;
 using MainApp.BLL.Entities;
+using MainApp.Web.Controllers;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -14,6 +19,8 @@ namespace MainAppIntegrationTests
 {
     public class ResponseIntegratedTest : IClassFixture<TestingWebAppFactory<Program>>
     {
+        private readonly ILogger<TrainersService> _logger;
+        private readonly TrackingService _trackingService;
         private readonly HttpClient _client;
         private const string AppiUrl = "https://localhost:7001/api";
 
@@ -32,6 +39,36 @@ namespace MainAppIntegrationTests
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Index_TrainersController_ReturnsTrainersWrongResponse_WhenIsNotStatusOK()
+        {
+            // Arrange
+            var trainer = new Trainer
+            {
+                Id = 1,
+                CreatedDate = DateTime.Now,
+                FirstName = "Piotr",
+                LastName = "Grot",
+                Email = "pg@example.com",
+                PhoneNumber = "505859599"
+
+            };
+
+            //var mockRepo = new Mock<TrainersService>();
+            //mockRepo.Setup(repo => repo.GetAll(trainer.Email, this.HttpContext))
+            //    .ReturnsAsync(trainer));
+            //;
+
+            var trainerService = new TrainersService((IHttpClientFactory)_client, _logger, _trackingService);
+            var controller = new TrainerController(trainerService);
+
+            // Act
+            var result = await controller.Index("name_desc");
+
+            // Assert
+            Assert.NotNull(result);
         }
 
         [Fact]
