@@ -36,8 +36,13 @@ namespace Tracking
             services.AddHttpClient();
             services.AddHttpContextAccessor();
 
+            //sqlite
+            //var connectionString = Configuration.GetConnectionString("Default");
+            //services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
+
+            //msql
             var connectionString = Configuration.GetConnectionString("Default");
-            services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
+            services.AddDbContext<MainApplicationContext>(o => o.UseSqlServer(connectionString));
 
             services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 
