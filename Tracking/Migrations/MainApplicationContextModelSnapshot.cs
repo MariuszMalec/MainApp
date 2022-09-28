@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tracking.Context;
 
@@ -14,25 +15,28 @@ namespace Tracking.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.15");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.17")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Tracking.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Action")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -43,22 +47,23 @@ namespace Tracking.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -68,7 +73,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 219, DateTimeKind.Local).AddTicks(4744),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 621, DateTimeKind.Local).AddTicks(3933),
                             Email = "pssg@example.com",
                             FirstName = "Patryk",
                             LastName = "Szwermer",
@@ -77,7 +82,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3916),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1833),
                             Email = "ps@example.com",
                             FirstName = "Przemyslaw",
                             LastName = "Sawicki",
@@ -86,7 +91,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3940),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1862),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dabrowski",
@@ -95,7 +100,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3944),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1867),
                             Email = "pk@example.com",
                             FirstName = "Piotr",
                             LastName = "Katny",
@@ -104,7 +109,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3946),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1869),
                             Email = "md@example.com",
                             FirstName = "Marcin",
                             LastName = "Dudzic",
@@ -113,7 +118,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3951),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1875),
                             Email = "mk@example.com",
                             FirstName = "Maciej",
                             LastName = "Krakowiak",
@@ -122,7 +127,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3954),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1878),
                             Email = "mc@example.com",
                             FirstName = "Mateusz",
                             LastName = "Cebula",
@@ -131,7 +136,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3956),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1880),
                             Email = "jk@example.com",
                             FirstName = "Jakub",
                             LastName = "Nowikowski",
@@ -140,7 +145,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3959),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1883),
                             Email = "jc@example.com",
                             FirstName = "Jan",
                             LastName = "Choma",
@@ -149,7 +154,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3962),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1887),
                             Email = "mp@example.com",
                             FirstName = "Marcin",
                             LastName = "Przypek",
@@ -158,7 +163,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3965),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1890),
                             Email = "ms@example.com",
                             FirstName = "Michal",
                             LastName = "Sosnowski",
@@ -167,7 +172,7 @@ namespace Tracking.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3967),
+                            CreatedDate = new DateTime(2022, 9, 28, 21, 57, 40, 626, DateTimeKind.Local).AddTicks(1893),
                             Email = "mt@example.com",
                             FirstName = "Maciej",
                             LastName = "Tyszka",
@@ -179,25 +184,26 @@ namespace Tracking.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
