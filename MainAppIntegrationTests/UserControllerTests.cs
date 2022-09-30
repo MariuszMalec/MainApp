@@ -33,11 +33,14 @@ namespace MainAppIntegrationTests
 
                         services.Remove(dbContextOptions);
 
-                        services
-                         .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("UserDb"));
+                        ;
+
+                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite("Data Source=C:\\Temp\\Databases\\ApplicationUsers.db"));
+
                     });
                 })
                 .CreateClient();
+            //_client = factory.CreateClient();//TODO blad sql 14!!
         }
 
         [Fact]
@@ -45,10 +48,21 @@ namespace MainAppIntegrationTests
         {
 
             //act
-            var response = await _client.GetAsync("/api/User");
+            var response = await _client.GetAsync("/User");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetAll_Users_ReturnNotFound()
+        {
+
+            //act
+            var response = await _client.GetAsync("/Userek");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
     }
 }
