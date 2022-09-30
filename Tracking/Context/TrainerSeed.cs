@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tracking.Models;
 
 namespace Tracking.Context
@@ -27,11 +28,30 @@ namespace Tracking.Context
         {
             return Trainers;
         }
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static void Seed(this ModelBuilder modelBuilder)//przez MainApplicationContext gdy odpalimy OnModelCreating... 
         {
             modelBuilder.Entity<Trainer>().HasData(
                 GetAll()
                 );
+        }
+
+        public static async void SeedTrainer(MainApplicationContext context)
+        {
+            if (context.Trainers.Any())
+            {
+                return;
+            }
+
+            var trainer = new Trainer()
+            {
+                CreatedDate = DateTime.Now,
+                Email = "Admin@example.com",
+                FirstName = "Admin",
+                LastName = "Admin",
+                PhoneNumber = "22222"
+            };
+            context.AddRange(trainer);
+            await context.SaveChangesAsync();
         }
 
     }

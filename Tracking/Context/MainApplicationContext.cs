@@ -19,10 +19,10 @@ namespace Tracking.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Trainer>().ToTable("Trainers");
-            modelBuilder.Seed();
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Event>().ToTable("Events");      
+            //modelBuilder.Entity<Trainer>().ToTable("Trainers");
+            //modelBuilder.Seed();
+            //modelBuilder.Entity<User>().ToTable("Users");
+            //modelBuilder.Entity<Event>().ToTable("Events");      
         }
     }
 }
