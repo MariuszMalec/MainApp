@@ -24,7 +24,7 @@ namespace MainAppUnitTests.TrainerTests
 
 
         [Fact]
-        public async Task GetAllUsers_ShoudReturnEmptyUsers_WhenUsersNotExist()
+        public async Task GetAllUsers_ShoudReturnUsers_WhenUsersExist()
         {
             // Arrange
             _userMockRepo.Setup(x => x.GetAll()).ReturnsAsync(GetUsersDto());
@@ -37,7 +37,20 @@ namespace MainAppUnitTests.TrainerTests
         }
 
         [Fact]
-        public async Task GetById_ShoudReturnNoUser_WhenUserNotExist()
+        public async Task GetAllUsers_ShoudReturnEmptyUsers_WhenUsersNotExist()
+        {
+            // Arrange
+            _userMockRepo.Setup(x => x.GetAll()).ReturnsAsync(new List<ApplicationUser>() { });
+
+            // Act
+            var users = await _sut.GetAll();
+
+            // Assert
+            users.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetById_ShoudReturnTrue_WhenUserExist()
         {
             // Arrange
             var userId = 2;
@@ -54,6 +67,26 @@ namespace MainAppUnitTests.TrainerTests
 
             // Assert
             Assert.Equal(userId, user.Id);
+        }
+
+        [Fact]
+        public async Task GetById_ShoudReturnFalse_WhenUserNotExist()
+        {
+            // Arrange
+            var userId = 1;
+            var userName = "";
+            var userDto = new ApplicationUser
+            {
+                Id = 2,
+                FirstName = userName
+            };
+            _userMockRepo.Setup(x => x.GetById(userId)).ReturnsAsync(userDto);
+
+            // Act
+            var user = await _sut.GetById(userId);
+
+            // Assert
+            Assert.NotEqual(userId, user.Id);
         }
 
         [Fact]
