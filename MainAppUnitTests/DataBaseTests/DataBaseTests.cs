@@ -29,12 +29,12 @@ namespace MainAppUnitTests.DataBaseTests
                     connection.Close();
 
                     //delete before test
-                    context.Database.EnsureDeleted();
+                    //context.Database.EnsureDeleted();
 
                     connection.Open();
 
                     //create again
-                    context.Database.EnsureCreated();
+                    //context.Database.EnsureCreated();
 
                     //init data
                     var any = context.Trainers.AnyAsync();
