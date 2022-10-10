@@ -24,7 +24,7 @@ namespace Tracking.Controllers
         {
             var users = await _userService.GetAll();
             if (!users.Any())
-                return BadRequest($"Brak uzytkowników!");
+                return NotFound($"Brak uzytkowników!");
             return Ok(users);
         }
 
@@ -32,18 +32,18 @@ namespace Tracking.Controllers
         public async Task<IActionResult> Insert([FromBody] Trainer user)
         {
             if (user == null)
-                return BadRequest("Brak uzytkownika!");
+                return NotFound("Brak uzytkownika!");
             await _userService.Insert(user);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetTrainer(int id)
         {
             var user = await _userService.Get(id);
             if (user == null)
-                return BadRequest($"Brak uzytkownika!");
+                return NotFound($"Brak uzytkownika!");
             return Ok(user);
         }
 
@@ -61,7 +61,7 @@ namespace Tracking.Controllers
         {
             var user = await _userService.Get(id);
             if (user == null)
-                return BadRequest($"Brak uzytkownika!");
+                return NotFound($"Brak uzytkownika!");
             await _userService.Delete(id);
             return Ok($"User with id {id} deleted");
         }

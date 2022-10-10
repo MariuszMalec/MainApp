@@ -1,17 +1,13 @@
 ﻿using FluentAssertions;
 using MainApp.BLL.Context;
 using MainApp.Web;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,6 +16,7 @@ namespace MainAppIntegrationTests
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
+        private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
 
         public UserControllerTests(WebApplicationFactory<Startup> factory)
         {
@@ -35,7 +32,7 @@ namespace MainAppIntegrationTests
 
                         ;
 
-                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite("Data Source=C:\\Temp\\Databases\\ApplicationUsers.db"));
+                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite($"Data Source={_repoUser}"));
 
                     });
                 })
@@ -44,7 +41,7 @@ namespace MainAppIntegrationTests
         }
 
         [Fact]
-        public async Task GetAll_Users_ReturnOk()
+        public async Task GetAll_Users_ReturnOk_WhenExist()
         {
 
             //act
@@ -55,7 +52,7 @@ namespace MainAppIntegrationTests
         }
 
         [Fact]
-        public async Task GetAll_Users_ReturnNotFound()
+        public async Task GetAll_Users_ReturnNotFound_WhenNotExist()
         {
 
             //act

@@ -18,7 +18,7 @@ namespace MainAppIntegrationTests
         }
 
         [Fact]
-        public async Task GetAll_Trainers_ReturnOk()
+        public async Task GetAll_Trainers_ReturnOk_WhenExist()
         {
 
             //act

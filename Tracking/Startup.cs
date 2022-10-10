@@ -74,7 +74,10 @@ namespace Tracking
             }
             else
             {
+                //TODO nie ralacyjna baza danych np memory msql do testow
                 SeedData.SeedTrainer(context);
+                SeedData.SeedUser(context);
+                SeedData.SeedEvent(context);
             }
 
             if (env.IsDevelopment())

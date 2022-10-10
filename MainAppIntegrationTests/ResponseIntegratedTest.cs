@@ -41,6 +41,7 @@ namespace MainAppIntegrationTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
+        //TOOD nie dziala test ! Jak go odpalic!
         [Fact]
         public async Task Index_TrainersController_ReturnsTrainersWrongResponse_WhenIsNotStatusOK()
         {

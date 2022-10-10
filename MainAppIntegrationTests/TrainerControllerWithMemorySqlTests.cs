@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Tracking;
 using Tracking.Context;
@@ -41,14 +38,49 @@ namespace MainAppIntegrationTests
         }
 
         [Fact]
-        public async Task GetAll_Trainers_ReturnOk()
+        public async Task GetAll_Trainers_ReturnOk_WhenExist()
         {
+            //arrange 
+            //TODO patrz startup dodano tam seed trainera jesli baza nierelacyjna
 
             //act
             var response = await _client.GetAsync("/api/Trainer");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+        [Fact]
+        public async Task GetAll_Trainers_ReturnNotFound_WhenNotExist()
+        {
+            //arrange
+            //TODO usunac trainera tutaj
+            await _client.DeleteAsync($"/api/Trainer/{1}");
+
+            //act
+            var response = await _client.GetAsync("/api/Trainer");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_Trainer_ReturnOk_WhenExist()
+        {
+            //act
+            var response = await _client.DeleteAsync($"/api/Trainer/{1}");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Delete_Trainer_ReturnNotFound_WhenNotExist()
+        {
+            //act
+            var response = await _client.DeleteAsync($"/api/Trainer/{2}");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
     }
 }
