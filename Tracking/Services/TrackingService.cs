@@ -37,5 +37,10 @@ namespace Tracking.Services
             var model = await Models.Get(id);
             await Models.Delete(model);
         }
+
+        public Task<AuthenticateModel> Authenticate(string email)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -5,6 +5,7 @@ using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -31,18 +32,23 @@ namespace MainApp.Web.Services
             _trackingService = trackingService;
         }
 
-        public async Task<List<TrainerView>> GetAll(string userEmail, HttpContext httpContext)
+        public async Task<List<TrainerView>> GetAll(string userEmail, HttpContext httpContext)//as query authorize
         {
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{userEmail}/admin");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var result = await client.SendAsync(request);
 
             var content = await result.Content.ReadAsStringAsync();
+
+            if (content.Contains("401") || content.Contains("401"))
+            {
+                return new List<TrainerView>();
+            }
 
             var trainers = JsonConvert.DeserializeObject<List<TrainerView>>(content);
 

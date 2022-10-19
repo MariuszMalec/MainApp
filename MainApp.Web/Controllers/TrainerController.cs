@@ -26,6 +26,8 @@ namespace MainApp.Web.Controllers
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
+            var users = this.HttpContext.User;
+
             var userEmail = this.HttpContext.User.Identity.Name;
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
 

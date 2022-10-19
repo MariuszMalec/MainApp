@@ -37,5 +37,10 @@ namespace Tracking.Services
             var person = await Persons.Get(id);
             await Persons.Delete(person);
         }
+
+        public Task<AuthenticateModel> Authenticate(string email)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

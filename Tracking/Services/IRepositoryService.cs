@@ -15,5 +15,7 @@ namespace Tracking.Services
         Task Update(T person);
 
         Task Delete(int id);
+
+        Task<AuthenticateModel> Authenticate(string email);
     }
 }
