@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -18,6 +19,7 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]//ApiKey
     public class TrackingController : ControllerBase
     {
         private readonly IRepositoryService<Event> _trackingService;

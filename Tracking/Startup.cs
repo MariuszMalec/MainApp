@@ -11,8 +11,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Tracking.Authentication.ApiKey;
 using Tracking.Context;
 using Tracking.Models;
 using Tracking.Repositories;
@@ -59,7 +61,14 @@ namespace Tracking
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tracking", Version = "v1" });
             });
-        }
+
+            //TODO api authorize
+            services
+            .AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultScheme = ApiKeyAuthenticationOptions.AuthenticationScheme;
+            })
+            .AddApiKey<ApiKeyAuthenticationService>(options => Configuration.Bind("ApiKeyAuth", options));}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MainApplicationContext context)
@@ -101,6 +110,8 @@ namespace Tracking
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

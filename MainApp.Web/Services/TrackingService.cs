@@ -36,6 +36,8 @@ namespace MainApp.Web.Services
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            request.Headers.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");//TODO Apikey do headera autoruzacja do tracking api
+
             var result = await client.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
