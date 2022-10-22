@@ -5,10 +5,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Tracking.Authentication.ApiKey;
 using Tracking.Context;
 using Tracking.Models;
 using Tracking.Services;
@@ -19,7 +21,8 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]//ApiKey
+    //[Authorize]//ApiKey
+    [Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.AuthenticationScheme)]
     public class TrackingController : ControllerBase
     {
         private readonly IRepositoryService<Event> _trackingService;

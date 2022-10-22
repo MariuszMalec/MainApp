@@ -19,6 +19,7 @@ namespace Tracking.Controllers
             _userService = userService;
         }
 
+        //TODO from route email is send as authorize
         [HttpGet("{email}/{password}")]
         public async Task<IActionResult> Get([FromRoute] string email, string password)
         {
