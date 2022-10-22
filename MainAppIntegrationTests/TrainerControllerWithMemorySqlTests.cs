@@ -49,19 +49,6 @@ namespace MainAppIntegrationTests
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
-        [Fact]
-        public async Task GetAll_Trainers_ReturnNotFound_WhenNotExist()
-        {
-            //arrange
-            //TODO usunac trainera tutaj
-            await _client.DeleteAsync($"/api/Trainer/{1}");
-
-            //act
-            var response = await _client.GetAsync("/api/Trainer");
-
-            //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
 
         [Fact]
         public async Task Delete_Trainer_ReturnOk_WhenExist()
@@ -82,5 +69,26 @@ namespace MainAppIntegrationTests
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
+
+        [Fact]
+        public async Task Get_Trainer_ReturnOk_WhenExist()
+        {
+            //act
+            var response = await _client.GetAsync($"/api/Trainer/{1}");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Get_Trainer_ReturnNotFound_WhenNotExist()
+        {
+            //act
+            var response = await _client.GetAsync($"/api/Trainer/{2}");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
     }
 }

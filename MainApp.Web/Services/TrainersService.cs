@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Services
 {
-    public class TrainersService
+    public class TrainersService : ITrainersService
     {
         private readonly ILogger<TrainersService> _logger;
         private readonly TrackingService _trackingService;
@@ -74,7 +74,7 @@ namespace MainApp.Web.Services
             var result = await client.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
-            {             
+            {
                 return null;
             }
 
@@ -96,8 +96,8 @@ namespace MainApp.Web.Services
             var userEmail = httpContext.User.Identity.Name;
 
             var emailTrainers = await GetAll(userEmail, httpContext);
-            if (emailTrainers.Any(e=>e.Email == model.Email))
-            { 
+            if (emailTrainers.Any(e => e.Email == model.Email))
+            {
                 return false;
             }
 

@@ -13,9 +13,9 @@ namespace MainApp.Web.Controllers
     [Authorize(Roles = "Admin,User")]
     public class TrainerController : Controller
     {
-        private TrainersService _trainerService;
+        private ITrainersService _trainerService;
 
-        public TrainerController(TrainersService trainerService)
+        public TrainerController(ITrainersService trainerService)
         {
             _trainerService = trainerService;
 
