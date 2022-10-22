@@ -34,6 +34,15 @@ namespace Tracking.Controllers
             return Ok(users);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var users = await _userService.GetAll();
+            if (!users.Any())
+                return NotFound($"Brak uzytkowników!");
+            return Ok(users);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] Trainer user)
         {
