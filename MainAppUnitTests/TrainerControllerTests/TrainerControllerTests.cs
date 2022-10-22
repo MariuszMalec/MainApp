@@ -56,7 +56,7 @@ namespace MainAppUnitTests.TrainerTests
             var result = await controller.GetTrainer(2) as NotFoundObjectResult;
 
             // Assert
-            Assert.Equal($"Brak uzytkownika!", result.Value);
+            Assert.Equal($"404 Brak uzytkownika!", result.Value);
         }
 
         [Fact]

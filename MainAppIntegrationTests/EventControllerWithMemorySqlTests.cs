@@ -38,18 +38,18 @@ namespace MainAppIntegrationTests
         }
 
         [Fact]
-        public async Task GetAll_Events_ReturnOk_WhenExist()
+        public async Task GetAll_Events_ReturnUnauthorized_WhenExist()
         {
 
             //act
             var response = await _client.GetAsync("/api/Tracking");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
-        public async Task GetAll_Events_ReturnNotFound_WhenNotExist()
+        public async Task GetEvent_Events_ReturnUnauthorized_WhenNotExist()
         {
             //arrange
             await _client.DeleteAsync($"/api/Tracking/{1}");
@@ -58,7 +58,7 @@ namespace MainAppIntegrationTests
             var response = await _client.GetAsync("/api/Tracking");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
     }
 }
