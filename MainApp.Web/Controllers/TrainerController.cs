@@ -43,6 +43,12 @@ namespace MainApp.Web.Controllers
                     break;
             }
 
+            if (!sortedTrainers.Any())
+            {
+                Serilog.Log.Warning("UnAuthorized");
+                return RedirectToAction("UnAuthorized");      
+            }
+
             Serilog.Log.Information("Download datas from API...");
             return View(sortedTrainers);
         }
@@ -185,6 +191,11 @@ namespace MainApp.Web.Controllers
         }
 
         public ActionResult EmailExistYet()
+        {
+            return View();
+        }
+
+        public ActionResult UnAuthorized()
         {
             return View();
         }

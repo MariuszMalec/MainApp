@@ -24,9 +24,8 @@ namespace Tracking.Controllers
         public async Task<IActionResult> Get([FromRoute] string email, string password)
         {
             var user = await _userService.Authenticate(email);
-
             if (user == null)
-                return Content("401 Not authorize!");
+                return Unauthorized("401 brak autoryzacji!");
 
             var users = await _userService.GetAll();
             if (!users.Any())
