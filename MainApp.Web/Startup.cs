@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Serilog;
 using System;
 using System.IO;
@@ -65,6 +66,17 @@ namespace MainApp.Web
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddHttpContextAccessor();
+
+            //Report API Http strzelanie do WebAppiUsers.Api
+            services.AddHttpClient("Tracking", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7001/");
+                client.Timeout = new TimeSpan(0, 0, 30);
+                client.DefaultRequestHeaders.Add(
+                    HeaderNames.Accept, "application/json");
+                client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+            });
+
             services.AddAuthorization();
 
             var profileAssembly = typeof(Startup).Assembly;

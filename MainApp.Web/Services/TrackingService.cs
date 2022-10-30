@@ -20,12 +20,14 @@ namespace MainApp.Web.Services
         private readonly IPersonService _userService;
         IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
+        private readonly HttpClient _httpClient;
 
         public TrackingService(ILogger<TrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             _userService = userService;
+            _httpClient = httpClientFactory.CreateClient("Tracking");
         }
 
         public async Task<List<Event>> GetAll()
@@ -36,9 +38,10 @@ namespace MainApp.Web.Services
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            request.Headers.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");//TODO Apikey do headera autoruzacja do tracking api
+            //przenioslem authoryzacje przez apikey do startupu dzieki dodaniu _httpClient w kosntruktorze
+            //request.Headers.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");//TODO Apikey do headera autoryzacji do tracking api
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -61,7 +64,12 @@ namespace MainApp.Web.Services
 
             requestUser.Content = new StringContent(JsonConvert.SerializeObject(myEvent), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(requestUser);
+            var result = await _httpClient.SendAsync(requestUser);
+
+            if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                _logger.LogWarning($"Insert my event is not authorized! This event was not saved in databae");
+            }
         }
 
         public async Task<bool> DeleteAllEvents()
@@ -73,7 +81,7 @@ namespace MainApp.Web.Services
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -94,7 +102,7 @@ namespace MainApp.Web.Services
 
             request.Headers.Add("Accept", "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -119,7 +127,7 @@ namespace MainApp.Web.Services
 
             request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
             {
