@@ -21,8 +21,8 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]//ApiKey
-    [Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.AuthenticationScheme)]
+    [Authorize]
+    //[Authorize(AuthenticationSchemes = ApiKeyAuthenticationOptions.AuthenticationScheme)]
     public class TrackingController : ControllerBase
     {
         private readonly IRepositoryService<Event> _trackingService;

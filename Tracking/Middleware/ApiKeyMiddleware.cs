@@ -9,7 +9,7 @@ namespace Tracking.Middleware
     {
         private readonly RequestDelegate _next;
         private
-        const string APIKEY = "XApiKey";
+        const string APIKEY = "ApiKey";
         public ApiKeyMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -24,7 +24,11 @@ namespace Tracking.Middleware
                 return;
             }
             var appSettings = context.RequestServices.GetRequiredService<IConfiguration>();
-            var apiKey = appSettings.GetValue<string>(APIKEY);
+
+            //var apiKey = appSettings.GetValue<string>(APIKEY);
+
+            var apiKey = appSettings.GetSection("ApiKeyAuth").GetValue<string>(APIKEY);
+
             if (!apiKey.Equals(extractedApiKey))
             {
                 context.Response.StatusCode = 401;
