@@ -27,7 +27,7 @@ namespace MainApp.Web.Services
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             _userService = userService;
-            _httpClient = httpClientFactory.CreateClient("Tracking");
+            _httpClient = httpClientFactory.CreateClient("Tracking");//TODO patrz startup
         }
 
         public async Task<List<Event>> GetAll()

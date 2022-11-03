@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tracking.Authentication.ApiKey;
 using Tracking.Context;
+using Tracking.Middleware;
 using Tracking.Models;
 using Tracking.Repositories;
 using Tracking.Services;
@@ -136,6 +137,8 @@ namespace Tracking
             //    app.UseSwagger();
             //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tracking v1"));
             //}
+
+            //app.UseMiddleware<ApiKeyMiddleware>();//TODO jak to odpalic aby apikeya sprawdzalo handlerem!
 
             app.UseHttpsRedirection();
 
