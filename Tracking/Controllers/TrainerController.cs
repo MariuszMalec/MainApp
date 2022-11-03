@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Tracking.Authentication.Attributes;
 using Tracking.Models;
 using Tracking.Services;
 
@@ -11,7 +12,7 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [ApiKey]
     public class TrainerController : ControllerBase
     {
         private readonly IRepositoryService<Trainer> _userService;

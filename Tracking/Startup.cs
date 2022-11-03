@@ -121,7 +121,7 @@ namespace Tracking
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tracking v1"));
             }
 
-            app.UseMiddleware<ApiKeyMiddleware>();
+            //app.UseMiddleware<ApiKeyMiddleware>();
 
             app.UseHttpsRedirection();
 

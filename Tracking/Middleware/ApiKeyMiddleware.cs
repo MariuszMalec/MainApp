@@ -8,8 +8,7 @@ namespace Tracking.Middleware
     public class ApiKeyMiddleware
     {
         private readonly RequestDelegate _next;
-        private
-        const string APIKEY = "ApiKey";
+        private const string APIKEY = "ApiKey";
         public ApiKeyMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -20,7 +19,7 @@ namespace Tracking.Middleware
                     var extractedApiKey))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Api Key was not provided ");
+                await context.Response.WriteAsync("Api Key was not provided (Middleware)");
                 return;
             }
             var appSettings = context.RequestServices.GetRequiredService<IConfiguration>();
@@ -32,7 +31,7 @@ namespace Tracking.Middleware
             if (!apiKey.Equals(extractedApiKey))
             {
                 context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Unauthorized client");
+                await context.Response.WriteAsync("Unauthorized client (Middleware)");
                 return;
             }
             await _next(context);
