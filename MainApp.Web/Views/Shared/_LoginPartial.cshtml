@@ -13,16 +13,26 @@
         {
             <hr />
             <li>
-                <a class="nav-link text-dark border border-success rounded"  style="background-color: silver" asp-area="" asp-controller="account" asp-action="Register">
+
+                <div class="form-group">
+                    <button class="button-92 bi bi-person-circle me-2" type="submit" onclick="@("window.location.href='" + @Url.Action("Register", "Account") + "'");">Register</button>
+                </div>
+
+@*                <a class="nav-link text-dark border border-success rounded"  style="background-color: silver" asp-area="" asp-controller="account" asp-action="Register">
                     <i class="bi bi-person-circle me-2"></i>
                     Register
-                </a>
+                </a>*@
             </li>           
             <li>
-                <a class="nav-link text-dark border border-success rounded" style="background-color: silver" asp-area="" asp-controller="account" asp-action="Login">
+
+                <div class="form-group">
+                    <button class="button-92 bi bi-box-arrow-in-left" type="submit" onclick="@("window.location.href='" + @Url.Action("Login", "Account") + "'");">Login</button>
+                </div>
+
+@*                <a class="nav-link text-dark border border-success rounded" style="background-color: silver" asp-area="" asp-controller="account" asp-action="Login">
                     <i class="bi bi-box-arrow-in-left"></i>
-                    Login
-                </a>
+                    Login                  
+                </a>*@
             </li>
 
         }
