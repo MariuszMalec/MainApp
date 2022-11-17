@@ -1,0 +1,47 @@
+﻿@page "/users"
+@using MainApp.BLL
+@using MainApp.BLL.Context;
+@using MainApp.BLL.Services;
+@inject UserService UserService
+@inject ApplicationDbContext _context;
+
+<h3>Users</h3>
+
+<p>This component demonstrates data from a MainApp.BLL and sqlite database</p>
+
+@{
+    var usersFromDataBase = _context.Users.ToArray();
+    var usersFromService = UserService.GetAll();
+}
+
+@if (!usersFromDataBase.Any())
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in usersFromDataBase)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+
+}
