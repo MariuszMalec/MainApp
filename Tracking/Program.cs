@@ -11,11 +11,12 @@ using Tracking.Context;
 using Tracking.Models;
 using Tracking.Repositories;
 using Tracking.Services;
+using System.Net;
+using System.Net.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
@@ -38,6 +39,13 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services
+    .AddAuthentication(sharedOptions =>
+    {
+        sharedOptions.DefaultScheme = ApiKeyAuthenticationOptions.AuthenticationScheme;
+    })
+    .AddApiKey<ApiKeyAuthenticationService>(options => configuration.Bind("ApiKeyAuth", options));
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -89,6 +97,14 @@ using (var scope = app.Services.CreateScope())
                 SeedData.SeedEvent(context);
             }
 }
+
+//Poblem fix ssl certificate!
+ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+{
+    // local dev, just approve all certs
+    if (app.Environment.IsDevelopment()) return true;
+    return errors == SslPolicyErrors.None ;
+};
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
