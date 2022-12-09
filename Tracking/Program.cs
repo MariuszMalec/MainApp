@@ -23,7 +23,7 @@ builder.Services.AddHttpContextAccessor();
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 var connectionString = configuration.GetConnectionString("Default");
-builder.Services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 

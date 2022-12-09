@@ -44,7 +44,7 @@ namespace Tracking.Context
 
             var trainer = new Trainer()
             {
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Email = "Admin@example.com",
                 FirstName = "Admin",
                 LastName = "Admin",
