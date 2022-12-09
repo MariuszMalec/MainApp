@@ -37,7 +37,7 @@ namespace Tracking
 
             //msql
             var connectionString = Configuration.GetConnectionString("Default");
-            services.AddDbContext<MainApplicationContext>(o => o.UseSqlServer(connectionString));
+            services.AddDbContext<MainApplicationContext>(o => o.UseSqlite(connectionString));
 
             services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 

@@ -15,7 +15,7 @@ namespace Tracking.Context
 
             var trainer = new Trainer()
             {
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Email = "Trainer@example.com",
                 FirstName = "Trainer",
                 LastName = "Trainer",
@@ -34,7 +34,7 @@ namespace Tracking.Context
 
             var user = new User()
             {
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Email = "Admin@example.com",
                 FirstName = "Admin",
                 LastName = "Admin",
@@ -51,7 +51,7 @@ namespace Tracking.Context
                 return;
             }
 
-            context.AddRange(new Event() { CreatedDate = DateTime.Now,
+            context.AddRange(new Event() { CreatedDate = DateTime.UtcNow,
                                            UserId = 1,
                                            Email= "Admin@example.com",
                                            Action = "register"

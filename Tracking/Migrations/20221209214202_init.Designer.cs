@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tracking.Context;
 
@@ -11,9 +12,10 @@ using Tracking.Context;
 namespace Tracking.Migrations
 {
     [DbContext(typeof(MainApplicationContext))]
-    partial class MainApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20221209214202_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
