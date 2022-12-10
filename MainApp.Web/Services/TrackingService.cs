@@ -149,7 +149,7 @@ namespace MainApp.Web.Services
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
-            return new Event { CreatedDate = DateTime.Now, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
+            return new Event { CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
         }
 
         public async Task<List<Event>> SelectedEvents(string sortOrder, string searchString, List<Event> events)

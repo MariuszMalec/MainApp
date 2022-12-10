@@ -34,11 +34,17 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        //To trzeba dodac!! aby zadzialalo Configuration!!
-        IConfiguration Configuration;
-        Configuration = builder.Configuration;
-        //DbContext configuration
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+        //To trzeba dodac!! aby zadzialalo Configuration!! Sqlite
+        // IConfiguration Configuration;
+        // Configuration = builder.Configuration;
+        // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+
+        //to musi byc dla core6 postgres
+        ConfigurationManager configuration = builder.Configuration;
+        IWebHostEnvironment environment = builder.Environment;
+        var connectionString = configuration.GetConnectionString("Default");
+        builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+
         //Services configuration
 
         builder.Services.AddControllersWithViews();

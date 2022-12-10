@@ -71,7 +71,7 @@ namespace MainApp.Web.Controllers
                         LastName = model.LastName,
                         UserName = model.Email,
                         Email = model.Email,
-                        Created = DateTime.Now,
+                        Created = DateTime.UtcNow,
                         UserRole = "User"
                     };
                     //LogContext.PushProperty("UserName", model.Email);// co to jest??
@@ -122,7 +122,7 @@ namespace MainApp.Web.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
+                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.UtcNow);
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
                     return RedirectToAction("Index", "Home");
