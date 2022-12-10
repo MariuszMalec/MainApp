@@ -25,68 +25,74 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Http;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-//To trzeba dodac!! aby zadzialalo Configuration!!
-IConfiguration Configuration;
-Configuration = builder.Configuration;
-//DbContext configuration
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
-//Services configuration
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-builder.Services.AddTransient<TrackingService>();
-builder.Services.AddTransient<IPersonService, UserService>();
-builder.Services.AddTransient<ITrainersService, TrainersService>();
-builder.Services.AddTransient<EmailService>();
-builder.Services.AddHttpClient();
-
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+internal class Program
 {
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 3;
-    options.Password.RequireDigit = false;
-    options.User.RequireUniqueEmail = false;
-    options.Lockout.MaxFailedAccessAttempts = 3;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-})
-.AddRoles<ApplicationRoles>()
-.AddEntityFrameworkStores<ApplicationDbContext>();
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var handler = new HttpClientHandler() 
-{ 
-    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-};
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient("Tracking", client =>
+        //To trzeba dodac!! aby zadzialalo Configuration!!
+        IConfiguration Configuration;
+        Configuration = builder.Configuration;
+        //DbContext configuration
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+        //Services configuration
+
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddRazorPages();
+        builder.Services.AddTransient<TrackingService>();
+        builder.Services.AddTransient<IPersonService, UserService>();
+        builder.Services.AddTransient<ITrainersService, TrainersService>();
+        builder.Services.AddTransient<EmailService>();
+        builder.Services.AddHttpClient();
+
+        builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+        {
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 3;
+            options.Password.RequireDigit = false;
+            options.User.RequireUniqueEmail = false;
+            options.Lockout.MaxFailedAccessAttempts = 3;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+        })
+        .AddRoles<ApplicationRoles>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        builder.Services.AddHttpContextAccessor();
+
+        //how to solve problem with ssl! only linux!?
+        builder.Services.AddHttpClient("Tracking").ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
             {
-                client.BaseAddress = new Uri("https://localhost:7001/");
-                client.Timeout = new TimeSpan(0, 0, 30);
-                client.DefaultRequestHeaders.Add(
-                    HeaderNames.Accept, "application/json");
-                client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+               ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+
             });
-            
-builder.Services.AddAuthorization();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddHttpClient("Tracking", client =>
+                    {
+                        client.BaseAddress = new Uri("https://localhost:7001/");
+                        client.Timeout = new TimeSpan(0, 0, 30);
+                        client.DefaultRequestHeaders.Add(
+                            HeaderNames.Accept, "application/json");
+                        client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+                    });
 
-var app = builder.Build();
+        builder.Services.AddAuthorization();
 
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRoles>>();
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRoles>>();
 
             if (context.Database.IsRelational())
             {
@@ -100,37 +106,39 @@ using (var scope = app.Services.CreateScope())
             {
                 //TODO nie ralacyjna baza danych np memory msql do testow
             }
+        }
+
+        //Poblem fix ssl certificate!
+        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+        {
+            // local dev, just approve all certs
+            if (app.Environment.IsDevelopment()) return true;
+            return errors == SslPolicyErrors.None;
+        };
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseMiddleware<MyExceptionMiddleware>();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization(); ;
+
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+
+        app.Run();
+    }
 }
-
-//Poblem fix ssl certificate!
-ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
-{
-    // local dev, just approve all certs
-    if (app.Environment.IsDevelopment()) return true;
-    return errors == SslPolicyErrors.None ;
-};
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseMiddleware<MyExceptionMiddleware>();
-
-app.UseAuthentication();
-
-app.UseAuthorization();;
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();

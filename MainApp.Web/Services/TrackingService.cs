@@ -56,7 +56,13 @@ namespace MainApp.Web.Services
         }
         public async Task Insert(Event myEvent)
         {
-            HttpClient client = httpClientFactory.CreateClient();
+
+            //Todo problem z ssl to rozwiazuje jak dodac ogolnie a nie do metody! patrz program.cs
+            // HttpClientHandler clientHandler = new HttpClientHandler();
+            // clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // HttpClient client = new HttpClient(clientHandler);
+
+            //HttpClient client = httpClientFactory.CreateClient();
 
             var requestUser = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
 
