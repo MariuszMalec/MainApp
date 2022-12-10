@@ -86,7 +86,8 @@ using (var scope = app.Services.CreateScope())
                 if (context.Database.IsRelational())
                 {
                     context?.Database.Migrate();
-                    TrainerSeed.SeedTrainer(context);
+                    //TrainerSeed.SeedTrainer(context);
+                    TrainerSeed.SeedTrainers(context);
                 }
             }
             else
