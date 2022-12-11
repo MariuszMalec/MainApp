@@ -11,7 +11,7 @@ namespace MainAppUnitTests.DataBaseTests
 {
     public class DataBaseTests
     {   
-        private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
+        private string _repoUser = Path.Combine(@"./", "TestMainAppUsersDb.db");
         [Fact]
         public void CheckDataBase_ReturnError_WhenNotTrainersExist()
         {
