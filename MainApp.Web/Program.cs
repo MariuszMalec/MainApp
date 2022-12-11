@@ -27,7 +27,7 @@ using System.Net.Http;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +92,9 @@ internal class Program
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        builder.Services.AddScoped<UserManager<ApplicationUser>>();
+        //builder.Services.AddScoped<RoleManager<ApplicationRoles>>();
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
@@ -105,7 +108,7 @@ internal class Program
                 if (context.Database.IsRelational())
                 {
                     context?.Database.Migrate();
-                    SeedData.SeedUser(context, userManager, roleManager);
+                    await SeedData.SeedUser(context, userManager, roleManager);
                 }
             }
             else
@@ -113,14 +116,6 @@ internal class Program
                 //TODO nie ralacyjna baza danych np memory msql do testow
             }
         }
-
-        //Poblem fix ssl certificate!
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
-        {
-            // local dev, just approve all certs
-            if (app.Environment.IsDevelopment()) return true;
-            return errors == SslPolicyErrors.None;
-        };
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
