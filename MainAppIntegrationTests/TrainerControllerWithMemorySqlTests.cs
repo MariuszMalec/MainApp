@@ -11,11 +11,11 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
+    public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
 
-        public TrainerControllerWithMemorySqlTests(WebApplicationFactory<Startup> factory)
+        public TrainerControllerWithMemorySqlTests(WebApplicationFactory<Program> factory)
         {
             //https://youtu.be/6keSabBQRdE?t=2953
 

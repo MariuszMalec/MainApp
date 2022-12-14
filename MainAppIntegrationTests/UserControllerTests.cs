@@ -13,12 +13,12 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class UserControllerTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
+    public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
         private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
 
-        public UserControllerTests(WebApplicationFactory<Startup> factory)
+        public UserControllerTests(WebApplicationFactory<Program> factory)
         {
             _client = factory
                 .WithWebHostBuilder(builder =>

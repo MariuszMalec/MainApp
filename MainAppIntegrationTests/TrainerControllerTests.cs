@@ -7,11 +7,11 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class TrainerControllerTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
+    public class TrainerControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
 
-        public TrainerControllerTests(WebApplicationFactory<Startup> factory)
+        public TrainerControllerTests(WebApplicationFactory<Program> factory)
         {
             //https://youtu.be/6keSabBQRdE?t=2665
             _client = factory.CreateClient();//to dziala ale musi byc polaczenie z baza
