@@ -13,6 +13,7 @@ using Tracking.Repositories;
 using Tracking.Services;
 using System.Net;
 using System.Net.Security;
+using Tracking.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,27 +100,16 @@ using (var scope = app.Services.CreateScope())
             }
 }
 
-//Poblem fix ssl certificate!
-ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
-{
-    // local dev, just approve all certs
-    if (app.Environment.IsDevelopment()) return true;
-    return errors == SslPolicyErrors.None ;
-};
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{    
+{
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(config =>
+    {
+        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Info API");
+    });
 }
-
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
 
 //app.UseMiddleware<ApiKeyMiddleware>();
 
