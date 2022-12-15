@@ -42,7 +42,7 @@ namespace MainAppIntegrationTests
             var responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         //TOOD nie dziala test ! Jak go odpalic!
@@ -103,7 +103,7 @@ namespace MainAppIntegrationTests
 
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
 

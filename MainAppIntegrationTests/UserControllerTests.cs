@@ -13,12 +13,12 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class UserControllerTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
+    public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
-        private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
+        private string _repoUser = Path.Combine(@".\", Environment.UserName, "TestMainAppUsersDb.db");
 
-        public UserControllerTests(WebApplicationFactory<Startup> factory)
+        public UserControllerTests(WebApplicationFactory<Program> factory)
         {
             _client = factory
                 .WithWebHostBuilder(builder =>
@@ -48,7 +48,7 @@ namespace MainAppIntegrationTests
             var response = await _client.GetAsync("/User");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]

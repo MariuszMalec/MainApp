@@ -11,11 +11,11 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Startup>>//wspoldzielenie factory testy nieco szybsze
+    public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
 
-        public TrainerControllerWithMemorySqlTests(WebApplicationFactory<Startup> factory)
+        public TrainerControllerWithMemorySqlTests(WebApplicationFactory<Program> factory)
         {
             //https://youtu.be/6keSabBQRdE?t=2953
 
@@ -47,7 +47,7 @@ namespace MainAppIntegrationTests
             var response = await _client.GetAsync("/api/Trainer");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace MainAppIntegrationTests
             var response = await _client.DeleteAsync($"/api/Trainer/{1}");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace MainAppIntegrationTests
             var response = await _client.DeleteAsync($"/api/Trainer/{2}");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace MainAppIntegrationTests
             var response = await _client.GetAsync($"/api/Trainer/{1}");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace MainAppIntegrationTests
             var response = await _client.GetAsync($"/api/Trainer/{2}");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
     }
