@@ -4,19 +4,21 @@ using MainApp.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Tracking.Context;
 using Xunit;
 
 namespace MainAppIntegrationTests
 {
+    //Jak uderzac do mvc skoro tracking tez ma nazwe Program?? mvc => ApplicationDbContext/ tracking => MainApplicationContext
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
-        private string _repoUser = Path.Combine(@"C:\Users", Environment.UserName, @"source\repos\MainApp\MainApp.Web\DataBaseUser", "TestMainAppUsersDb.db");
 
         public UserControllerTests(WebApplicationFactory<Program> factory)
         {
@@ -26,40 +28,49 @@ namespace MainAppIntegrationTests
                     builder.ConfigureServices(services =>
                     {
                         var dbContextOptions = services
-                            .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                            .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<MainApplicationContext>));
 
                         services.Remove(dbContextOptions);
 
                         ;
-
-                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite($"Data Source={_repoUser}"));
+                        services
+                          .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("UsersDb"));
 
                     });
                 })
                 .CreateClient();
-            //_client = factory.CreateClient();//TODO blad sql 14!!
+
+            _client.BaseAddress = new Uri("https://localhost:7001/");
+            _client.Timeout = new TimeSpan(0, 0, 30);
+            _client.DefaultRequestHeaders.Add(
+                HeaderNames.Accept, "application/json");
+            _client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
         }
 
-        [Fact]
-        public async Task GetAll_Users_ReturnOk_WhenExist()
+        [Theory]
+        [InlineData("/api/User")]
+        [InlineData("/api/User/1")]
+        public async Task GetAll_Users_ReturnOk_WhenExist(string endpoint)
         {
 
             //act
-            var response = await _client.GetAsync("/User");
+            var response = await _client.GetAsync($"{endpoint}");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        [Fact]
-        public async Task GetAll_Users_ReturnNotFound_WhenNotExist()
+        [Theory]
+        [InlineData("/api/User/100")]
+        [InlineData("/api/User/120")]
+        public async Task GetAll_Users_ReturnBadRequest_WhenNotExist(string endpoint)
         {
 
             //act
-            var response = await _client.GetAsync("/Userek");
+            var response = await _client.GetAsync($"{endpoint}");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
     }
 }

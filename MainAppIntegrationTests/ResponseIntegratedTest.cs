@@ -32,7 +32,7 @@ namespace MainAppIntegrationTests
             => _client = factory.CreateClient();
 
         [Fact]
-        public async Task Index_ReturnsTrainersWrongResponse_WhenIsNotStatusOK()
+        public async Task Index_ReturnsTrainersWrongResponse_WhenIsNotStatusUnauthorized()
         {
             // Arrange
             var response = await _client.GetAsync($"{AppiUrl}/Trainer");//TODO zmien na enpoint ktorego nie ma w api aby wywalilo test
@@ -42,43 +42,11 @@ namespace MainAppIntegrationTests
             var responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        //TOOD nie dziala test ! Jak go odpalic!
-        //[Fact]
-        //public async Task Index_TrainersController_ReturnsTrainersWrongResponse_WhenIsNotStatusOK()
-        //{
-        //    // Arrange
-        //    var trainer = new TrainerView
-        //    {
-        //        Id = 1,
-        //        CreatedDate = DateTime.Now,
-        //        FirstName = "Piotr",
-        //        LastName = "Grot",
-        //        Email = "pg@example.com",
-        //        PhoneNumber = "505859599"
-
-        //    };
-
-        //    var mockRepo = new Mock<ITrainersService>();
-        //    mockRepo.Setup(repo => repo.GetAll("pg@example.com", this._httpContext))
-        //        .ReturnsAsync(new List<TrainerView>() { trainer });
-        //    //;
-
-
-        //    //var trainerService = new TrainersService((IHttpClientFactory)_client, _logger, _trackingService);
-        //    var controller = new TrainerController(mockRepo.Object);
-
-        //    // Act
-        //    var result = await controller.Index("name_desc");
-
-        //    // Assert
-        //    Assert.NotNull(result);
-        //}
-
         [Fact]
-        public async Task Create_Trainer_ReturnWrongResponse_WhenIsNotStatusOK()
+        public async Task Create_Trainer_ReturnWrongResponse_WhenIsNotStatusUnauthorized()
         {
             // Arrange
             var trainer = new Trainer
@@ -103,7 +71,7 @@ namespace MainAppIntegrationTests
 
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
 
