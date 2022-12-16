@@ -1,12 +1,17 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
+using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Tracking;
 using Tracking.Context;
+using Tracking.Services;
 using Xunit;
 
 namespace MainAppIntegrationTests
@@ -19,6 +24,9 @@ namespace MainAppIntegrationTests
         {
             //https://youtu.be/6keSabBQRdE?t=2953
 
+            //_httpClient = new() { BaseAddress = new Uri("https://localhost:7133") };
+
+
             _client = factory
                 .WithWebHostBuilder(builder =>
                 {
@@ -30,11 +38,30 @@ namespace MainAppIntegrationTests
                         services.Remove(dbContextOptions);
 
                         services
-                         .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("TrainerDb"));
+                        .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("TrainerDb"));
+
+                        services.AddTransient<TrackingService>();
+
+                        services.AddHttpClient();
+                        services.AddHttpClient("Tracking", client =>
+                        {
+                            client.BaseAddress = new Uri("https://localhost:7001/");
+                            client.Timeout = new TimeSpan(0, 0, 30);
+                            client.DefaultRequestHeaders.Add(
+                                HeaderNames.Accept, "application/json");
+                            client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+                        });
+
+                        MvcServiceCollectionExtensions.AddMvc(services, options => options.Filters.Add(new AllowAnonymousFilter()));
+
+                        //services.AddAuthorization();
+
+
 
                     });
                 })
                 .CreateClient();
+
         }
 
         [Fact]
