@@ -13,12 +13,12 @@ using Xunit;
 
 namespace MainAppIntegrationTests
 {
-    public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
+    public class UserControllerTests : IClassFixture<WebApplicationFactory<ProgramMVC>>//wspoldzielenie factory testy nieco szybsze
     {
         private HttpClient _client;
-        private string _repoUser = Path.Combine(@".\", Environment.UserName, "TestMainAppUsersDb.db");
+        private string _repoUser = Path.Combine(@"./", "TestMainAppUsersDb.db");
 
-        public UserControllerTests(WebApplicationFactory<Program> factory)
+        public UserControllerTests(WebApplicationFactory<ProgramMVC> factory)
         {
             _client = factory
                 .WithWebHostBuilder(builder =>
@@ -32,7 +32,8 @@ namespace MainAppIntegrationTests
 
                         ;
 
-                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite($"Data Source={_repoUser}"));
+                        services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite($"Data Source={_repoUser}"));                                               
+                        //services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("UsersDb"));
 
                     });
                 })
@@ -45,7 +46,20 @@ namespace MainAppIntegrationTests
         {
 
             //act
-            var response = await _client.GetAsync("/User");
+            var response = await _client.GetAsync($"/User");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        [Theory (Skip = "gubi sie tutaj")]
+        [InlineData("/User")]
+        [InlineData("/User/1")]
+        public async Task GetAll_Users_WithAuhorize_ReturnOk_WhenExist(string endpoint)
+        {
+
+            //act
+            var response = await _client.GetAsync($"{endpoint}");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
