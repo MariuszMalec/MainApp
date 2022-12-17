@@ -25,9 +25,9 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Http;
 
-internal class Program
+public class ProgramMVC
 {
-    private static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 

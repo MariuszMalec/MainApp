@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace MainApp.Web.Controllers
 {
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private IPersonService _userService;
