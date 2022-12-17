@@ -20,8 +20,12 @@ namespace MainApp.Web.Services
 
         public async Task<Email> CreateEmail(Email model)
         {
+            //HttpClient client = httpClientFactory.CreateClient();
 
-            HttpClient client = httpClientFactory.CreateClient();
+            //TODO to trzeba dodac aby poszlo bez bledu SSL!!
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient client = new HttpClient(clientHandler);
 
             var request = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Email");
 

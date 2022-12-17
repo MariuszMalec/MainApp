@@ -24,10 +24,16 @@ namespace SendEmail.API.Services
         public async Task<bool> SendEmail(EmailDto request)
         {
             //get from other api events
-            HttpClient client = _httpClientFactory.CreateClient();//dodane aby wyciagnac dane z tracking api
+            //TODO to trzeba dodac aby poszlo bez bledu SSL!!
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient client = new HttpClient(clientHandler);
+
+            //HttpClient client = _httpClientFactory.CreateClient();//dodane aby wyciagnac dane z tracking api
             var requestEvents = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
             requestEvents.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var result = await client.SendAsync(requestEvents);
+            requestEvents.Headers.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+            var result = await client.SendAsync(requestEvents);//TODO ssl blad tutaj!!
             if (!result.IsSuccessStatusCode)
             {
                 new List<Event>();
