@@ -114,6 +114,7 @@ public class ProgramMVC
             else
             {
                 //TODO nie ralacyjna baza danych np memory msql do testow
+                await SeedData.SeedUser(context, userManager, roleManager);
             }
         }
 
