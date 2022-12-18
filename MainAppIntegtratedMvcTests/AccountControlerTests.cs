@@ -13,49 +13,22 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Tracking.Context;
 
 namespace MainAppIntegtratedMvcTests
 {
-    public class AccountControllerTests : IClassFixture<WebApplicationFactory<ProgramMVC>>
+    public class AccountControllerTests : IClassFixture<TestingWebAppFactory<ProgramMVC>>
     {
         private HttpClient _client;
 
         WebApplicationFactory<ProgramMVC> factory = new WebApplicationFactory<ProgramMVC>();
 
-        public AccountControllerTests(WebApplicationFactory<ProgramMVC> factory)
+        public AccountControllerTests(TestingWebAppFactory<ProgramMVC> factory)
         {
-            _client = factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureServices(services =>
-                    {
-                        var dbContextOptions = services
-                            .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
-
-                        services.Remove(dbContextOptions);
-
-                        services
-                         .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("UserDb"));//TODO tworzy jednak w postgresie, dlaczego?
-
-                    });
-                })
-                .CreateClient();
-             _client.BaseAddress = new Uri("https://localhost:5001/");
-             _client.Timeout = new TimeSpan(0, 0, 30);
-             _client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-        }
-
-        [Theory]
-        [InlineData("/User")]
-        public async Task Get_Users_EndPointsReturnsSuccessForAdmin(string url)
-        {
-            var provider = TestClaimsProvider.WithAdminClaims();
-            _client =  factory.CreateClientWithTestAuth(provider); 
-
-            var response = await _client.GetAsync(url);
-
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            _client = factory.CreateClient();
+            _client.BaseAddress = new Uri("https://localhost:5001/");
+            _client.Timeout = new TimeSpan(0, 0, 30);
+            _client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
         }
 
         [Fact]
@@ -70,7 +43,7 @@ namespace MainAppIntegtratedMvcTests
                 PhoneNumber = "555-555-555",
                 Password="123456",
                 ConfirmPassword = "123456",
-                Email = "tt7@example.com"
+                Email = "tt2@example.com"
             };
 
             var request = new HttpRequestMessage(HttpMethod.Post, $"/Account/Register");
