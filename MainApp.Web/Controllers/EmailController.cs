@@ -39,35 +39,28 @@ namespace MainApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Email model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                return View(model);
+            }
 
-                var isSend = await _emailService.CreateEmail(model);
+            var isSend = await _emailService.CreateEmail(model);
 
+            if (isSend == null)
+            {
+                Serilog.Log.Warning($"Email was not send!");
+                if (model.Body == null)
+                    return BadRequest("Email was not send! Body is empty");
+                if (model.Subject == null)
+                    return BadRequest("Email was not send! Subject is empty");
+                if (model.To == null)
+                    return BadRequest("Email can't be empty!");
                 if (isSend == null)
-                {
-                    Serilog.Log.Warning($"Email was not send!");
-                    if (model.Body == null)
-                        return BadRequest("Email was not send! Body is empty");
-                    if (model.Subject == null)
-                        return BadRequest("Email was not send! Subject is empty");
-                    if (model.To == null)
-                        return BadRequest("Email can't be empty!");
-                    if (isSend == null)
-                        return BadRequest("Email can't be send! Check internet connection");
-                }
+                    return BadRequest("Email can't be send! Check internet connection");
+            }
 
-                Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
-                return RedirectToAction(nameof(EmailWasSendCorrect));
-            }
-            catch
-            {
-                return View();
-            }
+            Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
+            return RedirectToAction(nameof(EmailWasSendCorrect));
         }
 
         public ActionResult EmailWasSendCorrect()
