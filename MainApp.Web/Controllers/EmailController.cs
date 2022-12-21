@@ -39,8 +39,6 @@ namespace MainApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Email model)
         {
-            try
-            {
                 if (!ModelState.IsValid)
                 {
                     return View(model);
@@ -63,11 +61,6 @@ namespace MainApp.Web.Controllers
 
                 Serilog.Log.Information("Send mail at date {date}", DateTime.Now);
                 return RedirectToAction(nameof(EmailWasSendCorrect));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         public ActionResult EmailWasSendCorrect()
