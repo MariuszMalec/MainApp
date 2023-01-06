@@ -113,11 +113,22 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginView model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            if (model.Email == null)
+            {
+                ModelState.AddModelError("", "Invalid ID or Password");
+
+                Serilog.Log.Information("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
+                return View(model);
+            }
+
             if (ModelState.IsValid)
             {
+
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
