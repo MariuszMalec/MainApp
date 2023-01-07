@@ -61,7 +61,7 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterView model)
+        public async Task<IActionResult> Register(RegisterView model)
         {
             if (ModelState.IsValid)
             {
