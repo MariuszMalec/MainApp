@@ -98,12 +98,24 @@ public class ProgramMVC
 
         builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsFactory>();
 
-        builder.Services.AddRazorPages();
+        //builder.Services.AddRazorPages();
+        //builder.Services.ConfigureApplicationCookie(options =>
+        //{
+        //    options.LoginPath = $"/account/login";
+        //    options.LogoutPath = $"/account/logout";
+        //    options.AccessDeniedPath = $"/account/accessDenied";
+        //});
+
+
         builder.Services.ConfigureApplicationCookie(options =>
         {
-            options.LoginPath = $"/account/login";
-            options.LogoutPath = $"/account/logout";
-            options.AccessDeniedPath = $"/account/accessDenied";
+            // Cookie settings
+            options.Cookie.HttpOnly = true;
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+            options.LoginPath = "/Identity/Account/Login";
+            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            options.SlidingExpiration = true;
         });
 
         var app = builder.Build();
