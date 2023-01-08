@@ -129,13 +129,40 @@ namespace MainApp.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
                     Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.UtcNow);
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
+
+                    //var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
+                    //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                    //identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                    //await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
+                    //    new ClaimsPrincipal(identity));
+
+
+                    //TODO add claims
+                    //var claims = new List<Claim>
+                    //{
+                    //    new Claim("amr", "pwd"),
+                    //    new Claim("EmployeeNumber","1")
+                    //};
+
+                    ////TODO Add roles
+                    //var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    //if (roles.Any())
+                    //{
+                    //    var roleClaim = string.Join(",", roles);
+                    //    claims.Add(new Claim("Roles", roleClaim));
+                    //}
+
+                    //await _signInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
+
+                    await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));//TODO dodaje do ApsNetUserClaims
+
                     return RedirectToAction("Index", "Home");
 
                 }

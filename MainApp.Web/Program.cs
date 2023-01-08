@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Net.Security;
 using System.Net.Http;
+using MainApp.Web.ClaimsFactory;
 
 public class ProgramMVC
 {
@@ -95,6 +96,16 @@ public class ProgramMVC
         builder.Services.AddScoped<UserManager<ApplicationUser>>();
         //builder.Services.AddScoped<RoleManager<ApplicationRoles>>();
 
+        builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsFactory>();
+
+        builder.Services.AddRazorPages();
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = $"/account/login";
+            options.LogoutPath = $"/account/logout";
+            options.AccessDeniedPath = $"/account/accessDenied";
+        });
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
@@ -135,11 +146,15 @@ public class ProgramMVC
 
         app.UseAuthentication();
 
-        app.UseAuthorization(); ;
+        app.UseAuthorization();
+
+        app.UseCookiePolicy();
 
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+
+        app.MapRazorPages();//TODO TO MUSI BYC JAK CHCEM UZYWAC IDENTITY/PAGE
 
         app.Run();
 
