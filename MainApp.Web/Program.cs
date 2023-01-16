@@ -96,7 +96,7 @@ public class ProgramMVC
         builder.Services.AddScoped<UserManager<ApplicationUser>>();
         //builder.Services.AddScoped<RoleManager<ApplicationRoles>>();
 
-        builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsFactory>();
+        builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsFactory>();//TODO dodanie claimow
 
         //builder.Services.AddRazorPages();
         //builder.Services.ConfigureApplicationCookie(options =>
@@ -106,12 +106,12 @@ public class ProgramMVC
         //    options.AccessDeniedPath = $"/account/accessDenied";
         //});
 
-
+        //TODO czas zalogowania
         builder.Services.ConfigureApplicationCookie(options =>
         {
             // Cookie settings
             options.Cookie.HttpOnly = true;
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
 
             options.LoginPath = "/Identity/Account/Login";
             options.AccessDeniedPath = "/Identity/Account/AccessDenied";

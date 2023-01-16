@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -137,12 +138,11 @@ namespace MainApp.Web.Controllers
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
 
-                    //var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
-                    //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-                    //identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
-                    //await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
-                    //    new ClaimsPrincipal(identity));
-
+                    var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                    await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
+                        new ClaimsPrincipal(identity));
 
                     //TODO add claims
                     //var claims = new List<Claim>
