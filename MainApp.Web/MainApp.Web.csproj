@@ -32,6 +32,10 @@
     <ProjectReference Include="..\MainApp.BLL\MainApp.BLL.csproj" />
   </ItemGroup>
 
+    <ItemGroup>
+    <ProjectReference Include="..\Tracking\Tracking.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="DataBaseUser\" />
   </ItemGroup>

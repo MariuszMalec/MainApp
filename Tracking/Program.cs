@@ -24,6 +24,12 @@ builder.Services.AddHttpContextAccessor();
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 var connectionString = configuration.GetConnectionString("Default");
+
+if (connectionString == null)
+{
+    connectionString = "Server = localhost; Port=5432; User Id=mario; Password=mario13; Database=MainAppDb2;";
+}
+
 builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
 
 builder.Services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
