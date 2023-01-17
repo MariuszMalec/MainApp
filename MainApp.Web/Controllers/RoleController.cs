@@ -29,18 +29,29 @@ namespace MainApp.Web.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var models = new List<ApplicationUserRoleView> () {
-                new ApplicationUserRoleView () {
-                    Id = _context.Users.Select(u=>u.Id).First(),
-                    FirstName = _context.Users.Select(u=>u.FirstName).First(),
-                    LastName = _context.Users.Select(u=>u.LastName).First(),
-                    UserId = _context.UserRoles.Select(u=>u.UserId).First(),
-                    RoleId = _context.UserRoles.Select(u=>u.RoleId).First(),
-                }
-            };
+            var users = await _context.Users.ToListAsync();
+
+            var models = users.Select(MapApplicationUserApplicationUserRoleView);//reczne mapowanie na model
+
+            if (models == null)
+                return Content("models is null!");
+
             return View(models);
+        }
+
+        private ApplicationUserRoleView MapApplicationUserApplicationUserRoleView(ApplicationUser appUser)
+        {
+            var roleId = _context.UserRoles.Where(r=>r.UserId == appUser.Id).Select(r=>r.RoleId).FirstOrDefault();
+            return new ApplicationUserRoleView
+            {
+                Id = appUser.Id,
+                FirstName = appUser.FirstName,
+                LastName = appUser.LastName,
+                UserId = appUser.Id,
+                RoleId = roleId             
+            };
         }
 
         // GET: UserController/Edit/5
