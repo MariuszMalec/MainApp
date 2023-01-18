@@ -106,12 +106,12 @@ public class ProgramMVC
         //    options.AccessDeniedPath = $"/account/accessDenied";
         //});
 
-        //TODO czas zalogowania
+        //TODO czas zalogowania po 2min odpala sie login
         builder.Services.ConfigureApplicationCookie(options =>
         {
             // Cookie settings
             options.Cookie.HttpOnly = true;
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
             options.LoginPath = "/Identity/Account/Login";
             options.AccessDeniedPath = "/Identity/Account/AccessDenied";
