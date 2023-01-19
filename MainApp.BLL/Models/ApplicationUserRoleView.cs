@@ -12,5 +12,6 @@ namespace MainApp.BLL.Models
         [HiddenInput(DisplayValue =false)]//TODO nie wyswietlanie w view value!
         public int UserId { get; set; }
         public int RoleId { get; set; }
+        public string? UserRole { get; set; }
     }
 }

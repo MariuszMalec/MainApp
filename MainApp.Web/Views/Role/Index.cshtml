@@ -31,6 +31,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.RoleId)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -52,6 +55,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RoleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRole)
                 </td>
                 <td>
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.UserId" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>

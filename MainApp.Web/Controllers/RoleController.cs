@@ -48,7 +48,8 @@ namespace MainApp.Web.Controllers
                 FirstName = appUser.FirstName,
                 LastName = appUser.LastName,
                 UserId = appUser.Id,
-                RoleId = roleId
+                RoleId = roleId,
+                UserRole = _context.Roles.Where(u=>u.Id== roleId).Select(r=>r.Name).FirstOrDefault()
             };
         }
 
