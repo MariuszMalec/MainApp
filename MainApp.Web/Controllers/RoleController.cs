@@ -129,8 +129,15 @@ namespace MainApp.Web.Controllers
 
                 var userRoles = await _userManager.GetRolesAsync(user);
 
-                var userId = _context.UserRoles.Where(r => r.UserId == model.Id).Select(r => r.UserId).First();
-                var roleId = _context.UserRoles.Where(r=>r.UserId == model.Id).Select(r => r.RoleId).First();
+                var userId = _context.UserRoles.Where(r => r.UserId == model.Id).Select(r => r.UserId).FirstOrDefault();
+                var roleId = _context.UserRoles.Where(r=>r.UserId == model.Id).Select(r => r.RoleId).FirstOrDefault();
+
+                //check exist roles
+                var checkRoleExist = _context.Roles.Any(r => r.Id == model.RoleId);
+                if (checkRoleExist == false)
+                {
+                    return Content("Role doesn't exist!");
+                }
 
                 _context.UserRoles.Remove(new IdentityUserRole<int>()
                 {
