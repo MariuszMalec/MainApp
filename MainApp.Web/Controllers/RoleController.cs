@@ -2,12 +2,14 @@
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,6 +83,7 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: UserController/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpGet("Edit/{id}")]
         public async Task<ActionResult<ApplicationUserRoleView>> Edit(int id)
         {

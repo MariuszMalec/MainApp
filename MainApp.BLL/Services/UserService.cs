@@ -41,7 +41,7 @@ namespace MainApp.BLL.Services
 
         public async Task<ApplicationUser> GetByEmail(string userEmail)
         {
-            return await Users.GetAllQueryable().FirstOrDefaultAsync(n => n.Email == userEmail);
+            return await Users.GetAllQueryable().FirstOrDefaultAsync(n => n.NormalizedEmail == userEmail.ToUpper());
         }
 
     }
