@@ -112,20 +112,11 @@ namespace MainApp.Web.Controllers
         {
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
-                //var userEmail = this.HttpContext.User.Identity.Name;
-
-                var updateModel = new ApplicationUserRoleView()
-                {
-                    Id = model.Id,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    UserId = model.UserId,
-                    RoleId = model.RoleId
-                };
 
                 var user = await _context.Users.FindAsync(model.UserId);
 
@@ -147,21 +138,19 @@ namespace MainApp.Web.Controllers
                     RoleId = roleId
                 });
 
-                var userRole = int.Parse(model.UserRole);
+                //set name from selected enum
+                var modelRoleName = Enum.GetName(typeof(Roles), int.Parse(model.UserRole));
+                var newRoleId = _context.Roles.Where(r => r.Name == modelRoleName).Select(r => r.Id).FirstOrDefault();
+
                 _context.Add(new IdentityUserRole<int>()
                 {
                     UserId = model.UserId,
-                    RoleId = userRole
+                    RoleId = newRoleId
                 });
 
-                //TODO zmien UserRole name w applicationuser!
-                var newUserName = _context.Roles.Where(r=>r.Id == userRole).Select(r => r.Name).FirstOrDefault();
+                //TODO zmien UserRole name w applicationuser!        
                 var newUser = await _context.Users.FindAsync(model.Id);
-                newUser.UserRole = newUserName;
-
-
-                //await _userManager.RemoveFromRolesAsync(user, userRoles);//TODO usuniecie role a z applicationuser
-                //await _userManager.AddToRoleAsync(user, "Admin");
+                newUser.UserRole = modelRoleName;
 
                 await _context.SaveChangesAsync();
 
