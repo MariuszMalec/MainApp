@@ -94,6 +94,7 @@ namespace MainApp.Web.Controllers
                 LastName = user.LastName,
                 UserId = _context.UserRoles.Where(u => u.UserId == id).Select(u => u.UserId).First(),
                 RoleId = _context.UserRoles.Where(u => u.UserId == id).Select(u => u.RoleId).First(),
+                UserRole = user.UserRole
             };
 
             if (model == null)
@@ -146,11 +147,18 @@ namespace MainApp.Web.Controllers
                     RoleId = roleId
                 });
 
+                var userRole = int.Parse(model.UserRole);
                 _context.Add(new IdentityUserRole<int>()
                 {
                     UserId = model.UserId,
-                    RoleId = model.RoleId
+                    RoleId = userRole
                 });
+
+                //TODO zmien UserRole name w applicationuser!
+                var newUserName = _context.Roles.Where(r=>r.Id == userRole).Select(r => r.Name).FirstOrDefault();
+                var newUser = await _context.Users.FindAsync(model.Id);
+                newUser.UserRole = newUserName;
+
 
                 //await _userManager.RemoveFromRolesAsync(user, userRoles);//TODO usuniecie role a z applicationuser
                 //await _userManager.AddToRoleAsync(user, "Admin");
