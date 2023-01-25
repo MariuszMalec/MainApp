@@ -1,27 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [Route("[controller]")]
     public class RoleController : Controller
     {
         private readonly ILogger<RoleController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
-
+        private readonly RoleManager<IdentityRole> _roleManager;
+        // GET: RoleController
         public RoleController(ILogger<RoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _logger = logger;
@@ -43,18 +43,47 @@ namespace MainApp.Web.Controllers
 
         private ApplicationUserRoleView MapApplicationUserApplicationUserRoleView(ApplicationUser appUser)
         {
-            var roleId = _context.UserRoles.Where(r=>r.UserId == appUser.Id).Select(r=>r.RoleId).FirstOrDefault();
+            var roleId = _context.UserRoles.Where(r => r.UserId == appUser.Id).Select(r => r.RoleId).FirstOrDefault();
             return new ApplicationUserRoleView
             {
                 Id = appUser.Id,
                 FirstName = appUser.FirstName,
                 LastName = appUser.LastName,
                 UserId = appUser.Id,
-                RoleId = roleId             
+                RoleId = roleId,
+                UserRole = _context.Roles.Where(u=>u.Id== roleId).Select(r=>r.Name).FirstOrDefault()
             };
         }
 
+        // GET: RoleController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        // GET: RoleController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: RoleController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         // GET: UserController/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpGet("Edit/{id}")]
         public async Task<ActionResult<ApplicationUserRoleView>> Edit(int id)
         {
@@ -62,13 +91,15 @@ namespace MainApp.Web.Controllers
 
             var user = await _context.Users.FindAsync(id);
 
-            var model = new ApplicationUserRoleView () {
+            var model = new ApplicationUserRoleView()
+            {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserId = _context.UserRoles.Where(u=>u.UserId == id).Select(u=>u.UserId).First(),
-                RoleId = _context.UserRoles.Where(u=>u.UserId == id).Select(u=>u.RoleId).First(),
+                UserId = _context.UserRoles.Where(u => u.UserId == id).Select(u => u.UserId).First(),
+                RoleId = _context.UserRoles.Where(u => u.UserId == id).Select(u => u.RoleId).First(),
+                UserRole = user.UserRole
             };
-            
+
             if (model == null)
             {
                 Serilog.Log.Information($"user with Id {id} doesn't exist!");
@@ -84,38 +115,49 @@ namespace MainApp.Web.Controllers
         {
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
-                //var userEmail = this.HttpContext.User.Identity.Name;
-
-                var updateModel = new ApplicationUserRoleView () {
-                    Id = model.Id,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    UserId = model.UserId,
-                    RoleId = model.RoleId
-                };
 
                 var user = await _context.Users.FindAsync(model.UserId);
 
-                var role = await _context.UserRoles.FindAsync(model);//TODO jak wyciagnac roleuser tabele
+                var userRoles = await _userManager.GetRolesAsync(user);
 
-                _context.UserRoles.Update(new IdentityUserRole<int> () {
-                    UserId = model.UserId, 
-                    RoleId = model.RoleId});
+                var userId = _context.UserRoles.Where(r => r.UserId == model.Id).Select(r => r.UserId).FirstOrDefault();
+                var roleId = _context.UserRoles.Where(r=>r.UserId == model.Id).Select(r => r.RoleId).FirstOrDefault();
+
+                //check exist roles
+                var checkRoleExist = _context.Roles.Any(r => r.Id == model.RoleId);
+                if (checkRoleExist == false)
+                {
+                    return Content("Role doesn't exist!");
+                }
+
+                _context.UserRoles.Remove(new IdentityUserRole<int>()
+                {
+                    UserId = userId,
+                    RoleId = roleId
+                });
+
+                //set name from selected enum
+                var modelRoleName = Enum.GetName(typeof(Roles), int.Parse(model.UserRole));
+                var newRoleId = _context.Roles.Where(r => r.Name == modelRoleName).Select(r => r.Id).FirstOrDefault();
+
+                _context.Add(new IdentityUserRole<int>()
+                {
+                    UserId = model.UserId,
+                    RoleId = newRoleId
+                });
+
+                //TODO zmien UserRole name w applicationuser!        
+                var newUser = await _context.Users.FindAsync(model.Id);
+                newUser.UserRole = modelRoleName;
 
                 await _context.SaveChangesAsync();
 
-                var check = false;//await _trainerService.EditTrainer(id, model, this.HttpContext);
-                Serilog.Log.Information("User {userName} edit trainer with id {id} at {date}", model.UserId, model.RoleId,DateTime.Now);
-
-                if (check == false)
-                {
-                    Serilog.Log.Warning($"user with Id {model.UserId} doesn't exist!");
-                    return RedirectToAction(nameof(Index));
-                }
+                Serilog.Log.Information("User {userName} edit trainer with id {id} at {date}", model.UserId, model.RoleId, DateTime.Now);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -132,5 +174,25 @@ namespace MainApp.Web.Controllers
             return View();
         }
 
+        // GET: RoleController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: RoleController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }

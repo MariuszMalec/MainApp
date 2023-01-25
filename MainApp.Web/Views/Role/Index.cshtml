@@ -31,33 +31,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.RoleId)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoleId)
-            </td>
-            <td>
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.UserId" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a> 
-                @* <a class="btn btn-info" asp-action="Details" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a> 
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRole)
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
+                    @* <a class="btn btn-info" asp-action="Details" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a> *@
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
