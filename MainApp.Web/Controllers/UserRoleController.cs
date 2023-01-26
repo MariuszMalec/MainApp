@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
@@ -16,15 +15,15 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
-    public class RoleController : Controller
+    public class UserRoleController : Controller
     {
-        private readonly ILogger<RoleController> _logger;
+        private readonly ILogger<UserRoleController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRoleService _roleService;
         // GET: RoleController
-        public RoleController(ILogger<RoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IRoleService roleService)
+        public UserRoleController(ILogger<UserRoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IRoleService roleService)
         {
             _logger = logger;
             _userManager = userManager;

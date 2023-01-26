@@ -5,16 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public class RoleService : IRoleService
+    public class UserRoleService : IRoleService
     {
         private readonly ApplicationDbContext _context;
 
-        public RoleService(ApplicationDbContext context)
+        public UserRoleService(ApplicationDbContext context)
         {
             _context = context;
         }
