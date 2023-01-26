@@ -7,7 +7,7 @@ namespace MainApp.BLL.Services
 {
     public interface IRoleService<T> where T : class
     {
-        Task Delete(T entity);
+        Task<bool> Delete(int id, T entity);
         Task<IEnumerable<T>> GetAll();
         IQueryable<T> GetAllQueryable();
         Task<T> GetById(int id);

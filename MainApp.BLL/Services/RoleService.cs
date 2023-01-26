@@ -19,9 +19,16 @@ namespace MainApp.BLL.Services
             _context = context;
         }
 
-        public Task Delete(ApplicationRoles entity)
+        public async Task<bool> Delete(int id, ApplicationRoles model)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                return false;
+            }
+            var user = await _context.Roles.FindAsync(id);
+            _context.Roles.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<ApplicationRoles>> GetAll()
@@ -35,9 +42,10 @@ namespace MainApp.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApplicationRoles> GetById(int id)
+        public async Task<ApplicationRoles> GetById(int id)
         {
-            throw new NotImplementedException();
+            var role = await _context.Roles.FindAsync(id);
+            return role;
         }
 
         public async Task<bool> Insert(ApplicationRoles entity)

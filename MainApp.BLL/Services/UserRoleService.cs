@@ -18,7 +18,7 @@ namespace MainApp.BLL.Services
             _context = context;
         }
 
-        public Task Delete(ApplicationUserRoleView entity)
+        public Task<bool> Delete(int Id, ApplicationUserRoleView entity)
         {
             throw new NotImplementedException();
         }
