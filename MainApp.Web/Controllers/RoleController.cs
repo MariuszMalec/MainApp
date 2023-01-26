@@ -2,6 +2,7 @@
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
+using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,38 +22,25 @@ namespace MainApp.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IRoleService _roleService;
         // GET: RoleController
-        public RoleController(ILogger<RoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public RoleController(ILogger<RoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IRoleService roleService)
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
+            _roleService = roleService;
         }
 
         public async Task<ActionResult> Index()
         {
-            var users = await _context.Users.ToListAsync();
 
-            var models = users.Select(MapApplicationUserApplicationUserRoleView);//reczne mapowanie na model
+            var models = await _roleService.GetAll();
 
             if (models == null)
                 return Content("models is null!");
 
             return View(models);
-        }
-
-        private ApplicationUserRoleView MapApplicationUserApplicationUserRoleView(ApplicationUser appUser)
-        {
-            var roleId = _context.UserRoles.Where(r => r.UserId == appUser.Id).Select(r => r.RoleId).FirstOrDefault();
-            return new ApplicationUserRoleView
-            {
-                Id = appUser.Id,
-                FirstName = appUser.FirstName,
-                LastName = appUser.LastName,
-                UserId = appUser.Id,
-                RoleId = roleId,
-                UserRole = _context.Roles.Where(u=>u.Id== roleId).Select(r=>r.Name).FirstOrDefault()
-            };
         }
 
         // GET: RoleController/Details/5
