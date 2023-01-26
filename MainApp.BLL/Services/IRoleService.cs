@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public interface IRoleService
+    public interface IRoleService<T> where T : class
     {
-        Task Delete(ApplicationUserRoleView entity);
-        Task<IEnumerable<ApplicationUserRoleView>> GetAll();
-        IQueryable<ApplicationUserRoleView> GetAllQueryable();
-        Task<ApplicationUserRoleView> GetById(int id);
-        Task Insert(ApplicationUserRoleView entity);
-        Task Update(ApplicationUserRoleView entity);
+        Task Delete(T entity);
+        Task<IEnumerable<T>> GetAll();
+        IQueryable<T> GetAllQueryable();
+        Task<T> GetById(int id);
+        Task<bool> Insert(T entity);
+        Task Update(T entity);
     }
 }

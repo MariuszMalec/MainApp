@@ -21,9 +21,9 @@ namespace MainApp.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IRoleService _roleService;
+        private readonly IRoleService<ApplicationUserRoleView> _roleService;
         // GET: RoleController
-        public UserRoleController(ILogger<UserRoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IRoleService roleService)
+        public UserRoleController(ILogger<UserRoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IRoleService<ApplicationUserRoleView> roleService)
         {
             _logger = logger;
             _userManager = userManager;

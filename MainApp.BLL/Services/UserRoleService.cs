@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public class UserRoleService : IRoleService
+    public class UserRoleService : IRoleService<ApplicationUserRoleView>
     {
         private readonly ApplicationDbContext _context;
 
@@ -54,7 +54,7 @@ namespace MainApp.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task Insert(ApplicationUserRoleView entity)
+        public Task<bool> Insert(ApplicationUserRoleView entity)
         {
             throw new NotImplementedException();
         }

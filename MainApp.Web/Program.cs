@@ -25,6 +25,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Http;
 using MainApp.Web.ClaimsFactory;
+using MainApp.BLL.Models;
 
 public class ProgramMVC
 {
@@ -53,7 +54,8 @@ public class ProgramMVC
         builder.Services.AddTransient<TrackingService>();
         builder.Services.AddTransient<IPersonService, UserService>();
         builder.Services.AddTransient<ITrainersService, TrainersService>();
-        builder.Services.AddTransient<IRoleService, UserRoleService>();
+        builder.Services.AddTransient<IRoleService<ApplicationUserRoleView>, UserRoleService>();
+        builder.Services.AddTransient<IRoleService<ApplicationRoles>, RoleService>();
         builder.Services.AddTransient<EmailService>();
         builder.Services.AddHttpClient();
 
