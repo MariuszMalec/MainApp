@@ -1,18 +1,15 @@
-@using MainApp.BLL.Context
-@using MainApp.BLL.Entities
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@using Microsoft.EntityFrameworkCore
-@model IEnumerable<MainApp.BLL.Models.ApplicationUserRoleView>
-@inject UserManager<ApplicationUser> UserManager
-@inject ApplicationDbContext _context
+@model IEnumerable<MainApp.BLL.Entities.ApplicationRoles>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>List of users roles</h1>
+<h1>Index</h1>
 
+<p>
+    <a class="btn btn-success" asp-action="Create"><img class="rounded" alt="Image placeholder" src="~/icons8-add-user-male-32X32.png">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -20,51 +17,38 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.NormalizedName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RoleId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserRole)
+                @Html.DisplayNameFor(model => model.ConcurrencyStamp)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoleId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserRole)
-                </td>
-                <td>
-                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
-                    @* <a class="btn btn-info" asp-action="Details" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a> *@
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NormalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
+            </td>
+            <td>
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a> 
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a> 
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>
