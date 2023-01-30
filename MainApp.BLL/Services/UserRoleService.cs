@@ -32,6 +32,10 @@ namespace MainApp.BLL.Services
 
         private ApplicationUserRoleView MapApplicationUserApplicationUserRoleView(ApplicationUser appUser)
         {
+            if (appUser == null)
+            {
+                return default;
+            }
             var roleId = _context.UserRoles.Where(r => r.UserId == appUser.Id).Select(r => r.RoleId).FirstOrDefault();
             return new ApplicationUserRoleView
             {
@@ -51,9 +55,8 @@ namespace MainApp.BLL.Services
 
         public async Task<ApplicationUserRoleView> GetById(int id)
         {
-            var userRoles = await _context.Users.ToListAsync();
-            var userRolesView = userRoles.Select(MapApplicationUserApplicationUserRoleView);
-            var model = userRolesView.SingleOrDefault(u=>u.Id == id);
+            var userRoleView = await _context.Users.FindAsync(id);
+            var model = MapApplicationUserApplicationUserRoleView(userRoleView);
             return model;
         }
 

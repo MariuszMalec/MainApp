@@ -48,7 +48,7 @@ namespace MainApp.Web.Controllers
             var model = await _roleService.GetById(id);
             if (model == null)
             {
-                return NotFound($"Not found role with {id}");
+                return NotFound($"Not found user role with {id}");
                 //return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -84,6 +84,10 @@ namespace MainApp.Web.Controllers
             //var userEmail = this.HttpContext.User.Identity.Name;
 
             var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound($"Not found user with {id}");
+            }
 
             var model = new ApplicationUserRoleView()
             {
