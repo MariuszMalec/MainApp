@@ -78,18 +78,37 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: RoleController/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApplicationRoles>> Edit(int id)
         {
-            return View();
+            var model = await _roleService.GetById(id);
+            if (model == null)
+            {
+                return RedirectToAction("EmptyList");
+            }
+            return View(model);
         }
 
         // POST: RoleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, ApplicationRoles model)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                //var userEmail = this.HttpContext.User.Identity.Name;
+                var check = await _roleService.Update(id, model);
+
+                if (check == false)
+                {
+
+                    return RedirectToAction(nameof(Index));
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -12,6 +12,6 @@ namespace MainApp.BLL.Services
         IQueryable<T> GetAllQueryable();
         Task<T> GetById(int id);
         Task<bool> Insert(T entity);
-        Task Update(T entity);
+        Task<bool> Update(int id, T entity);
     }
 }

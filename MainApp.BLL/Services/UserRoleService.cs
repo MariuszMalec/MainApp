@@ -59,7 +59,7 @@ namespace MainApp.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task Update(ApplicationUserRoleView entity)
+        public Task<bool> Update(int id, ApplicationUserRoleView entity)
         {
             throw new NotImplementedException();
         }

@@ -63,9 +63,15 @@ namespace MainApp.BLL.Services
             return true;
         }
 
-        public Task Update(ApplicationRoles entity)
+        public async Task<bool> Update(int id, ApplicationRoles entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                return false;
+            }
+            _context.Roles.Update(entity);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
