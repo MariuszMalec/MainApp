@@ -61,8 +61,7 @@
                 </td>
                 <td>
                     <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
-                    @* <a class="btn btn-info" asp-action="Details" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@_context.Users.Where(x=>x.Email == item.Email).Select(x=>x.Id).FirstOrDefault()" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a> *@
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
                 </td>
             </tr>
         }

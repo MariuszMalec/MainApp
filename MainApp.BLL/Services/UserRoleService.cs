@@ -49,9 +49,12 @@ namespace MainApp.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApplicationUserRoleView> GetById(int id)
+        public async Task<ApplicationUserRoleView> GetById(int id)
         {
-            throw new NotImplementedException();
+            var userRoles = await _context.Users.ToListAsync();
+            var userRolesView = userRoles.Select(MapApplicationUserApplicationUserRoleView);
+            var model = userRolesView.SingleOrDefault(u=>u.Id == id);
+            return model;
         }
 
         public Task<bool> Insert(ApplicationUserRoleView entity)
