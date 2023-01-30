@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public class UserRoleService : IRoleService<ApplicationUserRoleView>
+    public class UserRoleService : IRepositoryService<ApplicationUserRoleView>
     {
         private readonly ApplicationDbContext _context;
 

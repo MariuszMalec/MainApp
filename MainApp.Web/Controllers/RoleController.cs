@@ -12,9 +12,9 @@ namespace MainApp.Web.Controllers
 {
     public class RoleController : Controller
     {
-        private readonly IRoleService<ApplicationRoles> _roleService;
+        private readonly IRepositoryService<ApplicationRoles> _roleService;
 
-        public RoleController(IRoleService<ApplicationRoles> roleService)
+        public RoleController(IRepositoryService<ApplicationRoles> roleService)
         {
             _roleService = roleService;
         }
@@ -27,9 +27,15 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: RoleController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var model = await _roleService.GetById(id);
+            if (model == null)
+            {
+                return NotFound($"Not found role with {id}");
+                //return RedirectToAction("EmptyList");
+            }
+            return View(model);
         }
 
         // GET: RoleController/Create

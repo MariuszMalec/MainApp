@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public interface IRoleService<T> where T : class
+    public interface IRepositoryService<T> where T : class
     {
         Task<bool> Delete(int id, T entity);
         Task<IEnumerable<T>> GetAll();

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
 {
-    public class RoleService : IRoleService<ApplicationRoles>
+    public class RoleService : IRepositoryService<ApplicationRoles>
     {
         private readonly ApplicationDbContext _context;
 

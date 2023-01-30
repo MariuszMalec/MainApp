@@ -54,8 +54,8 @@ public class ProgramMVC
         builder.Services.AddTransient<TrackingService>();
         builder.Services.AddTransient<IPersonService, UserService>();
         builder.Services.AddTransient<ITrainersService, TrainersService>();
-        builder.Services.AddTransient<IRoleService<ApplicationUserRoleView>, UserRoleService>();
-        builder.Services.AddTransient<IRoleService<ApplicationRoles>, RoleService>();
+        builder.Services.AddTransient<IRepositoryService<ApplicationUserRoleView>, UserRoleService>();
+        builder.Services.AddTransient<IRepositoryService<ApplicationRoles>, RoleService>();
         builder.Services.AddTransient<EmailService>();
         builder.Services.AddHttpClient();
 
