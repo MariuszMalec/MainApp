@@ -47,6 +47,8 @@ public class ProgramMVC
         var connectionString = configuration.GetConnectionString("Default");
         builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
 
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
+
         //Services configuration
 
         builder.Services.AddControllersWithViews();
@@ -86,7 +88,7 @@ public class ProgramMVC
         builder.Services.AddHttpClient("Tracking", client =>
                     {
                         client.BaseAddress = new Uri("https://localhost:7001/");
-                        client.Timeout = new TimeSpan(0, 0, 30);
+                        client.Timeout = new TimeSpan(0, 0, 60);
                         client.DefaultRequestHeaders.Add(
                             HeaderNames.Accept, "application/json");
                         client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");

@@ -14,6 +14,7 @@ using Tracking.Services;
 using System.Net;
 using System.Net.Security;
 using Tracking.Middleware;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 var connectionString = configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 
