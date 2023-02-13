@@ -25,8 +25,22 @@ builder.Services.AddHttpContextAccessor();
 //to musi byc dla core6
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
-var connectionString = configuration.GetConnectionString("Default");
-builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+
+//var connectionString = configuration.GetConnectionString("Default");
+//builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+
+// Replace 'YourDbContext' with the name of your own DbContext derived class.
+builder.Services.AddDbContext<MainApplicationContext>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(configuration.GetConnectionString("Default"), serverVersion)
+        // The following three options help with debugging, but should
+        // be changed or removed for production.
+        //.LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
