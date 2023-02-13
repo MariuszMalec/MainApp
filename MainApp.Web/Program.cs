@@ -44,8 +44,20 @@ public class ProgramMVC
         //to musi byc dla core6 postgres
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
-        var connectionString = configuration.GetConnectionString("Default");
-        builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+
+        //var connectionString = configuration.GetConnectionString("Default");
+        //builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+        builder.Services.AddDbContext<ApplicationDbContext>(
+            dbContextOptions => dbContextOptions
+                .UseMySql(configuration.GetConnectionString("Default"), serverVersion)
+                // The following three options help with debugging, but should
+                // be changed or removed for production.
+                //.LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
 
