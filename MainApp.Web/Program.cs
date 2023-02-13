@@ -33,6 +33,8 @@ public class ProgramMVC
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        //builder.Services.AddMvc()
+        //.AddControllersAsServices();
 
         //To trzeba dodac!! aby zadzialalo Configuration!! Sqlite
         // IConfiguration Configuration;
@@ -49,11 +51,14 @@ public class ProgramMVC
         }
         builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
 
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         //Services configuration
 
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
         builder.Services.AddTransient<TrackingService>();
+        //builder.Services.AddTransient<Tracking.Services.IRepositoryService<Tracking.Models.Event>, Tracking.Services.TrackingService>();
         builder.Services.AddTransient<IPersonService, UserService>();
         builder.Services.AddTransient<ITrainersService, TrainersService>();
         builder.Services.AddTransient<IRepositoryService<ApplicationRoles>, RoleService>();

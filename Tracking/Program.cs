@@ -13,6 +13,7 @@ using Tracking.Repositories;
 using Tracking.Services;
 using System.Net;
 using System.Net.Security;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ if (connectionString == null)
 }
 
 builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddTransient<IRepositoryService<Trainer>, TrainerService>();
 

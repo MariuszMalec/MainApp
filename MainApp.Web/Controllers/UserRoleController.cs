@@ -20,7 +20,7 @@ namespace MainApp.Web.Controllers
         private readonly ILogger<UserRoleController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        
         // GET: UserRoleController
         public UserRoleController(ILogger<UserRoleController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {

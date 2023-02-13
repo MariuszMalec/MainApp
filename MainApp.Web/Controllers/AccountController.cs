@@ -26,7 +26,6 @@ namespace MainApp.Web.Controllers
         private readonly IRepository<ApplicationUser> _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly TrackingService _trackingService;
 
