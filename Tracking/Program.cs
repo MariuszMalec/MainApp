@@ -114,6 +114,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+//TODO dodane aby w visual studio code odpalila sie apka ze swaggerem
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
 //app.UseMiddleware<ApiKeyMiddleware>();
 
 app.UseHttpsRedirection();
