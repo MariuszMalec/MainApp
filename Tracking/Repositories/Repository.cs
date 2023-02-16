@@ -38,7 +38,10 @@ namespace Tracking.Repositories
             {
                 throw new ArgumentNullException("entity");
             }
-            entity.Id = (entities?.Max(m => m.Id) ?? 0) + 1; //TODO problem z postgresem automat nie dodaje kolejnego id!
+            if (entities.Count() == 0)
+                entity.Id = 1;
+            if (entities.Count() > 0)
+                entity.Id = (entities?.Max(m => m.Id) ?? 0) + 1; //TODO problem z postgresem automat nie dodaje kolejnego id!
             entities.Add(entity);
             await _context.SaveChangesAsync();
         }

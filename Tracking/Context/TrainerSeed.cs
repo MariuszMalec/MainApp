@@ -62,7 +62,7 @@ namespace Tracking.Context
                 return;
             }
             var trainers = GetAll();
-            context.AddRange(trainers);
+            await context.AddRangeAsync(trainers);
             await context.SaveChangesAsync();
         }
     }
