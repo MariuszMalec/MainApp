@@ -145,21 +145,21 @@ namespace MainApp.Web.Controllers
                         new ClaimsPrincipal(identity));
 
                     //TODO add claims
-                    //var claims = new List<Claim>
-                    //{
-                    //    new Claim("amr", "pwd"),
-                    //    new Claim("EmployeeNumber","1")
-                    //};
+                    var claims = new List<Claim>
+                    {
+                        new Claim("amr", "pwd"),
+                        new Claim("EmployeeNumber","1")
+                    };
 
-                    ////TODO Add roles
-                    //var roles = await _signInManager.UserManager.GetRolesAsync(user);
-                    //if (roles.Any())
-                    //{
-                    //    var roleClaim = string.Join(",", roles);
-                    //    claims.Add(new Claim("Roles", roleClaim));
-                    //}
+                    //TODO Add roles to authorization fir controllerrs
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    if (roles.Any())
+                    {
+                        var roleClaim = string.Join(",", roles);
+                        claims.Add(new Claim("Roles", roleClaim));
+                    }
 
-                    //await _signInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
+                    await _signInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
 
                     await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));//TODO dodaje do ApsNetUserClaims
 

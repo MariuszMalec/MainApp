@@ -26,6 +26,7 @@ using System.Net.Security;
 using System.Net.Http;
 using MainApp.Web.ClaimsFactory;
 using MainApp.BLL.Models;
+using MainApp.BLL.Enums;
 
 public class ProgramMVC
 {
@@ -123,6 +124,10 @@ public class ProgramMVC
             options.SlidingExpiration = true;
         });
 
+        #region Authorization Policy
+        //AddAuthorizationPolicies(builder.Services);
+        #endregion
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
@@ -175,5 +180,19 @@ public class ProgramMVC
 
         app.Run();
 
+    }
+
+    static void AddAuthorizationPolicies(IServiceCollection services)//TODO add policy to program.cs
+    {
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("EmployeeNumber"));
+        });
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdmin", policy => policy.RequireRole(Roles.Admin.ToString()));
+            options.AddPolicy("RequireUser", policy => policy.RequireRole(Roles.User.ToString()));
+        });
     }
 }

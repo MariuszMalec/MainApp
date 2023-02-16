@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User")]//TODO bez claimow tylko logowanie przez identity
+    //[Authorize(Policy = "RequireAdmin")]//TODO dodalem claimy podczas wlasnego slogowania
     public class TrainerController : Controller
     {
         private ITrainersService _trainerService;
