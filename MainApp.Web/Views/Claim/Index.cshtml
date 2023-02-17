@@ -1,0 +1,30 @@
+﻿@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+    }
+}
+
+<h3>Welcome @userFullName</h3>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <h2>Claim details</h2>
+        <ul>
+            @foreach (var claim in User.Claims)
+            {
+                <li><strong>@claim.Type</strong>: @claim.Value</li>
+            }
+        </ul>
+    }

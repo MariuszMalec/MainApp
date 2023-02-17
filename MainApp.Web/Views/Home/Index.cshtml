@@ -16,24 +16,38 @@
     }
 }
 
+<environment names="Production">
+    <h1 class="display-4">Presentation!</h1>
+</environment>
+
 <div class="text-center bg-transparent">
 
     @if (!SignInManager.IsSignedIn(User))
     {
-        <h3 class="card-title font-weight-bold">Welcome @userFullName</h3>
+        <h3 class="card-title font-weight-bold col">Welcome @userFullName</h3>
         <a class="btn btn-primary" asp-controller="account" asp-action="Login">Go to login</a>
         <hr />
         <div class="card bg-dark text-white">
-          <img class="card-img" src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Card image">
+          <img class="card-img" src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Card image">     
           <div class="card-img-overlay">
             <h5 class="card-title">Register or login</h5>
             <p class="card-text">Web api with MVC project</p>
           </div>
+            <div class="container mt-3">
+                 <div class="container">
+                      <div class="row">
+                           <div class="col">
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/mm.jpg"> 
+                                     <div class="shape__name">
+                                        Author : Mariusz Malec
+                                    </div>
+                            </div>
+                     </div>
+                 </div>
+            </div> 
         </div>
     }
-
 </div>
-
     @if (SignInManager.IsSignedIn(User))
     {
         <div class="row shadow-lg">

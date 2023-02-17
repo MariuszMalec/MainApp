@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Tracking.Authentication.Attributes;
 using Tracking.Models;
 using Tracking.Services;
 
@@ -10,6 +12,7 @@ namespace Tracking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class TrainerController : ControllerBase
     {
         private readonly IRepositoryService<Trainer> _userService;
@@ -19,12 +22,26 @@ namespace Tracking.Controllers
             _userService = userService;
         }
 
+        //TODO from route email is send as authorize
+        [HttpGet("{email}/{password}")]
+        public async Task<IActionResult> Get([FromRoute] string email, string password)
+        {
+            var user = await _userService.Authenticate(email);
+            if (user == null)
+                return Unauthorized("401 brak autoryzacji!");
+
+            var users = await _userService.GetAll();
+            if (!users.Any())
+                return NotFound($"404 Brak uzytkowników!");
+            return Ok(users);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             var users = await _userService.GetAll();
             if (!users.Any())
-                return BadRequest($"Brak uzytkowników!");
+                return NotFound($"Brak uzytkowników!");
             return Ok(users);
         }
 
@@ -32,18 +49,18 @@ namespace Tracking.Controllers
         public async Task<IActionResult> Insert([FromBody] Trainer user)
         {
             if (user == null)
-                return BadRequest("Brak uzytkownika!");
+                return NotFound("404 Brak uzytkownika!");
             await _userService.Insert(user);
             //return Ok($"User with id {user.Id} added");
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetTrainer(int id)
         {
             var user = await _userService.Get(id);
             if (user == null)
-                return BadRequest($"Brak uzytkownika!");
+                return NotFound($"404 Brak uzytkownika!");
             return Ok(user);
         }
 
@@ -51,7 +68,7 @@ namespace Tracking.Controllers
         public async Task<IActionResult> Edit(Trainer user)
         {
             if (user == null)
-                return BadRequest($"Brak uzytkownika!");
+                return BadRequest($"404 Brak uzytkownika!");
             await _userService.Update(user);
             return Ok($"User with id {user.Id} edited");
         }
@@ -61,7 +78,7 @@ namespace Tracking.Controllers
         {
             var user = await _userService.Get(id);
             if (user == null)
-                return BadRequest($"Brak uzytkownika!");
+                return NotFound($"404 Brak uzytkownika!");
             await _userService.Delete(id);
             return Ok($"User with id {id} deleted");
         }

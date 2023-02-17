@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Tracking.Context;
 using Tracking.Models;
@@ -37,6 +38,10 @@ namespace Tracking.Repositories
             {
                 throw new ArgumentNullException("entity");
             }
+            if (entities.Count() == 0)
+                entity.Id = 1;
+            if (entities.Count() > 0)
+                entity.Id = (entities?.Max(m => m.Id) ?? 0) + 1; //TODO problem z postgresem automat nie dodaje kolejnego id!
             entities.Add(entity);
             await _context.SaveChangesAsync();
         }

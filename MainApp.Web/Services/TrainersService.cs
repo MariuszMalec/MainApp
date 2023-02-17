@@ -5,6 +5,7 @@ using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -17,32 +18,39 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Services
 {
-    public class TrainersService
+    public class TrainersService : ITrainersService
     {
         private readonly ILogger<TrainersService> _logger;
         private readonly TrackingService _trackingService;
         IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
+        private readonly HttpClient _httpClient;
 
         public TrainersService(IHttpClientFactory httpClientFactory, ILogger<TrainersService> logger, TrackingService trackingService)
         {
             this.httpClientFactory = httpClientFactory;
             _logger = logger;
             _trackingService = trackingService;
+            _httpClient = httpClientFactory.CreateClient("Tracking");//TODO patrz startup
         }
 
-        public async Task<List<TrainerView>> GetAll(string userEmail, HttpContext httpContext)
+        public async Task<List<TrainerView>> GetAll(string userEmail, HttpContext httpContext)//as query authorize
         {
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Trainer/{userEmail}/admin");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             var content = await result.Content.ReadAsStringAsync();
+
+            if (content.Contains("401") || content.Contains("401"))
+            {
+                return new List<TrainerView>();
+            }
 
             var trainers = JsonConvert.DeserializeObject<List<TrainerView>>(content);
 
@@ -65,10 +73,10 @@ namespace MainApp.Web.Services
 
             request.Headers.Add("Accept", "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
-            {             
+            {
                 return null;
             }
 
@@ -90,8 +98,8 @@ namespace MainApp.Web.Services
             var userEmail = httpContext.User.Identity.Name;
 
             var emailTrainers = await GetAll(userEmail, httpContext);
-            if (emailTrainers.Any(e=>e.Email == model.Email))
-            { 
+            if (emailTrainers.Any(e => e.Email == model.Email))
+            {
                 return false;
             }
 
@@ -101,7 +109,7 @@ namespace MainApp.Web.Services
 
             request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             var myEvent = await _trackingService.InsertEvent(ActivityActions.create, httpContext, userEmail);
             await _trackingService.Insert(myEvent);
@@ -122,7 +130,7 @@ namespace MainApp.Web.Services
 
             request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             var myEvent = await _trackingService.InsertEvent(ActivityActions.edit, httpContext, userEmail);
             await _trackingService.Insert(myEvent);
@@ -141,7 +149,7 @@ namespace MainApp.Web.Services
 
             request.Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
-            var result = await client.SendAsync(request);
+            var result = await _httpClient.SendAsync(request);
 
             if (!result.IsSuccessStatusCode)
             {

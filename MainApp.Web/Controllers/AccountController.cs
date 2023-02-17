@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -71,7 +72,7 @@ namespace MainApp.Web.Controllers
                         LastName = model.LastName,
                         UserName = model.Email,
                         Email = model.Email,
-                        Created = DateTime.Now,
+                        Created = DateTime.UtcNow,
                         UserRole = "User"
                     };
                     //LogContext.PushProperty("UserName", model.Email);// co to jest??
@@ -79,13 +80,12 @@ namespace MainApp.Web.Controllers
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, "User");
-                        await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
-                        //LogContext.PushProperty("UserName", model.Email);
+                        await _userManager.AddToRoleAsync(user, "User");//TODO tutaj zapisuje do aktualnej bazy a nie do fasady przy tescie, dlaczego?!
+                        //await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                         Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
-                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);
+                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac!
                         await _trackingService.Insert(myEvent);
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Login");
 
                     }
                     else
@@ -114,18 +114,55 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginView model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            if (model.Email == null)
+            {
+                ModelState.AddModelError("", "Invalid ID or Password");
+
+                Serilog.Log.Information("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
+                return View(model);
+            }
+
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: true);
+
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
+                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.UtcNow);
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
+
+                    var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                    await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
+                        new ClaimsPrincipal(identity));
+
+                    //TODO add claims
+                    var claims = new List<Claim>
+                    {
+                        new Claim("amr", "pwd"),
+                        new Claim("EmployeeNumber","1")
+                    };
+
+                    //TODO Add roles to authorization fir controllerrs
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    if (roles.Any())
+                    {
+                        var roleClaim = string.Join(",", roles);
+                        claims.Add(new Claim("Roles", roleClaim));
+                    }
+
+                    await _signInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
+
+                    await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));//TODO dodaje do ApsNetUserClaims
+
                     return RedirectToAction("Index", "Home");
 
                 }

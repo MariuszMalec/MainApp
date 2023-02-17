@@ -1,13 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tracking.Models;
 using Tracking.Repositories;
+using Tracking.SecretData;
 
 namespace Tracking.Services
 {
     public class TrainerService : IRepositoryService<Trainer>
     {
         private readonly IRepository<Trainer> Persons;
+
+        public async Task<AuthenticateModel> Authenticate(string email)
+        {
+            var user = await Task.Run(() => UsersStorage.Users.SingleOrDefault(x => x.Email == email.ToLower()));
+            if (user == null)
+                return null;
+            return user;//.WithoutPassword();
+        }
+
 
         public TrainerService(IRepository<Trainer> persons)
         {

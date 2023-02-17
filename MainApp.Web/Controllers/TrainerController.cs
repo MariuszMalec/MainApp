@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
 {
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User")]//TODO bez claimow tylko logowanie przez identity
+    //[Authorize(Policy = "RequireAdmin")]//TODO dodalem claimy podczas wlasnego slogowania
     public class TrainerController : Controller
     {
-        private TrainersService _trainerService;
+        private ITrainersService _trainerService;
 
-        public TrainerController(TrainersService trainerService)
+        public TrainerController(ITrainersService trainerService)
         {
             _trainerService = trainerService;
 
@@ -25,6 +26,8 @@ namespace MainApp.Web.Controllers
         public async Task<ActionResult<List<TrainerView>>> Index(string sortOrder)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var users = this.HttpContext.User;
 
             var userEmail = this.HttpContext.User.Identity.Name;
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
@@ -41,7 +44,13 @@ namespace MainApp.Web.Controllers
                     break;
             }
 
-            Serilog.Log.Information("Sciagam dane z bazy danych API...");
+            if (!sortedTrainers.Any())
+            {
+                Serilog.Log.Warning("UnAuthorized");
+                return RedirectToAction("UnAuthorized");      
+            }
+
+            Serilog.Log.Information("Download datas from API...");
             return View(sortedTrainers);
         }
 
@@ -76,9 +85,10 @@ namespace MainApp.Web.Controllers
                 {
                     return View(model);
                 }
+                var userEmail = this.HttpContext.User.Identity.Name;
 
                 var check = await _trainerService.CreateTrainer(model, this.HttpContext);
-                Serilog.Log.Information($"Create new trainer with id {model.Id} at {DateTime.Now}");
+                Serilog.Log.Information("User {userName} create new trainer at {date}", userEmail, DateTime.Now);
 
                 if (check == false)
                 {
@@ -118,9 +128,9 @@ namespace MainApp.Web.Controllers
                 {
                     return View(model);
                 }
-
+                var userEmail = this.HttpContext.User.Identity.Name;
                 var check = await _trainerService.EditTrainer(id, model, this.HttpContext);
-                Serilog.Log.Information($"Edit trainer with id {model.Id} at {DateTime.Now}");
+                Serilog.Log.Information("User {userName} edit trainer with id {id} at {date}", userEmail, model.Id,DateTime.Now);
 
                 if (check == false)
                 {
@@ -165,8 +175,9 @@ namespace MainApp.Web.Controllers
                     return RedirectToAction("EmptyList");
                 }
 
-                Serilog.Log.Warning($"Delete trainer with id {model.Id}");
-
+                var userEmail = this.HttpContext.User.Identity.Name;
+                Serilog.Log.Information("User {userName} delete trainer with id {id} at {date}", userEmail, model.Id, DateTime.Now);
+    
                 return RedirectToAction("Index");
             }
             catch
@@ -181,6 +192,11 @@ namespace MainApp.Web.Controllers
         }
 
         public ActionResult EmailExistYet()
+        {
+            return View();
+        }
+
+        public ActionResult UnAuthorized()
         {
             return View();
         }

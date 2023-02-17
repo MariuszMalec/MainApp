@@ -3,7 +3,10 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Tracking.Context;
+
+#nullable disable
 
 namespace Tracking.Migrations
 {
@@ -14,25 +17,30 @@ namespace Tracking.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.15");
+                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Tracking.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Action")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -43,161 +51,55 @@ namespace Tracking.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("Trainers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 219, DateTimeKind.Local).AddTicks(4744),
-                            Email = "pssg@example.com",
-                            FirstName = "Patryk",
-                            LastName = "Szwermer",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3916),
-                            Email = "ps@example.com",
-                            FirstName = "Przemyslaw",
-                            LastName = "Sawicki",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3940),
-                            Email = "md@example.com",
-                            FirstName = "Marcin",
-                            LastName = "Dabrowski",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3944),
-                            Email = "pk@example.com",
-                            FirstName = "Piotr",
-                            LastName = "Katny",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3946),
-                            Email = "md@example.com",
-                            FirstName = "Marcin",
-                            LastName = "Dudzic",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3951),
-                            Email = "mk@example.com",
-                            FirstName = "Maciej",
-                            LastName = "Krakowiak",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3954),
-                            Email = "mc@example.com",
-                            FirstName = "Mateusz",
-                            LastName = "Cebula",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3956),
-                            Email = "jk@example.com",
-                            FirstName = "Jakub",
-                            LastName = "Nowikowski",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3959),
-                            Email = "jc@example.com",
-                            FirstName = "Jan",
-                            LastName = "Choma",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3962),
-                            Email = "mp@example.com",
-                            FirstName = "Marcin",
-                            LastName = "Przypek",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3965),
-                            Email = "ms@example.com",
-                            FirstName = "Michal",
-                            LastName = "Sosnowski",
-                            PhoneNumber = ""
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedDate = new DateTime(2022, 4, 12, 22, 53, 1, 222, DateTimeKind.Local).AddTicks(3967),
-                            Email = "mt@example.com",
-                            FirstName = "Maciej",
-                            LastName = "Tyszka",
-                            PhoneNumber = ""
-                        });
                 });
 
             modelBuilder.Entity("Tracking.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
