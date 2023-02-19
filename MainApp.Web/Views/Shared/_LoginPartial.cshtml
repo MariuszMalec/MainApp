@@ -25,6 +25,7 @@
     </ul>
 </div>
 
+<environment names="Development">
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
@@ -47,3 +48,4 @@
         </li>
     }
 </ul>
+</environment>

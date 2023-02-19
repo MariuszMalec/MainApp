@@ -105,7 +105,7 @@ using (var scope = app.Services.CreateScope())
                 {
                     context?.Database.Migrate();
                     //TrainerSeed.SeedTrainer(context);
-                    TrainerSeed.SeedTrainers(context);
+                    await TrainerSeed.SeedTrainers(context);
                 }
             }
             else
