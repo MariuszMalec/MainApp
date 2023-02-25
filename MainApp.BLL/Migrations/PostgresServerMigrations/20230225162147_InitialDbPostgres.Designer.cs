@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MainApp.BLL.Migrations
+namespace MainApp.BLL.Migrations.PostgresServerMigrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230216152928_init")]
-    partial class init
+    [DbContext(typeof(PostgresDbContext))]
+    [Migration("20230225162147_InitialDbPostgres")]
+    partial class InitialDbPostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,12 +184,10 @@ namespace MainApp.BLL.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -225,12 +223,10 @@ namespace MainApp.BLL.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");

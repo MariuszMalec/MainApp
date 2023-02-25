@@ -1,13 +1,16 @@
 ﻿@using MainApp.BLL.Entities
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Configuration;
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
+@inject IConfiguration Configuration
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
 @{
+    var provider = @Configuration["DatabaseProvider"];
     var user = await UserManager.GetUserAsync(User);
     var userFullName = "";
     if (user != null)
@@ -21,7 +24,7 @@
 </environment>
 
 <environment names="Development">
-    <h1 class="display-4">Develop version</h1>
+    <h1 class="display-4">Develop version (@provider)</h1>
 </environment>
 
 <div class="text-center bg-transparent">

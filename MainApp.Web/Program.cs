@@ -27,6 +27,8 @@ using System.Net.Http;
 using MainApp.Web.ClaimsFactory;
 using MainApp.BLL.Models;
 using MainApp.BLL.Enums;
+using Microsoft.DotNet.Scaffolding.Shared;
+using Serilog.Context;
 
 public class ProgramMVC
 {
@@ -42,11 +44,53 @@ public class ProgramMVC
         // Configuration = builder.Configuration;
         // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
 
-        //to musi byc dla core6 postgres
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
-        var connectionString = configuration.GetConnectionString("Default");
-        builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+        //Set the active provider via configuration
+        //select provider from appsettings.json
+        var provider = configuration["DatabaseProvider"];//Provider.Postgres.ToString();
+        var connectionString = configuration.GetConnectionString(provider);
+        switch (Provider.Postgres.ToString())
+        {
+            case "SqlServer":
+                builder.Services.AddDbContext<ApplicationDbContext, MsSqlDbContext>();
+                break;
+
+            case "Postgres":
+                builder.Services.AddDbContext<ApplicationDbContext, PostgresDbContext>();
+                break;
+        }
+
+        //if (connectionString.Contains("sqlexpress"))
+        //{
+        //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
+        //}
+        //if (connectionString.Contains("Sqlite"))
+        //{
+        //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
+        //}
+        //if (connectionString.Contains("postgres"))
+        //{
+        //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+        //}
+
+        builder.Services.AddDbContext<ApplicationDbContext>(
+        options => _ = provider switch
+        {
+            "Sqlite" => options.UseSqlite(
+                configuration.GetConnectionString("SqliteConnection"),
+                x => x.MigrationsAssembly("SqliteMigrations")),
+
+            "SqlServer" => options.UseSqlServer(
+                configuration.GetConnectionString("SqlServerConnection"),
+            x => x.MigrationsAssembly("SqlServerMigrations")),
+
+            "Postgres" => options.UseNpgsql(
+                configuration.GetConnectionString("PostgresServerConnection"),
+            x => x.MigrationsAssembly("PostgresServerMigrations")),
+
+            _ => throw new Exception($"Unsupported provider: {provider}")
+        });
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
 
