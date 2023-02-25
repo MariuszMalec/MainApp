@@ -50,7 +50,7 @@ public class ProgramMVC
         //select provider from appsettings.json
         var provider = configuration["DatabaseProvider"];//Provider.Postgres.ToString();
         var connectionString = configuration.GetConnectionString(provider);
-        switch (Provider.Postgres.ToString())
+        switch (provider)
         {
             case "SqlServer":
                 builder.Services.AddDbContext<ApplicationDbContext, MsSqlDbContext>();
