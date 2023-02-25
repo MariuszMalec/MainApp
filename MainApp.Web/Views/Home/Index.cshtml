@@ -1,9 +1,11 @@
 ﻿@using MainApp.BLL.Entities
+@using MainApp.BLL.Enums;
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Configuration;
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IConfiguration Configuration
+@model MainApp.BLL.Models.ProviderView
 
 @{
     ViewData["Title"] = "Home Page";
@@ -17,6 +19,11 @@
     {
         userFullName = $"{user.FirstName} {user.LastName}";
     }
+
+    var incomeList = Html.GetEnumSelectList<Provider>().Where(l => int.Parse(l.Value) >= 0).ToList();
+    var categoryList = new List<SelectListItem>();
+    categoryList = incomeList;
+
 }
 
 <environment names="Production">
@@ -25,6 +32,23 @@
 
 <environment names="Development">
     <h1 class="display-4">Develop version (@provider)</h1>
+            <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ProviderName" class="control-label"></label>
+                            <select asp-for="ProviderName" id="categorySelect" asp-items="categoryList" class="form-control">
+                        <option selected="selected">Please select</option>
+                    </select>
+                    <span asp-validation-for="ProviderName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+            </div>
+        </div>
 </environment>
 
 <div class="text-center bg-transparent">

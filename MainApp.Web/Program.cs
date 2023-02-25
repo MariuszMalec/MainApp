@@ -61,7 +61,7 @@ public class ProgramMVC
                 break;
         }
 
-        //if (connectionString.Contains("sqlexpress"))
+        //if (connectionString.Contains("SqlServer"))
         //{
         //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
         //}
