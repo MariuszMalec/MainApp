@@ -1,4 +1,5 @@
-﻿using MainApp.BLL.Context;
+﻿using Azure;
+using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
@@ -18,6 +19,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MainApp.Web.Controllers
 {
@@ -162,8 +164,12 @@ namespace MainApp.Web.Controllers
                     await _signInManager.SignInWithClaimsAsync(user, model.RememberMe, claims);
 
                     await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));//TODO dodaje do ApsNetUserClaims
+                    
+                    //get provider server
+                    int enumToInt =int.Parse(model.ProviderName);
+                    var getEnum = Enum.GetName(typeof(Provider), enumToInt);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home", new { ProviderName = getEnum });
 
                 }
                 else if (result.IsLockedOut)

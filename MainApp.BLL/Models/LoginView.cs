@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainApp.BLL.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace MainApp.BLL.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+        public string ProviderName { get; set; }
     }
 }

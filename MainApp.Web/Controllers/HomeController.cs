@@ -1,4 +1,5 @@
-﻿using MainApp.Web.Models;
+﻿using MainApp.BLL.Models;
+using MainApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,10 @@ namespace MainApp.Web.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(LoginView model)
         {
-            return View();
+            var provider = model.ProviderName;
+            return View(model);
         }
 
         public IActionResult Privacy()
