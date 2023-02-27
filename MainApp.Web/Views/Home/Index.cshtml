@@ -6,6 +6,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IConfiguration Configuration
 @model MainApp.BLL.Models.LoginView
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Home Page";
@@ -16,12 +17,17 @@
     var user = await UserManager.GetUserAsync(User);
     var userFullName = "";
 
-    var provider = "Nie wybrano!";
-    if (Model != null)
+    string provider = "Nie wybrano!";
+    int number;
+    bool success = int.TryParse(Model.ProviderName, out number);
+    if (success)
+    {
+        provider = Enum.GetName(typeof(Provider), number);
+    }
+    else
     {
         provider = Model.ProviderName;
     }
-
 
     if (user != null)
     {
@@ -46,7 +52,7 @@
                 <div class="form-group">
                     <label asp-for="ProviderName" class="control-label"></label>
                             <select asp-for="ProviderName" id="categorySelect" asp-items="categoryList" class="form-control">
-                        <option selected="selected">@Model.ProviderName</option>
+                        <option selected="selected">@provider</option>
                     </select>
                     <span asp-validation-for="ProviderName" class="text-danger"></span>
                 </div>
@@ -57,6 +63,11 @@
             </div>
         </div>
 </environment>
+
+<h2> @ViewBag.Test</h2>
+<h2> @ViewData["Provider"]</h2>
+<h2> @TempData["Provider"]</h2>
+
 
 <div class="text-center bg-transparent">
 

@@ -166,10 +166,11 @@ namespace MainApp.Web.Controllers
                     await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));//TODO dodaje do ApsNetUserClaims
                     
                     //get provider server
-                    int enumToInt =int.Parse(model.ProviderName);
-                    var getEnum = Enum.GetName(typeof(Provider), enumToInt);
+                    //int enumToInt =int.Parse(model.ProviderName);
+                    //var getEnum = Enum.GetName(typeof(Provider), enumToInt);
+                    //return RedirectToAction("Index", "Home", new { ProviderName = getEnum });
 
-                    return RedirectToAction("Index", "Home", new { ProviderName = getEnum });
+                    return RedirectToAction("Index", "Home");
 
                 }
                 else if (result.IsLockedOut)

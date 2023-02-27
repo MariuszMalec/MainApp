@@ -34,13 +34,13 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+@*                <div class="form-group">
                     <label asp-for="ProviderName" class="control-label"></label>
                             <select asp-for="ProviderName" id="categorySelect" asp-items="categoryList" class="form-control">
-                        <option selected="selected">Please select</option>
+                        <option selected="selected">@Model.ProviderName</option>
                     </select>
                     <span asp-validation-for="ProviderName" class="text-danger"></span>
-                </div>
+                </div>*@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Log in</button>
