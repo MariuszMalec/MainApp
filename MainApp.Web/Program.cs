@@ -42,55 +42,80 @@ public class ProgramMVC
         //To trzeba dodac!! aby zadzialalo Configuration!! Sqlite
         // IConfiguration Configuration;
         // Configuration = builder.Configuration;
-        // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+        // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux")));
 
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
         //Set the active provider via configuration
         //select provider from appsettings.json
-        var provider = configuration["DatabaseProvider"];//Provider.Postgres.ToString();
+
+        var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
+        //var provider = Provider.PostgresLinux.ToString();
+
         var connectionString = configuration.GetConnectionString(provider);
         switch (provider)
         {
+            case "MySqlLinux":
+                builder.Services.AddDbContext<ApplicationDbContext, MySqlDbContext>();
+                break;
+
             case "SqlServer":
                 builder.Services.AddDbContext<ApplicationDbContext, MsSqlDbContext>();
                 break;
 
-            case "Postgres":
+            case "PostgresWin":
                 builder.Services.AddDbContext<ApplicationDbContext, PostgresDbContext>();
                 break;
+
+            case "PostgresLinux":
+                builder.Services.AddDbContext<ApplicationDbContext, PostgresDbContext>();
+                break;                
         }
 
-        //if (connectionString.Contains("SqlServer"))
-        //{
+        // if (connectionString.Contains("SqlServer"))
+        // {
         //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
-        //}
-        //if (connectionString.Contains("Sqlite"))
-        //{
+        // }
+        // if (connectionString.Contains("Sqlite"))
+        // {
         //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
-        //}
-        //if (connectionString.Contains("postgres"))
-        //{
+        // }
+        // if (connectionString.Contains("PostgresWin"))
+        // {
         //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
-        //}
+        // }
+        // if (connectionString.Contains("MainAppWebPg"))
+        // {
+        //    builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(
+        //         configuration.GetConnectionString(provider),
+        //     x => x.MigrationsAssembly("PostgresServerMigrations")));
+        // }
 
-        builder.Services.AddDbContext<ApplicationDbContext>(
-        options => _ = provider switch
-        {
-            "Sqlite" => options.UseSqlite(
-                configuration.GetConnectionString("SqliteConnection"),
-                x => x.MigrationsAssembly("SqliteMigrations")),
 
-            "SqlServer" => options.UseSqlServer(
-                configuration.GetConnectionString("SqlServerConnection"),
-            x => x.MigrationsAssembly("SqlServerMigrations")),
+        //options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));
 
-            "Postgres" => options.UseNpgsql(
-                configuration.GetConnectionString("PostgresServerConnection"),
-            x => x.MigrationsAssembly("PostgresServerMigrations")),
 
-            _ => throw new Exception($"Unsupported provider: {provider}")
-        });
+        // builder.Services.AddDbContext<ApplicationDbContext>(
+        // options => _ = provider switch
+        // {
+        //     "Sqlite" => options.UseSqlite(
+        //         configuration.GetConnectionString("SqliteConnection"),
+        //         x => x.MigrationsAssembly("SqliteMigrations")),
+
+        //     "SqlServer" => options.UseSqlServer(
+        //         configuration.GetConnectionString("SqlServerConnection"),
+        //     x => x.MigrationsAssembly("SqlServerMigrations")),
+
+        //     "PostgresWin" => options.UseNpgsql(
+        //         configuration.GetConnectionString("PostgresServerConnection"),
+        //     x => x.MigrationsAssembly("PostgresServerMigrations")),
+
+        //     "PostgresLinux" => options.UseNpgsql(
+        //         configuration.GetConnectionString("PostgresLinux"),
+        //     x => x.MigrationsAssembly("PostgresServerMigrations")),            
+
+        //     _ => throw new Exception($"Unsupported provider: {provider}")
+        // });
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
 

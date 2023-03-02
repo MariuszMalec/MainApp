@@ -2,9 +2,11 @@
 {
     public enum Provider
     {
+        PostgresWin,
+        PostgresLinux,
         SqlServer,
-        Postgres,
-        MySql,
-        Sqlite
+        SqliteServer,
+        MySqlLinux,
+        MySqlWin
     }
 }

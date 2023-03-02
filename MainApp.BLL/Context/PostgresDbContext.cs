@@ -12,7 +12,22 @@ namespace MainApp.BLL.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseNpgsql(Configuration.GetConnectionString("Postgres"));
+            var provider = Configuration["DatabaseProvider"];
+            switch (provider)
+            {
+                case "SqlServer":
+                    break;
+
+                case "PostgresWin":
+                    options.UseNpgsql(Configuration.GetConnectionString("PostgresWin"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
+                    break;
+
+                case "PostgresLinux":
+                    options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
+                    break;                
+            }
+
+
         }
     }
 }

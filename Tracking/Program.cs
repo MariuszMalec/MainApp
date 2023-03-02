@@ -25,7 +25,7 @@ builder.Services.AddHttpContextAccessor();
 //to musi byc dla core6
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
-var connectionString = configuration.GetConnectionString("Default");
+var connectionString = configuration.GetConnectionString("PostgresLinux");
 builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
