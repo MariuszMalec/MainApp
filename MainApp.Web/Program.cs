@@ -36,31 +36,43 @@ public class ProgramMVC
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        //To trzeba dodac!! aby zadzialalo Configuration!! Sqlite
-        // IConfiguration Configuration;
-        // Configuration = builder.Configuration;
-        // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
-
         //to musi byc dla core6 postgres
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
 
-        //var connectionString = configuration.GetConnectionString("Default");
-        //builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+        if (environment.IsEnvironment("Sqlite"))
+        {
+            //IConfiguration Configuration;
+            //Configuration = builder.Configuration;
+            // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+        }
 
-        var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
-        builder.Services.AddDbContext<ApplicationDbContext>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(configuration.GetConnectionString("Default"), serverVersion)
-                // The following three options help with debugging, but should
-                // be changed or removed for production.
-                //.LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-        );
+        if (environment.IsEnvironment("PgSql"))
+        {
+            //var connectionString = configuration.GetConnectionString("Defaultpg");
+            //builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(connectionString));
+        }
 
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
+        if (environment.IsEnvironment("MSql"))
+        {
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Defaultmsql")));
+        }
 
+        if (environment.IsEnvironment("MySql"))
+        {
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(configuration.GetConnectionString("Defaultmysql"), serverVersion)
+                    // The following three options help with debugging, but should
+                    // be changed or removed for production.
+                    //.LogTo(Console.WriteLine, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+            );
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
+        }
         //Services configuration
 
         builder.Services.AddControllersWithViews();
