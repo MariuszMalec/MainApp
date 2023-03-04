@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MainApp.BLL.Enums;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace MainApp.BLL.Context
@@ -11,7 +12,8 @@ namespace MainApp.BLL.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
+            var provider = Provider.SqliteServer.ToString();
+            options.UseSqlServer(Configuration.GetConnectionString(provider));
         }
     }
 }
