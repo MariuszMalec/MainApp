@@ -25,8 +25,20 @@ builder.Services.AddHttpContextAccessor();
 //to musi byc dla core6
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
-var connectionString = configuration.GetConnectionString("PostgresLinux");
-builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+
+var provider = configuration["DatabaseProvider"];
+var connectionString = configuration.GetConnectionString(provider);
+switch (provider)
+{
+    case "PostgresLinux":
+        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        break;
+    case "SqlServer":
+        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseSqlServer(connectionString));
+        break;
+    default:
+        throw new Exception($"Unsupported provider: {provider}");
+}
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -89,7 +101,8 @@ using (var scope = app.Services.CreateScope())
             {
                 if (context.Database.IsRelational())
                 {
-                    context?.Database.Migrate();
+                    if (!context.Database.CanConnect())
+                        context?.Database.Migrate();
                     //TrainerSeed.SeedTrainer(context);
                     await TrainerSeed.SeedTrainers(context);
                 }

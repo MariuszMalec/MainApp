@@ -2,6 +2,7 @@
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -63,6 +64,9 @@ namespace MainApp.Web.Services
             // HttpClient client = new HttpClient(clientHandler);
 
             //HttpClient client = httpClientFactory.CreateClient();
+
+            if (myEvent.Id == 0)
+                _logger.LogError($"Event can't be id {myEvent.Id}");
 
             var requestUser = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
 

@@ -17,11 +17,14 @@ namespace MainApp.BLL.Context
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             var provider = Configuration["DatabaseProvider"];
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
             switch (provider)
             {
                 case "MySqlLinux":
-                    var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
                     options.UseMySql(Configuration.GetConnectionString("MySqlLinux"), serverVersion);
+                    break;
+                case "MySqlWin":         
+                    options.UseMySql(Configuration.GetConnectionString("MySqlWin"), serverVersion);
                     break;
             }
         }

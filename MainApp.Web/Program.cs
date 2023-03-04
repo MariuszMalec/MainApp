@@ -59,6 +59,10 @@ public class ProgramMVC
                 builder.Services.AddDbContext<ApplicationDbContext, MySqlDbContext>();
                 break;
 
+            case "MySqlWin":
+                builder.Services.AddDbContext<ApplicationDbContext, MySqlDbContext>();
+                break;
+
             case "SqlServer":
                 builder.Services.AddDbContext<ApplicationDbContext, MsSqlDbContext>();
                 break;
@@ -69,7 +73,10 @@ public class ProgramMVC
 
             case "PostgresLinux":
                 builder.Services.AddDbContext<ApplicationDbContext, PostgresDbContext>();
-                break;                
+                break;
+
+            default:
+                throw new Exception($"Unsupported provider: {provider}");
         }
 
         // if (connectionString.Contains("SqlServer"))
@@ -209,7 +216,8 @@ public class ProgramMVC
             {
                 if (context.Database.IsRelational())
                 {
-                    context?.Database.Migrate();
+                    if (!context.Database.CanConnect())
+                        context?.Database.Migrate();
                     await SeedData.SeedUser(context, userManager, roleManager);
                 }
             }
