@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace Tracking.Repositories
     {
         private readonly MainApplicationContext _context;
         private DbSet<T> entities;
-        public Repository(MainApplicationContext context)
+        private readonly IConfiguration _configuration;
+        public Repository(MainApplicationContext context, IConfiguration configuration)
         {
             _context = context;
             entities = context.Set<T>();
+            _configuration = configuration;
         }
         public async Task<IEnumerable<T>> GetAll()
         {
@@ -38,10 +41,15 @@ namespace Tracking.Repositories
             {
                 throw new ArgumentNullException("entity");
             }
-            if (entities.Count() == 0)
-                entity.Id = 1;
-            if (entities.Count() > 0)
-                entity.Id = (entities?.Max(m => m.Id) ?? 0) + 1; //TODO problem z postgresem automat nie dodaje kolejnego id!
+            //TODO problem z postgresem w linux automat nie dodaje kolejnego id!
+            var defaultprovider = _configuration["DatabaseProvider"];
+            if (defaultprovider.Contains("Postgres"))
+            {
+                if (entities.Count() == 0)
+                    entity.Id = 1;
+                if (entities.Count() > 0)
+                    entity.Id = (entities?.Max(m => m.Id) ?? 0) + 1;
+            }
             entities.Add(entity);
             await _context.SaveChangesAsync();
         }
