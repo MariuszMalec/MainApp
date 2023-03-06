@@ -33,8 +33,11 @@ switch (provider)
     case "PostgresLinux":
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
         break;
+    case "PostgresWin":
+        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        break;
     case "SqlServer":
-        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseSqlServer(connectionString));
+        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
         break;
     default:
         throw new Exception($"Unsupported provider: {provider}");
@@ -48,7 +51,7 @@ builder.Services.AddTransient<IRepositoryService<User>, UserService>();
 
 builder.Services.AddTransient<IRepositoryService<Event>, TrackingService>();
 
-builder.Services.AddDbContext<MainApplicationContext>();
+//builder.Services.AddDbContext<MainApplicationContext>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 

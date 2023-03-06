@@ -11,18 +11,33 @@ namespace Tracking.Context
     {
         private static List<Trainer> Trainers = new List<Trainer>()//TODO insert startowe dane do bazy
         {
-            new Trainer {Id = 1, FirstName = "Patryk", LastName="Szwermer" , Email ="pssg@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 2, FirstName = "Przemyslaw", LastName="Sawicki" , Email ="ps@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 3, FirstName = "Marcin", LastName="Dabrowski" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 4, FirstName = "Piotr", LastName="Katny" , Email ="pk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 5, FirstName = "Marcin", LastName="Dudzic" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 6, FirstName = "Maciej", LastName="Krakowiak" , Email ="mk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 7, FirstName = "Mateusz", LastName="Cebula" , Email ="mc@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 8, FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 9, FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 10, FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 11, FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {Id = 12, FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow}
+            //new Trainer {Id = 1, FirstName = "Patryk", LastName="Szwermer" , Email ="pssg@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 2, FirstName = "Przemyslaw", LastName="Sawicki" , Email ="ps@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 3, FirstName = "Marcin", LastName="Dabrowski" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 4, FirstName = "Piotr", LastName="Katny" , Email ="pk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 5, FirstName = "Marcin", LastName="Dudzic" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 6, FirstName = "Maciej", LastName="Krakowiak" , Email ="mk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 7, FirstName = "Mateusz", LastName="Cebula" , Email ="mc@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 8, FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 9, FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 10, FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 11, FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            //new Trainer {Id = 12, FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow}
+
+
+            //TODO entity nadaje automatycznie id
+            new Trainer {FirstName = "Patryk", LastName="Szwermer" , Email ="pssg@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Przemyslaw", LastName="Sawicki" , Email ="ps@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Marcin", LastName="Dabrowski" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Piotr", LastName="Katny" , Email ="pk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Marcin", LastName="Dudzic" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Maciej", LastName="Krakowiak" , Email ="mk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Mateusz", LastName="Cebula" , Email ="mc@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
+            new Trainer {FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow}
         };
 
         public static List<Trainer> GetAll()
