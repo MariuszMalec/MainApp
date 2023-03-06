@@ -34,7 +34,8 @@ switch (provider)
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
         break;
     case "PostgresWin":
-        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        //builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<MainApplicationContext, PgDbContext>();
         break;
     case "SqlServer":
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
@@ -42,6 +43,35 @@ switch (provider)
     default:
         throw new Exception($"Unsupported provider: {provider}");
 }
+
+
+
+//TODO tworzenie migracji z automatu nie wiem czy dziala to?
+//builder.Services.AddDbContext<MainApplicationContext>(
+//options => _ = provider switch
+//{
+//    "SqliteServer" => options.UseSqlite(
+//        configuration.GetConnectionString("SqliteServer"),
+//        x => x.MigrationsAssembly("SqliteMigrations")),
+
+//    "SqlServer" => options.UseSqlServer(
+//        configuration.GetConnectionString("SqlServer"),
+//    x => x.MigrationsAssembly("SqlServerMigrations")),
+
+//    "PostgresWin" => options.UseNpgsql(
+//        configuration.GetConnectionString("PostgresWin"),
+//    x => x.MigrationsAssembly("PostgresServerMigrations")),
+
+//    "PostgresLinux" => options.UseNpgsql(
+//        configuration.GetConnectionString("PostgresLinux"),
+//    x => x.MigrationsAssembly("PostgresServerMigrations")),
+
+//    "MySqlWin" => options.UseNpgsql(
+//        configuration.GetConnectionString("MySqlWin"),
+//    x => x.MigrationsAssembly("MySqlServerMigration")),
+
+//    _ => throw new Exception($"Unsupported provider: {provider}")
+//});
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
