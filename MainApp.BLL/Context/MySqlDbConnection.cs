@@ -23,7 +23,7 @@ namespace MainApp.BLL.Context
                 case "MySqlLinux":
                     options.UseMySql(Configuration.GetConnectionString("MySqlLinux"), serverVersion);
                     break;
-                case "MySqlWin":         
+                case "MySqlWin":
                     options.UseMySql(Configuration.GetConnectionString("MySqlWin"), serverVersion);
                     break;
             }

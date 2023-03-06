@@ -53,6 +53,9 @@ public class ProgramMVC
         //var provider = Provider.PostgresLinux.ToString();
 
         var connectionString = configuration.GetConnectionString(provider);
+
+        //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(provider)));
+
         switch (provider)
         {
             case "MySqlLinux":
@@ -65,6 +68,10 @@ public class ProgramMVC
 
             case "SqlServer":
                 builder.Services.AddDbContext<ApplicationDbContext, MsSqlDbContext>();
+                break;
+
+            case "SqliteServer":
+                builder.Services.AddDbContext<ApplicationDbContext, SqliteDbContext>();
                 break;
 
             case "PostgresWin":
@@ -98,31 +105,32 @@ public class ProgramMVC
         //     x => x.MigrationsAssembly("PostgresServerMigrations")));
         // }
 
+        //TODO tworzenie migracji z automatu nie wiem czy dziala to?
+        //builder.Services.AddDbContext<ApplicationDbContext>(
+        //options => _ = provider switch
+        //{
+        //    "SqliteServer" => options.UseSqlite(
+        //        configuration.GetConnectionString("SqliteServer"),
+        //        x => x.MigrationsAssembly("SqliteMigrations")),
 
-        //options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));
+        //    "SqlServer" => options.UseSqlServer(
+        //        configuration.GetConnectionString("SqlServer"),
+        //    x => x.MigrationsAssembly("SqlServerMigrations")),
 
+        //    "PostgresWin" => options.UseNpgsql(
+        //        configuration.GetConnectionString("PostgresServerConnection"),
+        //    x => x.MigrationsAssembly("PostgresServerMigrations")),
 
-        // builder.Services.AddDbContext<ApplicationDbContext>(
-        // options => _ = provider switch
-        // {
-        //     "Sqlite" => options.UseSqlite(
-        //         configuration.GetConnectionString("SqliteConnection"),
-        //         x => x.MigrationsAssembly("SqliteMigrations")),
+        //    "PostgresLinux" => options.UseNpgsql(
+        //        configuration.GetConnectionString("PostgresLinux"),
+        //    x => x.MigrationsAssembly("PostgresServerMigrations")),
 
-        //     "SqlServer" => options.UseSqlServer(
-        //         configuration.GetConnectionString("SqlServerConnection"),
-        //     x => x.MigrationsAssembly("SqlServerMigrations")),
+        //    "MySqlWin" => options.UseNpgsql(
+        //        configuration.GetConnectionString("MySqlWin"),
+        //    x => x.MigrationsAssembly("MySqlServerMigration")),
 
-        //     "PostgresWin" => options.UseNpgsql(
-        //         configuration.GetConnectionString("PostgresServerConnection"),
-        //     x => x.MigrationsAssembly("PostgresServerMigrations")),
-
-        //     "PostgresLinux" => options.UseNpgsql(
-        //         configuration.GetConnectionString("PostgresLinux"),
-        //     x => x.MigrationsAssembly("PostgresServerMigrations")),            
-
-        //     _ => throw new Exception($"Unsupported provider: {provider}")
-        // });
+        //    _ => throw new Exception($"Unsupported provider: {provider}")
+        //});
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
 
@@ -208,16 +216,18 @@ public class ProgramMVC
 
         using (var scope = app.Services.CreateScope())
         {
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();//TODO tutaj powinien wejsc do OnConfiguring 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRoles>>();
+            var takeConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
             if (context.Database.IsRelational())
             {
                 if (context.Database.IsRelational())
                 {
-                    if (!context.Database.CanConnect())
-                        context?.Database.Migrate();
+                    provider = configuration["DatabaseProvider"];
+                    context.Database.EnsureCreated();
+                    //context?.Database.Migrate();
                     await SeedData.SeedUser(context, userManager, roleManager);
                 }
             }

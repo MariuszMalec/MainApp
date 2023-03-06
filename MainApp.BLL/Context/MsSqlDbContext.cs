@@ -12,7 +12,7 @@ namespace MainApp.BLL.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var provider = Provider.SqliteServer.ToString();
+            var provider = Provider.SqlServer.ToString();
             options.UseSqlServer(Configuration.GetConnectionString(provider));
         }
     }

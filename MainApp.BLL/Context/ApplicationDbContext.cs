@@ -20,11 +20,11 @@ namespace MainApp.BLL.Context
         //    : base(options)
         //{
         //}
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //    //optionsBuilder.UseSqlite("Data Source=C:\\Temp\\Databases\\ApplicationUsers.db");//TODO to samo w appsettings.json jest
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite("Data Source=C:\\Temp\\Databases\\ApplicationUsers.db");//TODO to samo w appsettings.json jest
         //    optionsBuilder.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
-        // }
+        //}
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<ApplicationUser>().ToTable("ApplicationUsers");

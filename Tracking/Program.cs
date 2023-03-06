@@ -101,8 +101,7 @@ using (var scope = app.Services.CreateScope())
             {
                 if (context.Database.IsRelational())
                 {
-                    if (!context.Database.CanConnect())
-                        context?.Database.Migrate();
+                    context?.Database.Migrate();
                     //TrainerSeed.SeedTrainer(context);
                     await TrainerSeed.SeedTrainers(context);
                 }
