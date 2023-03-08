@@ -2,6 +2,7 @@
 using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
 using MainApp.BLL.ExtentionsMethod;
 using MainApp.BLL.Models;
 using MainApp.BLL.Services;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -25,13 +27,15 @@ namespace MainApp.Web.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IPersonService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public UserController(IPersonService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration)
         {
             _userService = userService;
             _mapper = mapper;
             _userManager = userManager;
             _context = context;
+            _configuration = configuration;
         }
         // GET: UserController1
         public async Task<IActionResult> Index()
@@ -47,6 +51,9 @@ namespace MainApp.Web.Controllers
             await SetRolesForUsers(users);
 
             var model = _mapper.Map<List<UserView>>(users);
+
+            var provider = _configuration["Provider"];//TODO from program.cs
+            TempData["Provider"] = provider;
 
             return View(model);
         }

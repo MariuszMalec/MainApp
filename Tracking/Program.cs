@@ -34,7 +34,7 @@ switch (provider)
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
         break;
     case "PostgresWin":
-        builder.Services.AddDbContext<PgDbContext>(o => o.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<PgDbContext>(o => o.UseNpgsql(connectionString));//TODO dzieki temu nie trzeba nadpisywac OnConfiguring
         builder.Services.AddDbContext<MainApplicationContext, PgDbContext>();
         break;
     case "SqlServer":

@@ -29,28 +29,46 @@ using MainApp.BLL.Models;
 using MainApp.BLL.Enums;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Serilog.Context;
+using Microsoft.Extensions.Hosting.Internal;
 
 public class ProgramMVC
 {
     public static async Task Main(string[] args)
     {
+        var provider = SelectProvider();
+        args = new string[] { provider };
+        await StartWebApp(args);
+    }
+
+    private static async Task StartWebApp(string[] args)
+    {
+        if (args.Length > 0)
+        {
+            //here current Web application stops
+        }
+
         var builder = WebApplication.CreateBuilder(args);
+
+        ConfigurationManager configuration = builder.Configuration;
+        IWebHostEnvironment environment = builder.Environment;
+        var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
+        if (args.Length > 0)//TODO zmiana providera jesli wybrany inny w homecontroller
+        {
+            provider = args[0];
+        }
+        //TODO add static values which I can use f.e in homecontroller!
+        configuration.AddInMemoryCollection(new Dictionary<string, string>
+        {
+            { "Provider", provider },
+        });
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        //To trzeba dodac!! aby zadzialalo Configuration!! Sqlite
-        // IConfiguration Configuration;
-        // Configuration = builder.Configuration;
-        // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux")));
-
-        ConfigurationManager configuration = builder.Configuration;
-        IWebHostEnvironment environment = builder.Environment;
-        //Set the active provider via configuration
-        //select provider from appsettings.json
-
-        var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
-        //var provider = Provider.PostgresLinux.ToString();
+        //Add serilog
+        builder.Host.UseSerilog((hostContext, services, configuration) => {
+            configuration.WriteTo.Console();
+        });
 
         var connectionString = configuration.GetConnectionString(provider);
 
@@ -135,9 +153,9 @@ public class ProgramMVC
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);//TODO dodane aby poprawic blad zapisu czasu utc w postgres
 
         //Services configuration
-
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
+        builder.Services.AddScoped<ApplicationLifetime>();
         builder.Services.AddTransient<TrackingService>();
         builder.Services.AddTransient<IPersonService, UserService>();
         builder.Services.AddTransient<ITrainersService, TrainersService>();
@@ -165,19 +183,19 @@ public class ProgramMVC
 
         //how to solve problem with ssl! only linux!?
         builder.Services.AddHttpClient("Tracking").ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
-            {
-               ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+        {
+            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
 
-            });
+        });
 
         builder.Services.AddHttpClient("Tracking", client =>
-                    {
-                        client.BaseAddress = new Uri("https://localhost:7001/");
-                        client.Timeout = new TimeSpan(0, 0, 60);
-                        client.DefaultRequestHeaders.Add(
-                            HeaderNames.Accept, "application/json");
-                        client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
-                    });
+        {
+            client.BaseAddress = new Uri("https://localhost:7001/");
+            client.Timeout = new TimeSpan(0, 0, 60);
+            client.DefaultRequestHeaders.Add(
+                HeaderNames.Accept, "application/json");
+            client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+        });
 
         builder.Services.AddAuthorization();
 
@@ -196,7 +214,7 @@ public class ProgramMVC
         //    options.AccessDeniedPath = $"/account/accessDenied";
         //});
 
-        //TODO czas zalogowania po 2min odpala sie login
+        //TODO czas zalogowania po 5min odpala sie login
         builder.Services.ConfigureApplicationCookie(options =>
         {
             // Cookie settings
@@ -225,7 +243,6 @@ public class ProgramMVC
             {
                 if (context.Database.IsRelational())
                 {
-                    provider = configuration["DatabaseProvider"];
                     context.Database.EnsureCreated();
                     //context?.Database.Migrate();
                     await SeedData.SeedUser(context, userManager, roleManager);
@@ -266,7 +283,6 @@ public class ProgramMVC
         app.MapRazorPages();//TODO TO MUSI BYC JAK CHCEM UZYWAC IDENTITY/PAGE
 
         app.Run();
-
     }
 
     static void AddAuthorizationPolicies(IServiceCollection services)//TODO add policy to program.cs
@@ -281,5 +297,45 @@ public class ProgramMVC
             options.AddPolicy("RequireAdmin", policy => policy.RequireRole(Roles.Admin.ToString()));
             options.AddPolicy("RequireUser", policy => policy.RequireRole(Roles.User.ToString()));
         });
+    }
+
+    static string SelectProvider()
+    {
+        int num;
+        var provider = Provider.PostgresWin.ToString();
+        Console.Write("\nSelect database provider 1 to 4: ");
+        Console.Write("\n1 - postgres");
+        Console.Write("\n2 - mysql");
+        Console.Write("\n3 - msql");
+        Console.Write("\n4 - sqlite\n");
+        var numasstring = Console.ReadLine();
+        while (!int.TryParse(numasstring, out num))
+        {
+            Console.WriteLine("This is not a number!");
+            numasstring = Console.ReadLine();
+        }
+        switch (num)
+        {
+            case 1:
+                Console.Write("Selected pg \n");
+                provider = Provider.PostgresWin.ToString();
+                break;
+            case 2:
+                Console.Write("selected mysql \n");
+                provider = Provider.MySqlWin.ToString();
+                break;
+            case 3:
+                Console.Write("selected msql \n");
+                provider = Provider.SqlServer.ToString();
+                break;
+            case 4:
+                Console.Write("selected sqlite \n");
+                provider = Provider.SqliteServer.ToString();
+                break;
+            default:
+                Console.WriteLine("wrong number!\n");
+                break;
+        }
+        return provider;
     }
 }

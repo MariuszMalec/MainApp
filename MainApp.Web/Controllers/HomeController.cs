@@ -1,18 +1,29 @@
 ﻿using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.BLL.Models;
 using MainApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.CommandLine;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NuGet.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using QC = Microsoft.Data.SqlClient;
 
@@ -23,27 +34,73 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ApplicationLifetime _applicationLifetime;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, ApplicationDbContext applicationDbContext = null)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, ApplicationLifetime applicationLifetime, SignInManager<ApplicationUser> signInManager = null)
         {
             _logger = logger;
             _configuration = configuration;
-            _applicationDbContext = applicationDbContext;
+            _applicationLifetime = applicationLifetime;
+            _signInManager = signInManager;
         }
 
-        public IActionResult Index(LoginView model)
+        public IActionResult Index(LoginView model, string param)
         {
-            var defaultprovider = _configuration["DatabaseProvider"];
-            if (model.ProviderName == null)
-                model.ProviderName = defaultprovider;
-            var provider = model.ProviderName;
+            //var defaultprovider = _configuration["DatabaseProvider"];//TODO  z appsettings.json
+            //if (model.ProviderName == null)
+            //{
+            //    model.ProviderName = defaultprovider;
+            //}
+            //var provider = model.ProviderName;
+            //provider= (string)TempData["Provider"];
+            //var providerFromProgramCs = _configuration["Provider"];
 
-            provider= (string)TempData["Provider"];
+            if (param == string.Empty || param == null)
+            {
+                model.ProviderName = _configuration["Provider"];
+                model.RememberMe = true;
+                model.Email = "";
+                model.Password = "";
+                _logger.LogInformation($"Wybrany provider {model.ProviderName}");
+                return View(model);
+            }
 
-            //ViewBag.Test = provider;
+            var viewModelFromEdit = JsonConvert.DeserializeObject<LoginView>(param);
+            string provider = "Nie wybrano!";
+            int number;
+            bool success = int.TryParse(viewModelFromEdit.ProviderName, out number);
+            if (success)
+            {
+                provider = Enum.GetName(typeof(Provider), number);
+            }
+            else
+            {
+                provider = viewModelFromEdit.ProviderName;
+            }
 
+            var startProvider = _configuration["Provider"];//TODO from program.cs
+
+            if (startProvider != provider)//TODO tutaj wstawic nowy z edycji provider
+            {
+                model.ProviderName = provider;
+                model.RememberMe= true;
+                model.Email = "";
+                model.Password = "";
+                _logger.LogInformation($"Wybrany provider {model.ProviderName}");
+                return View(model);
+            }
+
+            //if (newProvider != model.ProviderName)
+            //{
+            //    model.ProviderName = newProvider.ToString();
+            //    _logger.LogInformation($"Wybrany provider {model.ProviderName}");
+            //    return View(model);
+            //}
+
+            _logger.LogInformation($"Wybrany provider {model.ProviderName}");
             return View(model);
+
         }
 
         public IActionResult Edit(LoginView model)
@@ -60,7 +117,27 @@ namespace MainApp.Web.Controllers
                 provider = model.ProviderName;
             }
 
-            var connectionString = _configuration.GetConnectionString(provider);
+            var defaultProvider = _configuration["Provider"];
+
+            if (defaultProvider != provider)
+            {
+                //_applicationLifetime.StopApplication();
+                //ProgramMVC.Main(new string[] { provider });
+
+                _signInManager.SignOutAsync();
+                //TempData["Provider"] = provider;
+
+                model.RememberMe = true;
+                model.Email = "";
+                model.Password = "";
+
+                ViewData["Modelek"] = JsonConvert.SerializeObject(model);
+                //return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index", "Home", new { param = JsonConvert.SerializeObject(model) });
+
+
+            }
 
             //_applicationDbContext.Database.CanConnect();
 
