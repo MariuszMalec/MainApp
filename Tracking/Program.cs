@@ -16,6 +16,7 @@ using System.Net.Security;
 using Tracking.Middleware;
 using System;
 using MainApp.BLL.Enums;
+using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,15 +44,20 @@ if (environment.EnvironmentName == "PracaPostgres")
 }
 if (environment.EnvironmentName == "LaptopZonki")
 {
-    provider = Provider.PostgresWin.ToString();
+    provider = Provider.MySqlWin.ToString();
 }
 if (environment.EnvironmentName == "Linux")
 {
     provider = Provider.PostgresLinux.ToString();
 }
+//-------------------------------------------------------
+//-------------------------------------------------------
 
-//-------------------------------------------------------
-//-------------------------------------------------------
+//TODO add static values which I can use f.e in homecontroller!
+configuration.AddInMemoryCollection(new Dictionary<string, string>
+        {
+            { "Provider", provider },
+        });
 
 var connectionString = configuration.GetConnectionString(provider);
 switch (provider)
@@ -62,6 +68,9 @@ switch (provider)
     case "PostgresWin":
         builder.Services.AddDbContext<PgDbContext>(o => o.UseNpgsql(connectionString));//TODO dzieki temu nie trzeba nadpisywac OnConfiguring
         builder.Services.AddDbContext<MainApplicationContext, PgDbContext>();
+        break;
+    case "MySqlWin":
+        builder.Services.AddDbContext<MainApplicationContext, MySqlDbContext>();
         break;
     case "SqlServer":
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));

@@ -135,7 +135,7 @@ public class ProgramMVC
         }
         if (environment.EnvironmentName == "LaptopZonki")//TODO zmiana providera gdy wybrane spec. srodowisko
         {
-            provider = Provider.PostgresWin.ToString();
+            provider = Provider.MySqlWin.ToString();
         }
         if (environment.EnvironmentName == "Linux")//TODO zmiana providera gdy wybrane spec. srodowisko
         {

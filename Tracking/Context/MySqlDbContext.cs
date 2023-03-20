@@ -1,24 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 
-namespace MainApp.BLL.Context
+namespace Tracking.Context
 {
-    public class MySqlDbContext : ApplicationDbContext
+    public class MySqlDbContext : MainApplicationContext
     {
-        public MySqlDbContext(IConfiguration configuration)
-            : base(configuration)
+        protected readonly IConfiguration Configuration;
+
+        public MySqlDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
+            Configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var provider = Configuration["DatabaseProvider"];
-
-            provider = Configuration["Provider"];
+            var provider = Configuration["Provider"];
 
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
             switch (provider)
@@ -31,5 +28,6 @@ namespace MainApp.BLL.Context
                     break;
             }
         }
+
     }
 }
