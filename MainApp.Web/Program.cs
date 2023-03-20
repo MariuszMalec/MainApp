@@ -30,32 +30,126 @@ using MainApp.BLL.Enums;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Serilog.Context;
 using Microsoft.Extensions.Hosting.Internal;
+using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Diagnostics;
+using System.Net.Sockets;
+using Microsoft.Identity.Client;
 
 public class ProgramMVC
 {
+    private static CancellationTokenSource _tokenSource = new CancellationTokenSource();
+    private static bool _restartRequest;
+    private static TcpListener server = null;
+    private static bool _selectProviderFromConsole = false;
+
     public static async Task Main(string[] args)
     {
-        var provider = SelectProvider();
-        args = new string[] { provider };
-        await StartWebApp(args);
+
+        if (args.Length > 0)
+        {
+            //TODO jak tutaj wystartowac apke jeszcze raz z nowym providerem
+
+            //var process = new Process();
+            //var startInfo = new ProcessStartInfo("cmd.exe", "/c iisreset /restart");
+            //startInfo.CreateNoWindow = true;
+            //startInfo.UseShellExecute = false;
+            //process.StartInfo = startInfo;
+            //process.Start();
+
+            //process.WaitForExit();
+
+            //var process = System.Diagnostics.Process.GetCurrentProcess();
+            //var fileName = process.MainModule.FileName;
+            //process.Kill();
+            //System.Diagnostics.Process.Start(fileName);
+            //process.WaitForExit();
+
+            //Process currentProcess = Process.GetCurrentProcess();
+            //string applicationPath = currentProcess.MainModule.FileName;
+            //currentProcess.Kill();
+            //Process.Start(applicationPath);
+           
+            // Set the TcpListener on port 13000.
+            //Int32 port = 5001;
+            //IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+            //TcpListener server = new TcpListener(port);
+            //server = new TcpListener(localAddr, port);
+
+            //server.Stop();
+
+            // Start listening for client requests.
+            //server.Start();
+
+            //Console.Write("Waiting for a connection... ");
+
+            // Perform a blocking call to accept requests.
+            // You could also use server.AcceptSocket() here.
+            //using TcpClient client = server.AcceptTcpClient();
+            //Console.WriteLine("Connected!");
+
+            _restartRequest = true;
+
+            //await StartWebApp(args);
+        }
+
+        if (args.Length == 0 && _selectProviderFromConsole == false)//first start according appsetings.json
+            await StartWebApp(args);
+
+        if (_selectProviderFromConsole)//start according selection from console
+        {
+            var provider = SelectProvider();
+            args = new string[] { provider };
+            await StartWebApp(args);
+        }
     }
 
     private static async Task StartWebApp(string[] args)
     {
+
+
         if (args.Length > 0)
         {
-            //here current Web application stops
+            //here current Web application start again with new provider
         }
 
         var builder = WebApplication.CreateBuilder(args);
 
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
+
+        //-------------------------------------------------------
+        // -------------- ustalenie providera -------------------
+        //-------------------------------------------------------
+
         var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
-        if (args.Length > 0)//TODO zmiana providera jesli wybrany inny w homecontroller
+        
+        if (environment.EnvironmentName == "PracaMsql")//TODO zmiana providera gdy wybrane spec. srodowisko
+        {
+            provider = Provider.SqlServer.ToString();
+        }
+        if (environment.EnvironmentName == "PracaPostgres")//TODO zmiana providera gdy wybrane spec. srodowisko
+        {
+            provider = Provider.PostgresWin.ToString();
+        }
+        if (environment.EnvironmentName == "LaptopZonki")//TODO zmiana providera gdy wybrane spec. srodowisko
+        {
+            provider = Provider.PostgresWin.ToString();
+        }
+        if (environment.EnvironmentName == "Linux")//TODO zmiana providera gdy wybrane spec. srodowisko
+        {
+            provider = Provider.PostgresLinux.ToString();
+        }
+
+        if (args.Length > 0)//TODO zmiana providera jesli wybrany inny przez console
         {
             provider = args[0];
         }
+
+        //-------------------------------------------------------
+        //-------------------------------------------------------
+
         //TODO add static values which I can use f.e in homecontroller!
         configuration.AddInMemoryCollection(new Dictionary<string, string>
         {
@@ -232,6 +326,8 @@ public class ProgramMVC
 
         var app = builder.Build();
 
+        //await app.StopAsync();
+
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();//TODO tutaj powinien wejsc do OnConfiguring 
@@ -283,6 +379,7 @@ public class ProgramMVC
         app.MapRazorPages();//TODO TO MUSI BYC JAK CHCEM UZYWAC IDENTITY/PAGE
 
         app.Run();
+
     }
 
     static void AddAuthorizationPolicies(IServiceCollection services)//TODO add policy to program.cs
@@ -338,4 +435,14 @@ public class ProgramMVC
         }
         return provider;
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<ProgramMVC>()
+            .UseUrls($"http://localhost:8001", $"http://localhost:8002")
+            ;
+        });
+
 }

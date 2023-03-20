@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.CommandLine;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
@@ -25,6 +26,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using static ProgramMVC;
+using static System.Net.Mime.MediaTypeNames;
 using QC = Microsoft.Data.SqlClient;
 
 namespace MainApp.Web.Controllers
@@ -34,10 +37,10 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly ApplicationLifetime _applicationLifetime;
+        private readonly Microsoft.AspNetCore.Hosting.IApplicationLifetime _applicationLifetime;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, ApplicationLifetime applicationLifetime, SignInManager<ApplicationUser> signInManager = null)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IApplicationLifetime applicationLifetime, SignInManager<ApplicationUser> signInManager = null)
         {
             _logger = logger;
             _configuration = configuration;
@@ -47,6 +50,7 @@ namespace MainApp.Web.Controllers
 
         public IActionResult Index(LoginView model, string param)
         {
+            //_applicationLifetime.ApplicationStarted();
             //var defaultprovider = _configuration["DatabaseProvider"];//TODO  z appsettings.json
             //if (model.ProviderName == null)
             //{
@@ -81,7 +85,7 @@ namespace MainApp.Web.Controllers
 
             var startProvider = _configuration["Provider"];//TODO from program.cs
 
-            if (startProvider != provider)//TODO tutaj wstawic nowy z edycji provider
+            if (startProvider != provider)//TODO tutaj wstawic nowy z edycji provider i wystartowac apke
             {
                 model.ProviderName = provider;
                 model.RememberMe= true;
@@ -103,7 +107,7 @@ namespace MainApp.Web.Controllers
 
         }
 
-        public IActionResult Edit(LoginView model)
+        public async Task<IActionResult> Edit(LoginView model)
         {
             string provider = "Nie wybrano!";
             int number;
@@ -121,8 +125,7 @@ namespace MainApp.Web.Controllers
 
             if (defaultProvider != provider)
             {
-                //_applicationLifetime.StopApplication();
-                //ProgramMVC.Main(new string[] { provider });
+                //TODO tutaj od nowa odpalic apke z wyborem providera!! jak to zrobic??                
 
                 _signInManager.SignOutAsync();
                 //TempData["Provider"] = provider;
@@ -134,7 +137,25 @@ namespace MainApp.Web.Controllers
                 ViewData["Modelek"] = JsonConvert.SerializeObject(model);
                 //return RedirectToAction(nameof(Index));
 
-                return RedirectToAction("Index", "Home", new { param = JsonConvert.SerializeObject(model) });
+                //_applicationLifetime.StopApplication();//TODO stop app
+
+                //System.Web.HttpRuntime.UnloadAppDomain();
+
+                //AppDomain.Unload();
+
+                //await ProgramMVC.Main(new string[] { provider });
+
+                //Process currentProcess = Process.GetCurrentProcess();
+                //string applicationPath = currentProcess.MainModule.FileName;
+                //Process.Start(applicationPath);
+                //currentProcess.Kill();
+                //await ProgramMVC.Main(new string[] { provider });
+
+                return Content("change to new provider , how ???????????");//TODO Jak stad z restartowac applikacje!
+
+                //return new EmptyResult();
+
+                //return RedirectToAction("Index", "Home", new { param = JsonConvert.SerializeObject(model) });
 
 
             }

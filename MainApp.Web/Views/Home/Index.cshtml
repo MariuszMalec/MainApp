@@ -73,7 +73,7 @@
 
     @if (!SignInManager.IsSignedIn(User))
     {
-        <h3 class="card-title font-weight-bold col">Welcome @userFullName</h3>
+        <h3 class="card-title font-weight-bold col">Welcome @userFullName (@provider)</h3>
         <a class="btn btn-primary" asp-controller="account" asp-action="Login">Go to login</a>
         <hr />
         <div class="card bg-dark text-white">

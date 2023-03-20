@@ -15,6 +15,7 @@ using System.Net;
 using System.Net.Security;
 using Tracking.Middleware;
 using System;
+using MainApp.BLL.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,32 @@ builder.Services.AddHttpContextAccessor();
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 
+//-------------------------------------------------------
+// -------------- ustalenie providera -------------------
+//-------------------------------------------------------
+
 var provider = configuration["DatabaseProvider"];
+
+if (environment.EnvironmentName == "PracaMsql")//TODO zmiana providera gdy wybrane spec. srodowisko
+{
+    provider = Provider.SqlServer.ToString();
+}
+if (environment.EnvironmentName == "PracaPostgres")
+{
+    provider = Provider.PostgresWin.ToString();
+}
+if (environment.EnvironmentName == "LaptopZonki")
+{
+    provider = Provider.PostgresWin.ToString();
+}
+if (environment.EnvironmentName == "Linux")
+{
+    provider = Provider.PostgresLinux.ToString();
+}
+
+//-------------------------------------------------------
+//-------------------------------------------------------
+
 var connectionString = configuration.GetConnectionString(provider);
 switch (provider)
 {
@@ -158,6 +184,19 @@ if (app.Environment.IsDevelopment())
         config.SwaggerEndpoint("/swagger/v1/swagger.json", "Info API");
     });
 }
+
+if (app.Environment.EnvironmentName == "Praca" 
+    || app.Environment.EnvironmentName == "Linux" 
+    || app.Environment.EnvironmentName == "LaptopZonki")
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(config =>
+    {
+        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Info API");
+    });
+}
+
 
 //TODO dodane aby w visual studio code odpalila sie apka ze swaggerem
 app.UseSwaggerUI(options =>
