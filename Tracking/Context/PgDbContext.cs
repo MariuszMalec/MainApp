@@ -15,9 +15,18 @@ namespace Tracking.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var provider = Provider.PostgresWin.ToString();
-            //options.UseNpgsql(Configuration.GetConnectionString(provider));
-        }
+            //var provider = Configuration["DatabaseProvider"];
+            var provider = Configuration["Provider"];
+            switch (provider)
+            {
+                case "PostgresWin":
+                    options.UseNpgsql(Configuration.GetConnectionString("PostgresWin"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
+                    break;
+
+                case "PostgresLinux":
+                    options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
+                    break;
+            }        }
 
     }
 }

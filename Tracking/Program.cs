@@ -63,7 +63,8 @@ var connectionString = configuration.GetConnectionString(provider);
 switch (provider)
 {
     case "PostgresLinux":
-        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        //builder.Services.AddDbContext<MainApplicationContext>(o => o.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<MainApplicationContext, PgDbContext>();
         break;
     case "PostgresWin":
         builder.Services.AddDbContext<PgDbContext>(o => o.UseNpgsql(connectionString));//TODO dzieki temu nie trzeba nadpisywac OnConfiguring
@@ -162,14 +163,15 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<MainApplicationContext>();
+    var context = scope.ServiceProvider.GetRequiredService<MainApplicationContext>();//TODO tutaj powinien wejsc do OnConfiguring 
     //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     //var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRoles>>();
             if (context.Database.IsRelational())
             {
                 if (context.Database.IsRelational())
                 {
-                    context?.Database.Migrate();
+                    context.Database.EnsureCreated();
+                    //context?.Database.Migrate();
                     //TrainerSeed.SeedTrainer(context);
                     await TrainerSeed.SeedTrainers(context);
                 }

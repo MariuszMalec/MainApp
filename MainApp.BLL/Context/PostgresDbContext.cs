@@ -12,12 +12,10 @@ namespace MainApp.BLL.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var provider = Configuration["DatabaseProvider"];
+            //var provider = Configuration["DatabaseProvider"];
+            var provider = Configuration["Provider"];
             switch (provider)
             {
-                case "SqlServer":
-                    break;
-
                 case "PostgresWin":
                     options.UseNpgsql(Configuration.GetConnectionString("PostgresWin"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
                     break;
