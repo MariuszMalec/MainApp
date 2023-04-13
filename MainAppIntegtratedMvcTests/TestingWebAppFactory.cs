@@ -9,7 +9,7 @@ namespace MainAppIntegtratedMvcTests
     public class TestingWebAppFactory<TEntryPoint> : WebApplicationFactory<ProgramMVC> where TEntryPoint : ProgramMVC
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
+        {   
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(

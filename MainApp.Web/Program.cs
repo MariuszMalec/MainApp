@@ -49,68 +49,6 @@ public class ProgramMVC
 
         if (args.Length > 0)
         {
-            //TODO jak tutaj wystartowac apke jeszcze raz z nowym providerem
-
-            //var process = new Process();
-            //var startInfo = new ProcessStartInfo("cmd.exe", "/c iisreset /restart");
-            //startInfo.CreateNoWindow = true;
-            //startInfo.UseShellExecute = false;
-            //process.StartInfo = startInfo;
-            //process.Start();
-
-            //process.WaitForExit();
-
-            //var process = System.Diagnostics.Process.GetCurrentProcess();
-            //var fileName = process.MainModule.FileName;
-            //process.Kill();
-            //System.Diagnostics.Process.Start(fileName);
-            //process.WaitForExit();
-
-            //Process currentProcess = Process.GetCurrentProcess();
-            //string applicationPath = currentProcess.MainModule.FileName;
-            //currentProcess.Kill();
-            //Process.Start(applicationPath);
-           
-            // Set the TcpListener on port 13000.
-            //Int32 port = 5001;
-            //IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-            //TcpListener server = new TcpListener(port);
-            //server = new TcpListener(localAddr, port);
-
-            //server.Stop();
-
-            // Start listening for client requests.
-            //server.Start();
-
-            //Console.Write("Waiting for a connection... ");
-
-            // Perform a blocking call to accept requests.
-            // You could also use server.AcceptSocket() here.
-            //using TcpClient client = server.AcceptTcpClient();
-            //Console.WriteLine("Connected!");
-
-            _restartRequest = true;
-
-            //await StartWebApp(args);
-        }
-
-        if (args.Length == 0 && _selectProviderFromConsole == false)//first start according appsetings.json
-            await StartWebApp(args);
-
-        if (_selectProviderFromConsole)//start according selection from console
-        {
-            var provider = SelectProvider();
-            args = new string[] { provider };
-            await StartWebApp(args);
-        }
-    }
-
-    private static async Task StartWebApp(string[] args)
-    {
-
-
-        if (args.Length > 0)
-        {
             //here current Web application start again with new provider
         }
 
@@ -142,8 +80,10 @@ public class ProgramMVC
             provider = Provider.PostgresLinux.ToString();
         }
 
-        if (args.Length > 0)//TODO zmiana providera jesli wybrany inny przez console
+        if (_selectProviderFromConsole)//TODO zmiana providera jesli wybrany inny przez console
         {
+            provider = SelectProvider();
+            args = new string[] { provider };
             provider = args[0];
         }
 

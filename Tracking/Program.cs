@@ -196,7 +196,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-if (app.Environment.EnvironmentName == "Praca" 
+if (app.Environment.EnvironmentName.Contains("Praca") 
     || app.Environment.EnvironmentName == "Linux" 
     || app.Environment.EnvironmentName == "LaptopZonki")
 {
