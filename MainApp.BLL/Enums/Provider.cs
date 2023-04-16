@@ -7,6 +7,7 @@
         SqlServer,
         SqliteServer,
         MySqlLinux,
-        MySqlWin
+        MySqlWin,
+        UnitTests
     }
 }

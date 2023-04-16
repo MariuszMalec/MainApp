@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace MainAppIntegrationTests
             _client = factory
                 .WithWebHostBuilder(builder =>
                 {
+                    builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy. Czemu nie dziala to co nizej!!
                     builder.ConfigureServices(services =>
                     {
                         var dbContextOptions = services
@@ -31,7 +33,7 @@ namespace MainAppIntegrationTests
 
                         ;
                         services
-                          .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("UsersDb"));
+                          .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("UsersDb"));//TODO to nie dziala musialem dodac w program.cs!
 
                     });
                 })

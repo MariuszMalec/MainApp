@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +31,10 @@ namespace MainAppIntegrationTests
                         services.Remove(dbContextOptions);
 
                         services
-                         .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("EventDb"));
+                         .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("EventDb"));//TODO Czemu nie dziala to!!
 
                     });
+                    builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
                 })
                 .CreateClient();
         }

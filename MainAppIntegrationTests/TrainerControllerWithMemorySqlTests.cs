@@ -1,9 +1,12 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -31,8 +34,13 @@ namespace MainAppIntegrationTests
 
                         services.Remove(dbContextOptions);
 
+                        var dbConnectionDesciptor = services.SingleOrDefault(
+                            d => d.ServiceType == typeof(DbConnection));
+
+                        services.Remove(dbConnectionDesciptor);
+
                         services
-                         .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("TrainerDb"));
+                         .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("TrackingDb"));//TODO to nie dziala musialem dodac w program.cs!
 
                         services.AddHttpClient("Tracking", client =>
                         {
@@ -44,6 +52,8 @@ namespace MainAppIntegrationTests
                         });
 
                     });
+
+                    builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
                 })
                 .CreateClient();
 

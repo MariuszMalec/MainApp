@@ -79,6 +79,11 @@ public class ProgramMVC
         {
             provider = Provider.PostgresLinux.ToString();
         }
+        //only for unit tests
+        if (environment.EnvironmentName == "UnitTests")
+        {
+            provider = Provider.UnitTests.ToString();
+        }
 
         if (_selectProviderFromConsole)//TODO zmiana providera jesli wybrany inny przez console
         {
@@ -132,6 +137,10 @@ public class ProgramMVC
 
             case "PostgresLinux":
                 builder.Services.AddDbContext<ApplicationDbContext, PostgresDbContext>();
+                break;
+
+            case "UnitTests":
+                builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("MainWebDb"));
                 break;
 
             default:

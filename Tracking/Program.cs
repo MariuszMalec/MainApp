@@ -50,6 +50,11 @@ if (environment.EnvironmentName == "Linux")
 {
     provider = Provider.PostgresLinux.ToString();
 }
+//only for unit tests
+if (environment.EnvironmentName == "UnitTests")
+{
+    provider = Provider.UnitTests.ToString();
+}
 //-------------------------------------------------------
 //-------------------------------------------------------
 
@@ -60,6 +65,7 @@ configuration.AddInMemoryCollection(new Dictionary<string, string>
         });
 
 var connectionString = configuration.GetConnectionString(provider);
+
 switch (provider)
 {
     case "PostgresLinux":
@@ -76,11 +82,12 @@ switch (provider)
     case "SqlServer":
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
         break;
+    case "UnitTests":
+        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseInMemoryDatabase("TrackingDb"));
+        break;
     default:
         throw new Exception($"Unsupported provider: {provider}");
 }
-
-
 
 //TODO tworzenie migracji z automatu nie wiem czy dziala to?
 //builder.Services.AddDbContext<MainApplicationContext>(

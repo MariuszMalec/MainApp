@@ -13,6 +13,7 @@ namespace MainAppIntegrationTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy. Czemu nie dziala to co nizej!!
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
