@@ -140,7 +140,8 @@ public class ProgramMVC
                 break;
 
             case "UnitTests":
-                builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("MainWebDb"));
+                //builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("MainWebDb"));
+                builder.Services.AddDbContext<ApplicationDbContext, MemorySqlDbContext>();
                 break;
 
             default:
@@ -242,7 +243,10 @@ public class ProgramMVC
 
         builder.Services.AddAuthorization();
 
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        if (environment.EnvironmentName != "UnitTests")
+        {
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        }   
 
         builder.Services.AddScoped<UserManager<ApplicationUser>>();
         //builder.Services.AddScoped<RoleManager<ApplicationRoles>>();
@@ -273,7 +277,7 @@ public class ProgramMVC
         //AddAuthorizationPolicies(builder.Services);
         #endregion
 
-        var app = builder.Build();
+        var app = builder.Build();//TODO w unit test tutaj odpala TestingWebAppFactory!
 
         //await app.StopAsync();
 
@@ -384,14 +388,4 @@ public class ProgramMVC
         }
         return provider;
     }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder =>
-        {
-            webBuilder.UseStartup<ProgramMVC>()
-            .UseUrls($"http://localhost:8001", $"http://localhost:8002")
-            ;
-        });
-
 }

@@ -53,7 +53,8 @@ namespace MainAppIntegtratedMvcTests
             request.Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
             var provider = TestClaimsProvider.WithUserClaims();
-            _client = factory.CreateClientWithTestAuth(provider);
+
+            //_client = factory.CreateClientWithTestAuth(provider);
 
             var response = await _client.SendAsync(request);
 
@@ -81,7 +82,7 @@ namespace MainAppIntegtratedMvcTests
             request.Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
 
             var provider = TestClaimsProvider.WithUserClaims();
-            _client = factory.CreateClientWithTestAuth(provider);
+            //_client = factory.CreateClientWithTestAuth(provider);
 
             var response = await _client.SendAsync(request);
 
