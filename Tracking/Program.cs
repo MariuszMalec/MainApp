@@ -202,7 +202,8 @@ if (app.Environment.IsDevelopment())
 
 if (app.Environment.EnvironmentName.Contains("Praca") 
     || app.Environment.EnvironmentName == "Linux" 
-    || app.Environment.EnvironmentName == "LaptopZonki")
+    || app.Environment.EnvironmentName == "LaptopZonki"
+    || app.Environment.EnvironmentName == "UnitTests")
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
