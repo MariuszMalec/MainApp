@@ -42,7 +42,7 @@ namespace Tracking.Repositories
                 throw new ArgumentNullException("entity");
             }
             //TODO problem z postgresem w linux automat nie dodaje kolejnego id!
-            var defaultprovider = _configuration["DatabaseProvider"];
+            var defaultprovider = _configuration["Provider"];//Problem z testem wrzuca do bazy relacyjnej!
             if (defaultprovider.Contains("Postgres"))
             {
                 if (entities.Count() == 0)

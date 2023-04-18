@@ -67,6 +67,23 @@ namespace MainAppIntegrationTests.TrackingServiceTests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
+        [Theory]
+        [InlineData("/api/Tracking/Insert")]
+        public async Task Insert_Event_ReturnOk_WhenCreate(string endpoint)
+        {
+            // Arrange
+            //_mockTrackingService.Setup(x => x.Insert()).ReturnsAsync(GetEvent());
+
+            // Act
+            var create = await _sut.Insert(GetEvent());
+
+            //act
+            var response = await _client.GetAsync($"{endpoint}");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         private IEnumerable<Event> GetEvents()
         {
             var events = new List<Event>()
@@ -74,6 +91,19 @@ namespace MainAppIntegrationTests.TrackingServiceTests
                 new Tracking.Models.Event { Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
             };
             return events;
+        }
+
+        private MainApp.BLL.Entities.Event GetEvent()
+        {
+            var myEvent = new MainApp.BLL.Entities.Event()
+            {
+                Id = 2,
+                Action = ActivityActions.create.ToString(),
+                CreatedDate = DateTime.Now,
+                UserId = 1, 
+                Email = "Admin@example.com"
+            };
+            return myEvent;
         }
     }
 }

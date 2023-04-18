@@ -26,7 +26,7 @@ namespace Tracking.Context
                 case "PostgresLinux":
                     options.UseNpgsql(Configuration.GetConnectionString("PostgresLinux"));//TODO to jak dodam to dziala! jak wrzucic to do progrmam.cs
                     break;
-            }        }
-
+            }        
+        }
     }
 }

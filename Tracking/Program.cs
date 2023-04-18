@@ -1,3 +1,4 @@
+using MainApp.BLL.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,18 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.IO;
+using System;
+using System.Collections.Generic;
 using Tracking.Authentication.ApiKey;
 using Tracking.Context;
 using Tracking.Models;
 using Tracking.Repositories;
 using Tracking.Services;
-using System.Net;
-using System.Net.Security;
-using Tracking.Middleware;
-using System;
-using MainApp.BLL.Enums;
-using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +79,8 @@ switch (provider)
         builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
         break;
     case "UnitTests":
-        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseInMemoryDatabase("TrackingDb"));
+        //builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseInMemoryDatabase("TrackingDb"));
+        builder.Services.AddDbContext<MainApplicationContext, MemorySqlDbContext>();
         break;
     default:
         throw new Exception($"Unsupported provider: {provider}");

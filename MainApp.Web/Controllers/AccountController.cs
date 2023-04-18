@@ -85,7 +85,7 @@ namespace MainApp.Web.Controllers
                         await _userManager.AddToRoleAsync(user, "User");//TODO tutaj zapisuje do aktualnej bazy a nie do fasady przy tescie, dlaczego?!
                         //await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                         Serilog.Log.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
-                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac! Nie nadaje id? przy tescie!
+                        var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac! Nie nadaje id? przy tescie! przy tescie musi byc odpalony api tracking!
                         await _trackingService.Insert(myEvent);
                         return RedirectToAction("Login");
                     }

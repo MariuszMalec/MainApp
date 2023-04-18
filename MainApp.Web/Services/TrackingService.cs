@@ -55,7 +55,7 @@ namespace MainApp.Web.Services
 
             return events;
         }
-        public async Task Insert(Event myEvent)
+        public async Task<bool> Insert(Event myEvent)
         {
 
             //Todo problem z ssl to rozwiazuje jak dodac ogolnie a nie do metody! patrz program.cs
@@ -66,8 +66,11 @@ namespace MainApp.Web.Services
             //HttpClient client = httpClientFactory.CreateClient();
 
             if (myEvent.Id == 0)
+            { 
                 _logger.LogError($"Event can't be id {myEvent.Id}");
-
+                return false;
+            }
+                
             var requestUser = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
 
             requestUser.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -79,7 +82,9 @@ namespace MainApp.Web.Services
             if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 _logger.LogWarning($"Insert my event is not authorized! This event was not saved in databae");
+                return false;
             }
+            return true;
         }
 
         public async Task<bool> DeleteAllEvents()
