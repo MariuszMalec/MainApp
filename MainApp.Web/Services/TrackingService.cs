@@ -19,7 +19,7 @@ namespace MainApp.Web.Services
     {
         private readonly ILogger<TrackingService> _logger;
         private readonly IPersonService _userService;
-        IHttpClientFactory httpClientFactory;
+        private readonly IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
         private readonly HttpClient _httpClient;
 
@@ -33,7 +33,7 @@ namespace MainApp.Web.Services
 
         public async Task<List<Event>> GetAll()
         {
-            HttpClient client = httpClientFactory.CreateClient();
+            //HttpClient client = httpClientFactory.CreateClient();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
 
@@ -153,7 +153,17 @@ namespace MainApp.Web.Services
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
-            return new Event { CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
+
+            var events = GetAll().Result;//TODO musi byc aktywny project tracking!
+
+            //TODO dodanie idy
+            var id = 0;
+            if (events.Count() == 0)
+                id = 1;
+            if (events.Count() > 0)
+                id = (events?.Max(m => m.Id) ?? 0) + 1;
+
+            return new Event { Id = id, CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
         }
 
         public async Task<List<Event>> SelectedEvents(string sortOrder, string searchString, List<Event> events)

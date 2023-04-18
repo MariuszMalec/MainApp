@@ -66,7 +66,7 @@ namespace MainApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterView model)
         {
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
             {
                     var user = new ApplicationUser()
                     {
@@ -88,7 +88,6 @@ namespace MainApp.Web.Controllers
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac! Nie nadaje id? przy tescie!
                         await _trackingService.Insert(myEvent);
                         return RedirectToAction("Login");
-
                     }
                     else
                     {
