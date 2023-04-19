@@ -14,9 +14,9 @@ namespace MainApp.Web.Controllers
     public class EventController : Controller
     {
         private readonly ILogger<EventController> _logger;
-        private readonly TrackingService _trackingService;
+        private readonly ITrackingService _trackingService;
 
-        public EventController(ILogger<EventController> logger, TrackingService trackingService)
+        public EventController(ILogger<EventController> logger, ITrackingService trackingService)
         {
             _logger = logger;
             _trackingService = trackingService;

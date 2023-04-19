@@ -15,15 +15,15 @@ using System.Threading.Tasks;
 
 namespace MainApp.Web.Services
 {
-    public class TrackingService
+    public class TrackingService : ITrackingService
     {
-        private readonly ILogger<TrackingService> _logger;
+        private readonly ILogger<ITrackingService> _logger;
         private readonly IPersonService _userService;
         private readonly IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
         private readonly HttpClient _httpClient;
 
-        public TrackingService(ILogger<TrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService)
+        public TrackingService(ILogger<ITrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
@@ -46,7 +46,7 @@ namespace MainApp.Web.Services
 
             if (!result.IsSuccessStatusCode)
             {
-                return new List<Event> ();
+                return new List<Event>();
             }
 
             var content = await result.Content.ReadAsStringAsync();
@@ -66,11 +66,11 @@ namespace MainApp.Web.Services
             //HttpClient client = httpClientFactory.CreateClient();
 
             if (myEvent.Id == 0)
-            { 
+            {
                 _logger.LogError($"Event can't be id {myEvent.Id}");
                 return false;
             }
-                
+
             var requestUser = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
 
             requestUser.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -92,7 +92,7 @@ namespace MainApp.Web.Services
 
             HttpClient client = httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Delete  , $"{AppiUrl}/Tracking/DeleteAllEvents");
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{AppiUrl}/Tracking/DeleteAllEvents");
 
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -168,7 +168,7 @@ namespace MainApp.Web.Services
             if (events.Count() > 0)
                 id = (events?.Max(m => m.Id) ?? 0) + 1;
 
-            return new Event { Id = id, CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString()};
+            return new Event { Id = id, CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString() };
         }
 
         public async Task<List<Event>> SelectedEvents(string sortOrder, string searchString, List<Event> events)

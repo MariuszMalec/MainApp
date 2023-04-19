@@ -201,6 +201,7 @@ public class ProgramMVC
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<ApplicationLifetime>();
         builder.Services.AddTransient<TrackingService>();
+        builder.Services.AddTransient<ITrackingService, TrackingService>();
         builder.Services.AddTransient<IPersonService, UserService>();
         builder.Services.AddTransient<ITrainersService, TrainersService>();
         builder.Services.AddTransient<IRepositoryService<ApplicationUserRoleView>, UserRoleService>();

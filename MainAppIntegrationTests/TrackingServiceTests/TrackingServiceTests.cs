@@ -47,41 +47,26 @@ namespace MainAppIntegrationTests.TrackingServiceTests
 
             //TODO zamokowac http i userservice
             _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object);
-
         }
 
-        [Theory]
-        [InlineData("/api/Tracking")]
-        public async Task GetAll_Events_ReturnOk_WhenExist(string endpoint)
+        [Fact]
+        public async Task GetAll_Events_ReturnOk_WhenExist()
         {
-            // Arrange
-            _mockTrackingService.Setup(x => x.GetAll()).ReturnsAsync(GetEvents());
-
             // Act
             var events = await _sut.GetAll();
 
-            //act
-            var response = await _client.GetAsync($"{endpoint}");
-
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            events.Should().HaveCount(1);
         }
 
-        [Theory]
-        [InlineData("/api/Tracking/Insert")]
-        public async Task Insert_Event_ReturnOk_WhenCreate(string endpoint)
+        [Fact]
+        public async Task Insert_Event_ReturnOk_WhenCreate()
         {
-            // Arrange
-            //_mockTrackingService.Setup(x => x.Insert()).ReturnsAsync(GetEvent());
-
             // Act
             var create = await _sut.Insert(GetEvent());
 
-            //act
-            var response = await _client.GetAsync($"{endpoint}");
-
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            Assert.True(create);
         }
 
         private IEnumerable<Event> GetEvents()
