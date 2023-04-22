@@ -43,7 +43,7 @@ namespace Tracking.Repositories
             }
             //TODO problem z postgresem w linux automat nie dodaje kolejnego id!
             var defaultprovider = _configuration["Provider"];//Problem z testem wrzuca do bazy relacyjnej!
-            if (defaultprovider.Contains("Postgres"))
+            if (defaultprovider.Contains("Postgres"))//TODO sprawdzic czemu msql nie nadaje id a nadawal wczesniej
             {
                 if (entities.Count() == 0)
                     entity.Id = 1;

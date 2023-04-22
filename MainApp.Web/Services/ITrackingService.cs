@@ -10,7 +10,7 @@ namespace MainApp.Web.Services
     {
         Task<bool> DeleteAllEvents();
         Task<bool> DeleteEvent(int id, Event model, HttpContext httpContext);
-        Task<List<Event>> GetAll();
+        Task<List<Event>> GetAll(string sortOrder, string searchString);
         Task<Event> GetEventById(int id, string userEmail, HttpContext httpContext);
         Task<bool> Insert(Event myEvent);
         Task<Event> InsertEvent(ActivityActions activityActions, HttpContext httpContext, string email);

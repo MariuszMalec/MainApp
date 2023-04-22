@@ -18,8 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using MainApp.Web.Controllers;
 using Azure;
 using SQLitePCL;
+using Microsoft.Extensions.Configuration;
 
-namespace MainAppIntegrationTests.EventControllerTests
+namespace MainAppIntegtratedMvcTests.EventControllerTests
 {
     public class EventControllerTests : IClassFixture<WebApplicationFactory<ProgramMVC>>//wspoldzielenie factory testy nieco szybsze
     {
@@ -31,6 +32,7 @@ namespace MainAppIntegrationTests.EventControllerTests
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly HttpClient _client;
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+        private readonly Mock<IConfiguration> _configuration = new Mock<IConfiguration>();
         //private readonly Mock<Tracking.Services.IRepositoryService<Event>> _mockTrackingService = new Mock<Tracking.Services.IRepositoryService<Event>>();
 
         public EventControllerTests(WebApplicationFactory<ProgramMVC> factory)
@@ -53,31 +55,30 @@ namespace MainAppIntegrationTests.EventControllerTests
             _httpClientFactory.Setup(x => x.CreateClient("Tracking")).Returns(_client);//TODO dzieki temu test dziala!
 
             //TODO zamokowac http i userservice
-            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object);
+            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configuration.Object);
 
         }
 
         [Fact]
-        public async Task GetTrainer_ReturnTrainer_WhenExist()
+        public async Task GetEvents_ReturnStatusOk_WhenExist()
         {
             // Arrange
             //var mockRepo = new Mock<ITrackingService>();
             //mockRepo.Setup(r => r.GetAll())
             //   .ReturnsAsync(GetEvents());
 
+            _trackingServiceMock.Setup(x => x.GetAll(null,null)).Returns(GetEvents());
 
-            //_trackingServiceMock.Setup(x => x.GetAll()).Returns(GetEvents());
-           
+            //_trackingServiceMock.Setup(x => x.SelectedEvents(null,null,GetEvents().Result)).Returns(GetEvents());
 
-            //var controller = new EventController(_loggerEventControllerMock.Object, _trackingServiceMock.Object);
+            var controller = new EventController(_loggerEventControllerMock.Object, _sut);
 
             //// Act
-            //var result = await controller.Index(string.Empty, string.Empty);
+            var result = await controller.Index(string.Empty, string.Empty);
 
             //// Assert
-            //result.Should().Be(System.Net.HttpStatusCode.OK);
+            result.Should().Be(System.Net.HttpStatusCode.OK);
         }
-
 
         [Theory]
         [InlineData("/api/Event")]
@@ -116,7 +117,7 @@ namespace MainAppIntegrationTests.EventControllerTests
         {
             var events = new List<MainApp.BLL.Entities.Event>()
             {
-                new MainApp.BLL.Entities.Event { Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
+                new MainApp.BLL.Entities.Event { Id=3, Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
             };
             return events;
         }

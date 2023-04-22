@@ -135,7 +135,7 @@ namespace MainApp.Web.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.UtcNow);
+                    Serilog.Log.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
 
@@ -276,12 +276,11 @@ namespace MainApp.Web.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            _logger.LogInformation($"User logout at {DateTime.Now}");
-            Serilog.Log.Information($"User logout at {DateTime.Now}");
             var userEmail = this.HttpContext.User.Identity.Name;
             var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, HttpContext, userEmail);
             await _trackingService.Insert(myEvent);
             await _signInManager.SignOutAsync();
+            Serilog.Log.Information("User {userName} logout at {loginDate}", userEmail, DateTime.Now);
             return RedirectToAction("login", "account");
         }
     }

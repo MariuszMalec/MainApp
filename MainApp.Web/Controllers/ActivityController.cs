@@ -21,7 +21,7 @@ namespace MainApp.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Event> events = await _trackingService.GetAll();
+            List<Event> events = await _trackingService.GetAll(null, null);
 
             if (events.Count() == 0)
             {

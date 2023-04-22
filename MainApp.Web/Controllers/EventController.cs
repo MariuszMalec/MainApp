@@ -25,7 +25,7 @@ namespace MainApp.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Event>>> Index(string sortOrder, string searchString)
         {
-            List<Event> events = await _trackingService.GetAll();
+            List<Event> events = await _trackingService.GetAll(sortOrder, searchString);//TODO test daje tu null why i nie chece wejsc do metody???
 
             if (events.Count() == 0)
             {
@@ -34,8 +34,6 @@ namespace MainApp.Web.Controllers
 
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CurrentFilter"] = searchString;
-
-            events = await _trackingService.SelectedEvents(sortOrder, searchString, events);
 
             return View(events.OrderByDescending(e => e.CreatedDate).Take(20));
         }

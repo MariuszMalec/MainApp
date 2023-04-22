@@ -3,6 +3,7 @@ using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -22,16 +23,18 @@ namespace MainApp.Web.Services
         private readonly IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public TrackingService(ILogger<ITrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService)
+        public TrackingService(ILogger<ITrackingService> logger, IHttpClientFactory httpClientFactory, IPersonService userService, IConfiguration configuration = null)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             _userService = userService;
             _httpClient = httpClientFactory.CreateClient("Tracking");//TODO patrz startup
+            _configuration = configuration;
         }
 
-        public async Task<List<Event>> GetAll()
+        public async Task<List<Event>> GetAll(string sortOrder, string searchString)
         {
             //HttpClient client = httpClientFactory.CreateClient();
 
@@ -53,7 +56,9 @@ namespace MainApp.Web.Services
 
             var events = JsonConvert.DeserializeObject<List<Event>>(content);
 
-            return events;
+            var sortEvents = await SelectedEvents(sortOrder, searchString, events);
+
+            return sortEvents;
         }
         public async Task<bool> Insert(Event myEvent)
         {
@@ -65,10 +70,14 @@ namespace MainApp.Web.Services
 
             //HttpClient client = httpClientFactory.CreateClient();
 
-            if (myEvent.Id == 0)
+            var defaultprovider = _configuration["Provider"];//Problem z postgres nie nadaje entity framework kolejengo id!
+            if (defaultprovider.Contains("Postgres"))
             {
-                _logger.LogError($"Event can't be id {myEvent.Id}");
-                return false;
+                if (myEvent.Id == 0)
+                {
+                    _logger.LogError($"Event can't be id {myEvent.Id}");
+                    return false;
+                }
             }
 
             var requestUser = new HttpRequestMessage(HttpMethod.Post, $"{AppiUrl}/Tracking");
@@ -77,11 +86,16 @@ namespace MainApp.Web.Services
 
             requestUser.Content = new StringContent(JsonConvert.SerializeObject(myEvent), Encoding.UTF8, "application/json");
 
-            var result = await _httpClient.SendAsync(requestUser);
+            var result = await _httpClient.SendAsync(requestUser);//TODO nie wysyla do api!!
 
             if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                _logger.LogWarning($"Insert my event is not authorized! This event was not saved in databae");
+                _logger.LogWarning($"Insert my event is not authorized! This event was not saved in database");
+                return false;
+            }
+            if (result.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            {
+                _logger.LogError($"InternalServerError! can't send event to tracking api (look TrackingService, insert event)");
                 return false;
             }
             return true;
@@ -159,16 +173,22 @@ namespace MainApp.Web.Services
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
 
-            var events = GetAll().Result;//TODO musi byc aktywny project tracking!
+            var events = GetAll(null, null).Result;//TODO musi byc aktywny project tracking!
 
             //TODO dodanie idy
-            var id = 0;
-            if (events.Count() == 0)
-                id = 1;
-            if (events.Count() > 0)
-                id = (events?.Max(m => m.Id) ?? 0) + 1;
+            //TODO problem z postgresem w linux automat nie dodaje kolejnego id!
+            var defaultprovider = _configuration["Provider"];//Problem z testem wrzuca do bazy relacyjnej!
+            if (defaultprovider.Contains("Postgres"))
+            {
+                var id = 0;
+                if (events.Count() == 0)
+                    id = 1;
+                if (events.Count() > 0)
+                    id = (events?.Max(m => m.Id) ?? 0) + 1;
+                return new Event { Id = id, CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString() };
+            }
 
-            return new Event { Id = id, CreatedDate = DateTime.UtcNow, UserId = user.Id, Email = userEmail, Action = activityActions.ToString() };
+            return new Event { CreatedDate = DateTime.Now, UserId = user.Id, Email = userEmail, Action = activityActions.ToString() };
         }
 
         public async Task<List<Event>> SelectedEvents(string sortOrder, string searchString, List<Event> events)

@@ -11,6 +11,7 @@ namespace Tracking.Configuration
         {
             //builder.HasOne(e => e.Id).WithMany().HasForeignKey("Event").OnDelete(DeleteBehavior.SetNull);
             //builder.HasOne(e => e.Id).WithMany(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+            //builder.HasKey(e => e.Id);
         }
     }
 }

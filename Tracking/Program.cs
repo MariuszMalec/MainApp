@@ -76,7 +76,8 @@ switch (provider)
         builder.Services.AddDbContext<MainApplicationContext, MySqlDbContext>();
         break;
     case "SqlServer":
-        builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
+        //builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseSqlServer(connectionString));
+        builder.Services.AddDbContext<MainApplicationContext, MSqlDbContext>();
         break;
     case "UnitTests":
         //builder.Services.AddDbContext<MainApplicationContext>(o => o.UseLazyLoadingProxies().UseInMemoryDatabase("TrackingDb"));
