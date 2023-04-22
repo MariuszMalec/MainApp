@@ -63,15 +63,15 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
         public async Task GetEvents_ReturnStatusOk_WhenExist()
         {
             // Arrange
-            //var mockRepo = new Mock<ITrackingService>();
-            //mockRepo.Setup(r => r.GetAll())
-            //   .ReturnsAsync(GetEvents());
+            var mockRepo = new Mock<ITrackingService>();
+            mockRepo.Setup(r => r.GetAll(null,null))
+               .Returns(GetEvents());
 
-            _trackingServiceMock.Setup(x => x.GetAll(null,null)).Returns(GetEvents());
+            //_trackingServiceMock.Setup(x => x.GetAll(null,null)).Returns(GetEvents());
 
             //_trackingServiceMock.Setup(x => x.SelectedEvents(null,null,GetEvents().Result)).Returns(GetEvents());
 
-            var controller = new EventController(_loggerEventControllerMock.Object, _sut);
+            var controller = new EventController(_loggerEventControllerMock.Object, mockRepo.Object);
 
             //// Act
             var result = await controller.Index(string.Empty, string.Empty);
