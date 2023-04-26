@@ -32,7 +32,7 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly HttpClient _client;
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
-        private readonly Mock<IConfiguration> _configuration = new Mock<IConfiguration>();
+        private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
         //private readonly Mock<Tracking.Services.IRepositoryService<Event>> _mockTrackingService = new Mock<Tracking.Services.IRepositoryService<Event>>();
 
         public EventControllerTests(WebApplicationFactory<ProgramMVC> factory)
@@ -54,8 +54,10 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
 
             _httpClientFactory.Setup(x => x.CreateClient("Tracking")).Returns(_client);//TODO dzieki temu test dziala!
 
+            _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");
+
             //TODO zamokowac http i userservice
-            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configuration.Object);
+            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
 
         }
 
@@ -85,9 +87,7 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
         public async Task GetAll_Events_ReturnOk_WhenExist(string endpoint)
         {
             // Arrange
-            //_trackingServiceMock.Setup(x => x.GetAll()).ReturnsAsync(GetEvents());
-
-            
+            //_trackingServiceMock.Setup(x => x.GetAll()).ReturnsAsync(GetEvents());    
 
             //act
             //var response = await _client.GetAsync($"{endpoint}");

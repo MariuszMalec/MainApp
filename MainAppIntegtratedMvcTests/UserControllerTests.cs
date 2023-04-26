@@ -4,7 +4,7 @@ using System.Net;
 
 namespace MainAppIntegtratedMvcTests
 {
-    public class UserControllerTests : IClassFixture<TestingWebAppFactory<ProgramMVC>>
+    public class UserControllerTests : IClassFixture<TestingWebAppFactory<ProgramMVC>> //TODO musi byc uruchomiony project tracking! mvc strzela do api aby zarejstrowac event
     {
         private HttpClient _client;
 

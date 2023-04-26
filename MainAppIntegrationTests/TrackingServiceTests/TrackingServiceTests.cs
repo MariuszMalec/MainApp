@@ -4,6 +4,8 @@ using MainApp.BLL.Enums;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.DotNet.Scaffolding.Shared;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -25,6 +27,8 @@ namespace MainAppIntegrationTests.TrackingServiceTests
         private readonly HttpClient _client;
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<Tracking.Services.IRepositoryService<Event>> _mockTrackingService = new Mock<Tracking.Services.IRepositoryService<Event>>();
+        private readonly IConfiguration _configuration;
+        private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
 
         public TrackingServiceTests(WebApplicationFactory<Program> factory)
         {
@@ -45,15 +49,27 @@ namespace MainAppIntegrationTests.TrackingServiceTests
 
             _httpClientFactory.Setup(x => x.CreateClient("Tracking")).Returns(_client);//TODO dzieki temu test dziala!
 
+            //TODO set configuration
+            // 1 way (more lines)
+            var inMemorySettings = new Dictionary<string, string>
+            {
+                { "Provider","UnitTest"},
+            };
+            _configuration = new ConfigurationBuilder()
+                                    .AddInMemoryCollection(inMemorySettings)
+                                    .Build();
+            // 2 way
+            _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");  
+
             //TODO zamokowac http i userservice
-            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object);
+            _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
         }
 
         [Fact]
         public async Task GetAll_Events_ReturnOk_WhenExist()
         {
             // Act
-            var events = await _sut.GetAll();
+            var events = await _sut.GetAll(null,null);
 
             //assert
             events.Should().HaveCount(1);
