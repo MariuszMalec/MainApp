@@ -1,24 +1,14 @@
-﻿using MainApp.BLL.Enums;
-using MainApp.BLL;
+﻿using MainApp.BLL;
+using MainApp.BLL.Enums;
+using MainApp.Web.Controllers;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
-using MainApp.Web.Services;
-using Microsoft.AspNetCore.Mvc;
-using MainApp.Web.Controllers;
-using Azure;
-using SQLitePCL;
-using Microsoft.Extensions.Configuration;
 
 namespace MainAppIntegtratedMvcTests.EventControllerTests
 {
@@ -62,55 +52,22 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
         }
 
         [Fact]
-        public async Task GetEvents_ReturnStatusOk_WhenExist()
+        public async Task GetEvents_ReturnNotNull_WhenExist()
         {
             // Arrange
             var mockRepo = new Mock<ITrackingService>();
-            mockRepo.Setup(r => r.GetAll(null,null))
+            mockRepo.Setup(r => r.GetAll(It.IsAny<string>(), It.IsAny<string>()))
                .Returns(GetEvents());
-
-            //_trackingServiceMock.Setup(x => x.GetAll(null,null)).Returns(GetEvents());
-
-            //_trackingServiceMock.Setup(x => x.SelectedEvents(null,null,GetEvents().Result)).Returns(GetEvents());
 
             var controller = new EventController(_loggerEventControllerMock.Object, mockRepo.Object);
 
-            //// Act
-            var result = await controller.Index(string.Empty, string.Empty);
+            // Act
+            var actionResult = await controller.Index(string.Empty, string.Empty);
 
-            //// Assert
-            result.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
-        [Theory]
-        [InlineData("/api/Event")]
-        public async Task GetAll_Events_ReturnOk_WhenExist(string endpoint)
-        {
-            // Arrange
-            //_trackingServiceMock.Setup(x => x.GetAll()).ReturnsAsync(GetEvents());    
-
-            //act
-            //var response = await _client.GetAsync($"{endpoint}");
-
-            //assert
-            
-        }
-
-        [Theory]
-        [InlineData("/api/Tracking/Insert")]
-        public async Task Insert_Event_ReturnOk_WhenCreate(string endpoint)
-        {
-            //// Arrange
-            ////_mockTrackingService.Setup(x => x.Insert()).ReturnsAsync(GetEvent());
-
-            //// Act
-            //var create = await _sut.Insert(GetEvent());
-
-            ////act
-            //var response = await _client.GetAsync($"{endpoint}");
-
-            ////assert
-            //response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(actionResult);
+            mockRepo.Verify(u => u.GetAll(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            Assert.NotNull(viewResult);//TODO how to check getting list??
         }
 
         private async Task<List<MainApp.BLL.Entities.Event>> GetEvents()
