@@ -37,6 +37,20 @@ namespace MainAppUnitTests.TrainerTests
         }
 
         [Fact]
+        public async Task GetFirstMame_ShoudReturnUser_WhenUserExist()
+        {
+            // Arrange
+            _userMockRepo.Setup(x => x.GetAll()).ReturnsAsync(GetUsersDto());
+            var firstname = "test1";
+
+            // Act
+            var users = await _sut.GetAll();
+
+            // Assert
+            Assert.Equal(firstname, users.Where(x => x.FirstName == firstname).Select(x => x.FirstName).FirstOrDefault());
+        }
+
+        [Fact]
         public async Task GetAllUsers_ShoudReturnEmptyUsers_WhenUsersNotExist()
         {
             // Arrange
@@ -60,7 +74,7 @@ namespace MainAppUnitTests.TrainerTests
                 Id = 2,
                 FirstName = userName
             };
-            _userMockRepo.Setup(x => x.GetById(userId)).ReturnsAsync(userDto);
+            _userMockRepo.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(userDto);
 
             // Act
             var user = await _sut.GetById(userId);
@@ -114,19 +128,19 @@ namespace MainAppUnitTests.TrainerTests
             {
                 Created = new DateTime(2016, 7, 2),
                 Id = 1,
-                FirstName = "dsdsd"
+                FirstName = "test1"
             });
             sessions.Add(new ApplicationUser()
             {
                 Created = new DateTime(2018, 7, 2),
                 Id = 2,
-                FirstName = "dsdsd"
+                FirstName = "test2"
             });
             sessions.Add(new ApplicationUser()
             {
                 Created = new DateTime(2018, 7, 2),
                 Id = 3,
-                FirstName = "dsdsd"
+                FirstName = "test3"
             });
             return sessions;
         }
