@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
 using MainApp.Web.Controllers;
 using MainApp.Web.Services;
@@ -66,8 +67,11 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(actionResult);
+            var model = Assert.IsAssignableFrom<IEnumerable<Event>>(viewResult.Model).ToList();
+
             mockRepo.Verify(u => u.GetAll(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            Assert.NotNull(viewResult);//TODO how to check getting list??
+            Assert.NotNull(viewResult);
+            Assert.Equal("Admin@example.com", model.Select(x=>x.Email).First());
         }
 
         private async Task<List<MainApp.BLL.Entities.Event>> GetEvents()
