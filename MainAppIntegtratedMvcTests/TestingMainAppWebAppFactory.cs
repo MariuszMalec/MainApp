@@ -7,7 +7,7 @@ using Tracking.Context;
 
 namespace MainAppIntegtratedMvcTests
 {
-    public class TestingWebAppFactory<TEntryPoint> : WebApplicationFactory<ProgramMVC> where TEntryPoint : ProgramMVC
+    public class TestingMainAppWebAppFactory<TEntryPoint> : WebApplicationFactory<ProgramMVC> where TEntryPoint : ProgramMVC
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

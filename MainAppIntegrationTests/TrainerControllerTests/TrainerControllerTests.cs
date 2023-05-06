@@ -10,7 +10,7 @@ using Tracking;
 using Xunit;
 using System.Net;
 
-namespace MainAppIntegrationTests
+namespace MainAppIntegrationTests.TrainerControllerTests
 {
     public class TrainerControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {

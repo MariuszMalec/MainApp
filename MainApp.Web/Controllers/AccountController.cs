@@ -111,6 +111,7 @@ namespace MainApp.Web.Controllers
         public IActionResult Login(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Redirection"] = "You are registerded correctly";
             return View();
         }
 

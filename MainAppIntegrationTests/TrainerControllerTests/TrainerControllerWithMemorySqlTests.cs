@@ -14,7 +14,7 @@ using Tracking;
 using Tracking.Context;
 using Xunit;
 
-namespace MainAppIntegrationTests
+namespace MainAppIntegrationTests.TrainerControllerTests
 {
     public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {

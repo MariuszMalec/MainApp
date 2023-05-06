@@ -10,7 +10,7 @@ using Tracking;
 using Tracking.Context;
 using Xunit;
 
-namespace MainAppIntegrationTests
+namespace MainAppIntegrationTests.EventControllerTests
 {
     public class EventControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {

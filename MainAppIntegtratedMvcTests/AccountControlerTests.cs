@@ -17,18 +17,39 @@ using Tracking.Context;
 
 namespace MainAppIntegtratedMvcTests
 {
-    public class AccountControllerTests : IClassFixture<TestingWebAppFactory<ProgramMVC>>
+    public class AccountControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>, IClassFixture<TestingTrackingWebAppFactory<Program>>
     {
         private HttpClient _client;
+        private HttpClient _client2;
 
         WebApplicationFactory<ProgramMVC> factory = new WebApplicationFactory<ProgramMVC>();
+        WebApplicationFactory<Program> factory2 = new WebApplicationFactory<Program>();
 
-        public AccountControllerTests(TestingWebAppFactory<ProgramMVC> factory)
+        public AccountControllerTests(TestingMainAppWebAppFactory<ProgramMVC> factory, TestingTrackingWebAppFactory<Program> factory2)
         {
             _client = factory.CreateClient();
             _client.BaseAddress = new Uri("https://localhost:5001/");
             _client.Timeout = new TimeSpan(0, 0, 30);
             _client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+
+            _client2 = factory2.CreateClient();
+            _client2.BaseAddress = new Uri("https://localhost:7001/");
+            _client2.Timeout = new TimeSpan(0, 0, 30);
+            _client2.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            _client2.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+        }
+
+        [Theory]
+        [InlineData("/api/Tracking")]
+        public async Task GetEvent_ReturnsSuccess_WhenStatusOk(string endpoint)//TODO musi byc uruchomiony project tracking! mvc strzela do api aby zarejstrowac event
+        {
+            var response = await _client2.GetAsync($"{endpoint}");
+
+            var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
+
+            Assert.Equal("/api/Tracking", requestMessage.RequestUri.LocalPath);
+            Assert.IsType<HttpResponseMessage>(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -56,6 +77,9 @@ namespace MainAppIntegtratedMvcTests
 
             var response = await _client.SendAsync(request);
 
+            var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
+
+            Assert.Equal("/Account/Login", requestMessage.RequestUri.LocalPath);
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -87,6 +111,5 @@ namespace MainAppIntegtratedMvcTests
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
-
     }
 }

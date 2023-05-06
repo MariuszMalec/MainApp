@@ -2,15 +2,15 @@
 using Microsoft.Net.Http.Headers;
 using System.Net;
 
-namespace MainAppIntegtratedMvcTests
+namespace MainAppIntegtratedMvcTests.UserControllerTests
 {
-    public class UserControllerTests : IClassFixture<TestingWebAppFactory<ProgramMVC>> //TODO musi byc uruchomiony project tracking! mvc strzela do api aby zarejstrowac event
+    public class UserControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>> //TODO musi byc uruchomiony project tracking! mvc strzela do api aby zarejstrowac event
     {
         private HttpClient _client;
 
         WebApplicationFactory<ProgramMVC> factory = new WebApplicationFactory<ProgramMVC>();
 
-        public UserControllerTests(TestingWebAppFactory<ProgramMVC> factory)
+        public UserControllerTests(TestingMainAppWebAppFactory<ProgramMVC> factory)
         {
             _client = factory.CreateClient();
             _client.BaseAddress = new Uri("https://localhost:5001/");

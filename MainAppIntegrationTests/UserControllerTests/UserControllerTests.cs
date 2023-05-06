@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Tracking.Context;
 using Xunit;
 
-namespace MainAppIntegrationTests
+namespace MainAppIntegrationTests.UserControllerTests
 {
     //Jak uderzac do mvc skoro tracking tez ma nazwe Program?? mvc => ApplicationDbContext/ tracking => MainApplicationContext
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze

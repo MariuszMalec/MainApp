@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace MainAppIntegtratedMvcTests
+namespace MainAppIntegtratedMvcTests.UserContextTests
 {
     public class UserContextTests : IClassFixture<ApplicationUserSeedDataFixture>
     {
@@ -34,7 +34,7 @@ namespace MainAppIntegtratedMvcTests
             var result = users.FirstOrDefault();
 
             // Assert
-            Assert.Equal("Admin@example.com",result.Email);
+            Assert.Equal("Admin@example.com", result.Email);
         }
     }
 }

@@ -244,10 +244,10 @@ public class ProgramMVC
 
         builder.Services.AddAuthorization();
 
-        if (environment.EnvironmentName != "UnitTests")
+        if (environment.EnvironmentName != "UnitTests")//TODO gdy automapper aktywny nie dzialaja testy!!!???
         {
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        }   
+        }
 
         builder.Services.AddScoped<UserManager<ApplicationUser>>();
         //builder.Services.AddScoped<RoleManager<ApplicationRoles>>();
