@@ -2,7 +2,7 @@
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +13,10 @@ namespace MainApp.Web.Controllers
     [Authorize(Roles = "Admin,User")]
     public class EventController : Controller
     {
-        private readonly ILogger<EventController> _logger;
+        private readonly ILogger _logger;
         private readonly ITrackingService _trackingService;
 
-        public EventController(ILogger<EventController> logger, ITrackingService trackingService)
+        public EventController(ILogger logger, ITrackingService trackingService)
         {
             _logger = logger;
             _trackingService = trackingService;
@@ -31,6 +31,8 @@ namespace MainApp.Web.Controllers
             {
                 return RedirectToAction("EmptyList");
             }
+
+            _logger.Information($"Events load sucessfull at {DateTime.Now}");
 
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CurrentFilter"] = searchString;
@@ -77,7 +79,7 @@ namespace MainApp.Web.Controllers
             var model = await _trackingService.GetEventById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                _logger.Warning($"Event with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -94,11 +96,11 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Event with Id {id} doesn't exist!");
+                    _logger.Warning($"Event with Id {id} doesn't exist!");
                     return RedirectToAction("EmptyList");
                 }
 
-                _logger.LogWarning($"Delete event with id {model.Id}");
+                _logger.Warning($"Delete event with id {model.Id}");
 
                 return RedirectToAction("Index");
             }

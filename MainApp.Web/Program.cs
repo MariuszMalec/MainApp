@@ -36,6 +36,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Diagnostics;
 using System.Net.Sockets;
 using Microsoft.Identity.Client;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using System.Data;
 
 public class ProgramMVC
 {
@@ -60,7 +63,6 @@ public class ProgramMVC
         //-------------------------------------------------------
         // -------------- ustalenie providera -------------------
         //-------------------------------------------------------
-
         var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
         
         if (environment.EnvironmentName == "PracaMsql")//TODO zmiana providera gdy wybrane spec. srodowisko
@@ -93,9 +95,8 @@ public class ProgramMVC
         }
 
         //-------------------------------------------------------
-        //-------------------------------------------------------
-
         //TODO add static values which I can use f.e in homecontroller!
+        //-------------------------------------------------------
         configuration.AddInMemoryCollection(new Dictionary<string, string>
         {
             { "Provider", provider },
@@ -104,12 +105,38 @@ public class ProgramMVC
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        //Add serilog
-        builder.Host.UseSerilog((hostContext, services, configuration) => {
-            configuration.WriteTo.Console();
-        });
-
         var connectionString = configuration.GetConnectionString(provider);
+
+        //-------------------------------------------------------
+        //Add serilog
+        //-------------------------------------------------------
+        if (provider == Provider.SqlServer.ToString())
+        {
+            var columnOptions = new ColumnOptions
+            {
+                AdditionalColumns = new Collection<SqlColumn>
+                {
+                    new SqlColumn
+                        {ColumnName = "Scope", PropertyName = "Scope", DataType = SqlDbType.NVarChar, DataLength = 64},
+                }
+            };
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.WriteTo.Console();
+                configuration.WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions
+                {
+                    AutoCreateSqlTable = true,
+                    TableName = "LogEvents",
+                }, columnOptions: columnOptions).MinimumLevel.Information().Enrich.FromLogContext();
+            });
+        }
+        else
+        {
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.WriteTo.Console();
+            });
+        }
 
         //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(provider)));
 
