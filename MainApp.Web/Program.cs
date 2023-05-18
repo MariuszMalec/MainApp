@@ -39,6 +39,8 @@ using Microsoft.Identity.Client;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Data;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
+using Serilog.Events;
 
 public class ProgramMVC
 {
@@ -59,6 +61,27 @@ public class ProgramMVC
 
         ConfigurationManager configuration = builder.Configuration;
         IWebHostEnvironment environment = builder.Environment;
+
+        //-------------------------------------------------------
+        //Add serilog from appsetings
+        //-------------------------------------------------------
+        var conf = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
+        var logger = new LoggerConfiguration()
+            //.ReadFrom.Configuration(conf)//TODO czytanie z appsettings
+
+            //ponize bez appsetings
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+        builder.Host.UseSerilog();
+        //dodac msql events patrz nizej
 
         //-------------------------------------------------------
         // -------------- ustalenie providera -------------------
@@ -110,33 +133,34 @@ public class ProgramMVC
         //-------------------------------------------------------
         //Add serilog
         //-------------------------------------------------------
-        if (provider == Provider.SqlServer.ToString())
-        {
-            var columnOptions = new ColumnOptions
-            {
-                AdditionalColumns = new Collection<SqlColumn>
-                {
-                    new SqlColumn
-                        {ColumnName = "Scope", PropertyName = "Scope", DataType = SqlDbType.NVarChar, DataLength = 64},
-                }
-            };
-            builder.Host.UseSerilog((hostContext, services, configuration) =>
-            {
-                configuration.WriteTo.Console();
-                configuration.WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions
-                {
-                    AutoCreateSqlTable = true,
-                    TableName = "LogEvents",
-                }, columnOptions: columnOptions).MinimumLevel.Information().Enrich.FromLogContext();
-            });
-        }
-        else
-        {
-            builder.Host.UseSerilog((hostContext, services, configuration) =>
-            {
-                configuration.WriteTo.Console();
-            });
-        }
+        //if (provider == Provider.SqlServer.ToString())
+        //{
+        //    var columnOptions = new ColumnOptions
+        //    {
+        //        AdditionalColumns = new Collection<SqlColumn>
+        //        {
+        //            new SqlColumn
+        //                {ColumnName = "Scope", PropertyName = "Scope", DataType = SqlDbType.NVarChar, DataLength = 64},
+        //        }
+        //    };
+        //    builder.Host.UseSerilog((hostContext, services, configuration) =>
+        //    {
+        //        configuration.WriteTo.Console();
+        //        configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
+        //        configuration.WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions
+        //        {
+        //            AutoCreateSqlTable = true,
+        //            TableName = "LogEvents",
+        //        }, columnOptions: columnOptions).MinimumLevel.Information().Enrich.FromLogContext();
+        //    });
+        //}
+        //else
+        //{
+        //    builder.Host.UseSerilog((hostContext, services, configuration) =>
+        //    {
+        //        configuration.WriteTo.Console();
+        //    });
+        //}
 
         //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(provider)));
 
@@ -235,6 +259,7 @@ public class ProgramMVC
         builder.Services.AddTransient<IRepositoryService<ApplicationRoles>, RoleService>();
         builder.Services.AddTransient<EmailService>();
         builder.Services.AddHttpClient();
+        builder.Services.AddSerilog(logger);//inject serilog
 
         builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         {
