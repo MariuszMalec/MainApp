@@ -41,6 +41,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using Serilog.Events;
+using Serilog.Sinks.PostgreSQL;
 
 public class ProgramMVC
 {
@@ -69,18 +70,19 @@ public class ProgramMVC
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
-        var logger = new LoggerConfiguration()
-            //.ReadFrom.Configuration(conf)//TODO czytanie z appsettings
 
-            //ponize bez appsetings
-            .MinimumLevel.Information()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-        builder.Host.UseSerilog();
+        //var logger = new LoggerConfiguration()
+        //    //.ReadFrom.Configuration(conf)//TODO czytanie z appsettings
+
+        //    //ponize bez appsetings
+        //    .MinimumLevel.Information()
+        //    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        //    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+        //    .Enrich.FromLogContext()
+        //    .WriteTo.Console()
+        //    .WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day)
+        //    .CreateLogger();
+        //builder.Host.UseSerilog();
         //dodac msql events patrz nizej
 
         //-------------------------------------------------------
@@ -133,27 +135,46 @@ public class ProgramMVC
         //-------------------------------------------------------
         //Add serilog
         //-------------------------------------------------------
-        //if (provider == Provider.SqlServer.ToString())
-        //{
-        //    var columnOptions = new ColumnOptions
-        //    {
-        //        AdditionalColumns = new Collection<SqlColumn>
-        //        {
-        //            new SqlColumn
-        //                {ColumnName = "Scope", PropertyName = "Scope", DataType = SqlDbType.NVarChar, DataLength = 64},
-        //        }
-        //    };
-        //    builder.Host.UseSerilog((hostContext, services, configuration) =>
-        //    {
-        //        configuration.WriteTo.Console();
-        //        configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
-        //        configuration.WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions
-        //        {
-        //            AutoCreateSqlTable = true,
-        //            TableName = "LogEvents",
-        //        }, columnOptions: columnOptions).MinimumLevel.Information().Enrich.FromLogContext();
-        //    });
-        //}
+        if (provider == Provider.SqlServer.ToString())
+        {
+            var columnOptions = new Serilog.Sinks.MSSqlServer.ColumnOptions
+            {
+                AdditionalColumns = new Collection<SqlColumn>
+                {
+                    new SqlColumn
+                        {ColumnName = "Scope", PropertyName = "Scope", DataType = SqlDbType.NVarChar, DataLength = 64},
+                }
+            };
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.WriteTo.Console();
+                configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
+                configuration.WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions
+                {
+                    AutoCreateSqlTable = true,
+                    TableName = "LogEvents",
+                }, columnOptions: columnOptions).MinimumLevel.Information().Enrich.FromLogContext();
+            });
+        }
+        else if (provider == Provider.PostgresWin.ToString())
+        {
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.MinimumLevel.Information();
+                configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
+                configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
+                configuration.WriteTo.Console();
+                configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
+                configuration.WriteTo.PostgreSQL(
+                      connectionString: "Server = localhost; Port=5432; User Id=postgres; Password=mario13; Database=MainAppWeb;",
+                      tableName: "LogEvents",
+                      restrictedToMinimumLevel: LogEventLevel.Information,
+                      needAutoCreateTable: true,
+                      respectCase: true,
+                      useCopy: false
+                    );
+            });
+        }
         //else
         //{
         //    builder.Host.UseSerilog((hostContext, services, configuration) =>
@@ -259,7 +280,7 @@ public class ProgramMVC
         builder.Services.AddTransient<IRepositoryService<ApplicationRoles>, RoleService>();
         builder.Services.AddTransient<EmailService>();
         builder.Services.AddHttpClient();
-        builder.Services.AddSerilog(logger);//inject serilog
+        //builder.Services.AddSerilog(logger);//inject serilog
 
         builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         {
