@@ -160,15 +160,18 @@ public class ProgramMVC
         {
             builder.Host.UseSerilog((hostContext, services, configuration) =>
             {
-                configuration.MinimumLevel.Information();
+                //configuration.MinimumLevel.Information();
                 configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
-                configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
+                configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
+                configuration.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning);
+                configuration.MinimumLevel.Override("Microsoft.Hosting.AspNetCore", LogEventLevel.Warning);
+                configuration.MinimumLevel.Override("MainApp.Web", LogEventLevel.Warning);
                 configuration.WriteTo.Console();
                 configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
                 configuration.WriteTo.PostgreSQL(
                       connectionString: "Server = localhost; Port=5432; User Id=postgres; Password=mario13; Database=MainAppWeb;",
                       tableName: "LogEvents",
-                      restrictedToMinimumLevel: LogEventLevel.Information,
+                      restrictedToMinimumLevel: LogEventLevel.Warning,
                       needAutoCreateTable: true,
                       respectCase: true,
                       useCopy: false
