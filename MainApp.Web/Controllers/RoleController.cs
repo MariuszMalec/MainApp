@@ -1,10 +1,8 @@
 ﻿using MainApp.BLL.Entities;
-using MainApp.BLL.Enums;
-using MainApp.BLL.Models;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -13,16 +11,19 @@ namespace MainApp.Web.Controllers
     public class RoleController : Controller
     {
         private readonly IRepositoryService<ApplicationRoles> _roleService;
+        private readonly ILogger _logger;
 
-        public RoleController(IRepositoryService<ApplicationRoles> roleService)
+        public RoleController(IRepositoryService<ApplicationRoles> roleService, ILogger logger = null)
         {
             _roleService = roleService;
+            _logger = logger;
         }
 
         // GET: RoleController
         public async Task<ActionResult> Index()
         {
             var models = await _roleService.GetAll();
+            _logger.Information("Get Roles at {registrationDate}", DateTime.Now);
             return View(models);
         }
 
@@ -32,6 +33,7 @@ namespace MainApp.Web.Controllers
             var model = await _roleService.GetById(id);
             if (model == null)
             {
+                _logger.Warning($"Not found role with {id}");
                 return NotFound($"Not found role with {id}");
                 //return RedirectToAction("EmptyList");
             }
@@ -58,12 +60,15 @@ namespace MainApp.Web.Controllers
                 }
 
                 if (model == null)
+                {
+                    _logger.Warning($"404 Brak roli!");
                     return NotFound("404 Brak roli!");
+                }
 
                 var check = await _roleService.Insert(model);
                 if (check == false)
                 {
-                    Serilog.Log.Warning($"Role can't be created!");
+                    _logger.Warning($"Role can't be created!");
                     return NotFound("404 Brak roli!");
                 }
 
@@ -105,7 +110,6 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -125,12 +129,13 @@ namespace MainApp.Web.Controllers
 
             if (model.NormalizedName == "ADMIN")
             {
+                _logger.Error($"Role Admin can't be deleted!");
                 return Content($"Admin can't be deleted!");
             }
 
             if (model == null)
             {
-                Serilog.Log.Warning($"Role with Id {id} doesn't exist!");
+                _logger.Warning($"Role with Id {id} doesn't exist!");
                 return NotFound($"Not found role with {id}");
                 //return RedirectToAction("EmptyList");
             }
@@ -148,12 +153,12 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-                    Serilog.Log.Information($"Rolr with Id {id} doesn't exist!");
+                    _logger.Warning($"Role with Id {id} doesn't exist!");
                     return RedirectToAction("EmptyList");
                 }
 
                 var userEmail = this.HttpContext.User.Identity.Name;
-                Serilog.Log.Information($"Role {model.Name} delete with id {id} at {DateTime.Now}");
+                _logger.Error($"Role {model.Name} delete with id {id} at {DateTime.Now}");
 
                 return RedirectToAction("Index");
             }
