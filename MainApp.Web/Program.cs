@@ -171,7 +171,7 @@ public class ProgramMVC
                 configuration.WriteTo.PostgreSQL(
                       connectionString: "Server = localhost; Port=5432; User Id=postgres; Password=mario13; Database=MainAppWeb;",
                       tableName: "LogEvents",
-                      restrictedToMinimumLevel: LogEventLevel.Warning,
+                      restrictedToMinimumLevel: LogEventLevel.Information,
                       needAutoCreateTable: true,
                       respectCase: true,
                       useCopy: false

@@ -32,7 +32,7 @@ namespace MainApp.Web.Controllers
                 return RedirectToAction("EmptyList");
             }
 
-            _logger.Information($"Events load sucessfull at {DateTime.Now}");
+            _logger.Information("Events load sucessfull at at {loginDate}", DateTime.Now);
 
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CurrentFilter"] = searchString;

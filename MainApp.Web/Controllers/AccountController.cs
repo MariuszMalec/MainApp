@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +33,11 @@ namespace MainApp.Web.Controllers
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly TrackingService _trackingService;
 
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger _logger;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<AccountController> logger,
+            ILogger logger,
             ApplicationDbContext applicationDbContext, IRepository<ApplicationUser> userRepository, TrackingService trackingService)
         {
             _userManager = userManager;
@@ -78,13 +78,13 @@ namespace MainApp.Web.Controllers
                         UserRole = "User"
                     };
                     //LogContext.PushProperty("UserName", model.Email);// co to jest??
-                    _logger.LogInformation("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);
+                    _logger.Information("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, "User");//TODO tutaj zapisuje do aktualnej bazy a nie do fasady przy tescie, dlaczego?!
                                                                         //await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
-                        _logger.LogInformation("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
+                        _logger.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac! Nie nadaje id? przy tescie! przy tescie musi byc odpalony api tracking!
                         await _trackingService.Insert(myEvent);
                         return RedirectToAction("Login");
@@ -102,7 +102,7 @@ namespace MainApp.Web.Controllers
                     }
             }
             //LogContext.PushProperty("UserName", model.Email);
-            _logger.LogError("Registration of the user - {userName} failed at {registrationDate}", model.Email, DateTime.Now);
+            _logger.Error("Registration of the user - {userName} failed at {registrationDate}", model.Email, DateTime.Now);
             ModelState.AddModelError("", "Invalid Register.");
             return View(model);
         }
@@ -125,7 +125,7 @@ namespace MainApp.Web.Controllers
             {
                 ModelState.AddModelError("", "Invalid ID or Password");
 
-                _logger.LogError("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
+                _logger.Error("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
                 return View(model);
             }
 
@@ -136,7 +136,7 @@ namespace MainApp.Web.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-                    _logger.LogInformation("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
+                    _logger.Information("User {userName} logged in successfully at {loginDate}", model.Email, DateTime.Now);
                     var myEvent = await _trackingService.InsertEvent(ActivityActions.loggin, this.HttpContext, model.Email);
                     await _trackingService.Insert(myEvent);
 
@@ -175,22 +175,20 @@ namespace MainApp.Web.Controllers
                 }
                 else if (result.IsLockedOut)
                 {
-                    Serilog.Log.Error("User {email} account locked!!", model.Email);
-                    _logger.LogError("User {email} account locked!!", model.Email);
+                    _logger.Error("User {email} account locked!!", model.Email);
                     return View("AccountLocked");
                 }
                 else
                 {
                     ModelState.AddModelError("message", "Invalid login attempt");
-                    Serilog.Log.Warning($"invalid login attempt for user {model.Email}");
-                    _logger.LogWarning($"invalid login attempt for user {model.Email}");
+                    _logger.Warning($"invalid login attempt for user {model.Email}");
                     return View(model);
                 }
             }
 
             ModelState.AddModelError("", "Invalid ID or Password");
 
-            _logger.LogWarning("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
+            _logger.Warning("login attempt failed for the user - {userName} at {loginDate}", model.Email, DateTime.Now);
             return View(model);
         }
 
@@ -281,7 +279,7 @@ namespace MainApp.Web.Controllers
             var myEvent = await _trackingService.InsertEvent(ActivityActions.logout, HttpContext, userEmail);
             await _trackingService.Insert(myEvent);
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User {userName} logout at {loginDate}", userEmail, DateTime.Now);
+            _logger.Information("User {userName} logout at {loginDate}", userEmail, DateTime.Now);
             return RedirectToAction("login", "account");
         }
     }
