@@ -39,6 +39,7 @@ namespace MainApp.Web.Controllers
             if (models == null)
                 return Content("models is null!");
 
+            _logger.LogInformation("Get users role at {loginDate}", DateTime.Now);
             return View(models);
         }
 
@@ -48,9 +49,11 @@ namespace MainApp.Web.Controllers
             var model = await _roleService.GetById(id);
             if (model == null)
             {
+                _logger.LogWarning($"Not found user role with {id}");
                 return NotFound($"Not found user role with {id}");
                 //return RedirectToAction("EmptyList");
             }
+            _logger.LogInformation($"Get details of role {id}");
             return View(model);
         }
 
@@ -86,6 +89,7 @@ namespace MainApp.Web.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
+                _logger.LogWarning($"Not found user with {id}");
                 return NotFound($"Not found user with {id}");
             }
 
@@ -100,7 +104,7 @@ namespace MainApp.Web.Controllers
 
             if (model == null)
             {
-                Serilog.Log.Information($"user with Id {id} doesn't exist!");
+                _logger.LogWarning($"user with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -130,6 +134,7 @@ namespace MainApp.Web.Controllers
                 var checkRoleExist = _context.Roles.Any(r => r.Id == model.RoleId);
                 if (checkRoleExist == false)
                 {
+                    _logger.LogWarning("Role doesn't exist!");
                     return Content("Role doesn't exist!");
                 }
 
@@ -155,7 +160,7 @@ namespace MainApp.Web.Controllers
 
                 await _context.SaveChangesAsync();
 
-                Serilog.Log.Information("User {userName} edit trainer with id {id} at {date}", model.UserId, model.RoleId, DateTime.Now);
+                _logger.LogInformation("User {userName} edit trainer with id {id} at {date}", model.UserId, model.RoleId, DateTime.Now);
 
                 return RedirectToAction(nameof(Index));
             }
