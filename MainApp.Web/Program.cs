@@ -42,6 +42,7 @@ using System.Data;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using Serilog.Events;
 using Serilog.Sinks.PostgreSQL;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 public class ProgramMVC
 {
@@ -161,12 +162,16 @@ public class ProgramMVC
             builder.Host.UseSerilog((hostContext, services, configuration) =>
             {
                 //configuration.MinimumLevel.Information();
+                //configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
+                //configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
+                //configuration.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning);
+                //configuration.MinimumLevel.Override("Microsoft.Hosting.AspNetCore", LogEventLevel.Warning);
+                //configuration.MinimumLevel.Override("MainApp.Web", LogEventLevel.Warning);
+                //configuration.WriteTo.Console();
+                configuration.MinimumLevel.Verbose();
                 configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
-                configuration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
-                configuration.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning);
-                configuration.MinimumLevel.Override("Microsoft.Hosting.AspNetCore", LogEventLevel.Warning);
-                configuration.MinimumLevel.Override("MainApp.Web", LogEventLevel.Warning);
-                configuration.WriteTo.Console();
+                configuration.MinimumLevel.Override("System", LogEventLevel.Error);
+                configuration.WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}");
                 configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
                 configuration.WriteTo.PostgreSQL(
                       connectionString: "Server = localhost; Port=5432; User Id=postgres; Password=mario13; Database=MainAppWeb;",

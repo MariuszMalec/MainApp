@@ -50,15 +50,6 @@ namespace MainApp.Web.Controllers
 
         public IActionResult Index(LoginView model, string param)
         {
-            //_applicationLifetime.ApplicationStarted();
-            //var defaultprovider = _configuration["DatabaseProvider"];//TODO  z appsettings.json
-            //if (model.ProviderName == null)
-            //{
-            //    model.ProviderName = defaultprovider;
-            //}
-            //var provider = model.ProviderName;
-            //provider= (string)TempData["Provider"];
-            //var providerFromProgramCs = _configuration["Provider"];
 
             if (param == string.Empty || param == null)
             {
@@ -94,13 +85,6 @@ namespace MainApp.Web.Controllers
                 _logger.LogInformation($"Wybrany provider {model.ProviderName}");
                 return View(model);
             }
-
-            //if (newProvider != model.ProviderName)
-            //{
-            //    model.ProviderName = newProvider.ToString();
-            //    _logger.LogInformation($"Wybrany provider {model.ProviderName}");
-            //    return View(model);
-            //}
 
             _logger.LogInformation($"Wybrany provider {model.ProviderName}");
             return View(model);

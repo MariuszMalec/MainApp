@@ -2,19 +2,17 @@
 using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
-using MainApp.BLL.Enums;
-using MainApp.BLL.ExtentionsMethod;
 using MainApp.BLL.Models;
-using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -28,14 +26,16 @@ namespace MainApp.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IPersonService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration)
+        public UserController(IPersonService userService, IMapper mapper, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IConfiguration configuration, ILogger<UserController> logger = null)
         {
             _userService = userService;
             _mapper = mapper;
             _userManager = userManager;
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
         // GET: UserController1
         public async Task<IActionResult> Index()
@@ -54,6 +54,8 @@ namespace MainApp.Web.Controllers
 
             var provider = _configuration["Provider"];//TODO from program.cs
             TempData["Provider"] = provider;
+
+            _logger.LogInformation("Get users informations at {loginDate}", DateTime.Now);
 
             return View(model);
         }
@@ -131,12 +133,12 @@ namespace MainApp.Web.Controllers
             var user = await _userService.GetById(id);
             if (user == null)
             {
-                Serilog.Log.Warning($"User with Id {id} doesn't exist!");
+                _logger.LogWarning($"User with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             if (user.UserRole.Contains("Admin"))
             {
-                Serilog.Log.Warning($"You can't delete admin!");
+                _logger.LogWarning($"You can't delete admin!");
                 return RedirectToAction("AccessDenied", "Account");
             }
             var model = _mapper.Map<UserView>(user);
@@ -152,7 +154,7 @@ namespace MainApp.Web.Controllers
             {
                 var user = await _userService.GetById(id);
                 await _userService.Delete(user);
-                Serilog.Log.Warning($"Delete user with id {id}");
+                _logger.LogWarning($"Delete user with id {id}");
                 return RedirectToAction(nameof(Index));
             }
             catch

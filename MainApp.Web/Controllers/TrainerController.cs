@@ -51,7 +51,7 @@ namespace MainApp.Web.Controllers
                 return RedirectToAction("UnAuthorized");      
             }
 
-            _logger.LogInformation("Download datas from API...");
+            _logger.LogInformation("Download trainers from Tracking API...");
             return View(sortedTrainers);
         }
 
