@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -58,9 +59,9 @@ namespace MainApp.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterView model)
+        public async Task<IActionResult> Register(RegisterView model)//TODO [FromBody] nie dziala??? musialem wykasowac
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                     var user = new ApplicationUser()
                     {
@@ -71,8 +72,16 @@ namespace MainApp.Web.Controllers
                         Created = DateTime.UtcNow,
                         UserRole = "User"
                     };
-                    //LogContext.PushProperty("UserName", model.Email);// co to jest??
-                    _logger.Information("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);
+                //not register if exist mail!
+                var emailUsers = await _userRepository.GetAll();
+                if (emailUsers.Any(e => e.Email == model.Email))
+                {
+                    _logger.Error("Registration of the user - {userName} failed at {registrationDate}, email exist!", model.Email, DateTime.Now);
+                    ModelState.AddModelError("", "Invalid Email!");//TODO to wyrzucane na front!
+                    return View(model);
+                }
+                //LogContext.PushProperty("UserName", model.Email);// co to jest??
+                _logger.Information("Trying to register new user - {userName} at {registrationDate}", model.Email, DateTime.Now);
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
