@@ -15,7 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Tracking.Context;
 
-namespace MainAppIntegtratedMvcTests
+namespace MainAppIntegtratedMvcTests.AccountControlerTests
 {
     public class AccountControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>, IClassFixture<TestingTrackingWebAppFactory<Program>>
     {
@@ -62,7 +62,7 @@ namespace MainAppIntegtratedMvcTests
                 FirstName = "Test1",
                 LastName = "Test1",
                 PhoneNumber = "555-555-555",
-                Password="123456",
+                Password = "123456",
                 ConfirmPassword = "123456",
                 Email = "tt2@example.com"
             };
