@@ -79,7 +79,7 @@ namespace MainAppIntegtratedMvcTests
 
             var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
 
-            Assert.Equal("/Account/Login", requestMessage.RequestUri.LocalPath);
+            Assert.Equal("/Account/Register", requestMessage.RequestUri.LocalPath);
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

@@ -183,13 +183,13 @@ public class ProgramMVC
                     );
             });
         }
-        //else
-        //{
-        //    builder.Host.UseSerilog((hostContext, services, configuration) =>
-        //    {
-        //        configuration.WriteTo.Console();
-        //    });
-        //}
+        else
+        {
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.WriteTo.Console();
+            });
+        }
 
         //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(provider)));
 
