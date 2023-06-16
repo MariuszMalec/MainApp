@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Moq;
+using ILogger = Serilog.ILogger;
 
 namespace MainAppIntegtratedMvcTests.EventControllerTests
 {
@@ -19,7 +20,7 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
         private readonly Mock<ITrackingService> _trackingServiceMock = new Mock<ITrackingService>();
         private readonly HttpClient _httpClient;
         private readonly Mock<ILogger<ITrackingService>> _loggerMock = new Mock<ILogger<ITrackingService>>();
-        private readonly Mock<ILogger<EventController>> _loggerEventControllerMock = new Mock<ILogger<EventController>>();
+        private readonly Mock<ILogger> _loggerEventControllerMock = new Mock<ILogger>();
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly HttpClient _client;
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
