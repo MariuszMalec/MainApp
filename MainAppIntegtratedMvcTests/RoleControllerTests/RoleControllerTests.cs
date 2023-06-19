@@ -1,12 +1,18 @@
-﻿using MainApp.BLL.Entities;
+﻿using FluentAssertions;
+using MainApp.BLL.Entities;
+using MainApp.BLL.Services;
+using MainApp.Web.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
+using Moq;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using Serilog;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MainAppIntegtratedMvcTests.RoleControllerTests
 {
@@ -43,7 +49,8 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
             var roles = new ApplicationRoles()
             {
                 Id = 1,
-                Name = "Admin"
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN"
             };
 
             var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -52,8 +59,9 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
 
             request.Content = new StringContent(JsonConvert.SerializeObject(roles), Encoding.UTF8, "application/json");
 
-            var provider = TestClaimsProvider.WithUserClaims();
+            var provider = TestClaimsProvider.WithAdminClaims();
 
+            //_client = factory.CreateClientWithTestAuth(provider);
             //Act
             var response = await _client.SendAsync(request);
 
@@ -63,5 +71,36 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Fact]
+        public async Task Index_GetCorrectName_ReturnsSuccess()
+        {
+            //arange
+            var roles = new List<ApplicationRoles>() 
+                {
+                    new ApplicationRoles()
+                    {
+                        Id = 1,
+                        Name = "SuperAdmin",
+                        NormalizedName = "SUPERADMIN"
+                    }
+                };
+
+            var mockRepo = new Mock<IRepositoryService<ApplicationRoles>>();
+            mockRepo.Setup(r => r.GetAll())
+                .ReturnsAsync(roles);
+
+            var logger = new Mock<ILogger>();
+            logger.Setup(c => c.Information(It.IsAny<string>()))
+                 ;
+
+            var controller = new RoleController(mockRepo.Object, logger.Object);
+
+            // Act
+            var result = await controller.Index();
+            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+            var applicationRoles = Assert.IsAssignableFrom<IEnumerable<ApplicationRoles>>(viewResult.Model);
+            // Assert
+            Assert.Equal("SuperAdmin", applicationRoles.Select(x=>x.Name).FirstOrDefault()); 
+        }
     }
 }
