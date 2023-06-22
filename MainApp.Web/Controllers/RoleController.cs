@@ -41,7 +41,7 @@ namespace MainApp.Web.Controllers
         }
 
         // GET: RoleController/Create
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();

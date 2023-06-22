@@ -1,24 +1,39 @@
-﻿using MainApp.BLL.Context;
+﻿using MainApp.BLL;
+using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Models;
-using Microsoft.AspNetCore.Http;
+using MainApp.BLL.Repositories;
+using MainApp.BLL.Services;
+using MainApp.Web.Controllers;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using Moq;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Tracking.Context;
+using Tracking.Services;
 
 namespace MainAppIntegtratedMvcTests.AccountControlerTests
 {
     public class AccountControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>, IClassFixture<TestingTrackingWebAppFactory<Program>>
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly MainApp.Web.Services.TrackingService _trackingService;
+        private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
+        private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
+        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly Mock<ILogger<ITrackingService>> _loggerMock = new Mock<ILogger<ITrackingService>>();
+        private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+
         private HttpClient _client;
         private HttpClient _client2;
 
@@ -37,6 +52,9 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             _client2.Timeout = new TimeSpan(0, 0, 30);
             _client2.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             _client2.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+
+            _httpClientFactory.Setup(x => x.CreateClient("Tracking")).Returns(_client2);
+
         }
 
         [Theory]
@@ -110,6 +128,61 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
 
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Register_ActionExecuted_RedirectsToLoginAction()
+        {
+            //arange
+            var userReg = new RegisterView()
+            {
+                FirstName = "Tester",
+                LastName = "Test",
+                Password = "123456",
+                ConfirmPassword = "123456",
+                PhoneNumber = "666-666-666",
+                Email = "tester@example.com",
+            };
+
+            var userApp = new ApplicationUser()
+            {
+                FirstName = "Testerek",
+                LastName = "Testerkowski",
+                Email = "Testerkowski@example.com"
+            };
+
+            ApplicationRoles? emp = null;
+            var mockRepo = new Mock<IRepository<ApplicationUser>>();
+            mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationUser>()))
+                .Returns(Task.CompletedTask);
+
+            //var logger = new Mock<ILogger<ITrackingService>>();
+            //logger.Setup(c => c.LogInformation(It.IsAny<string>()));//TODO blad ?!
+
+            var serviceProvider = new ServiceCollection()
+                .AddLogging()
+                .BuildServiceProvider();
+            var factory = serviceProvider.GetService<ILoggerFactory>();
+            var logger = factory.CreateLogger<ITrackingService>();
+
+            var loggerSerilog = new Mock<Serilog.ILogger>();
+            loggerSerilog.Setup(c => c.Information(It.IsAny<string>()));
+
+            _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");
+
+            //TODO zamokowac http i userservice
+            var trackingService = new MainApp.Web.Services.TrackingService(logger, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
+
+            //_userManager is null??? zrobic mocka
+
+            var controller = new AccountController(_userManager, _signInManager, loggerSerilog.Object, _applicationDbContext, mockRepo.Object, trackingService);
+
+            // Act
+            var result = await controller.Register(userReg);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Login", redirectToActionResult.ActionName);
         }
     }
 }
