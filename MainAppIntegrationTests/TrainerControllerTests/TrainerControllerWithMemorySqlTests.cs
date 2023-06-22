@@ -1,11 +1,14 @@
 ﻿using FluentAssertions;
+using MainApp.BLL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Net.Http;
@@ -62,6 +65,20 @@ namespace MainAppIntegrationTests.TrainerControllerTests
             _client.DefaultRequestHeaders.Add(
                 HeaderNames.Accept, "application/json");
             _client.DefaultRequestHeaders.Add("ApiKey", "8e421ff965cb4935ba56ef7833bf4750");
+        }
+
+        [Fact]
+        public async Task GetAll_Trainers_ReturnTrainers_WhenExist()//only if env unit test
+        {
+            //act
+            var response = await _client.GetAsync($"/api/Trainer");
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var trainers = JsonConvert.DeserializeObject<List<TrainerView>>(content);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         [Theory]

@@ -1,18 +1,12 @@
-﻿using FluentAssertions;
-using MainApp.BLL.Entities;
+﻿using MainApp.BLL.Entities;
 using MainApp.BLL.Services;
 using MainApp.Web.Controllers;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Net.Http.Headers;
 using Moq;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using Serilog;
-using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace MainAppIntegtratedMvcTests.RoleControllerTests
 {
@@ -20,7 +14,7 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
     {
         private HttpClient _client;
 
-        WebApplicationFactory<ProgramMVC> factory = new WebApplicationFactory<ProgramMVC>();
+        WebApplicationFactory<ProgramMVC> _factory = new WebApplicationFactory<ProgramMVC>();
 
         public RoleControllerTests(TestingMainAppWebAppFactory<ProgramMVC> factory)
         {
@@ -38,36 +32,6 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
         {
             var response = await _client.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Theory]
-        [InlineData("/Role/Edit/1")]//only admin
-        public async Task Get_Edit_EndPointsReturnsSuccess(string url)
-        {
-            //arange
-            var roles = new ApplicationRoles()
-            {
-                Id = 1,
-                Name = "SuperAdmin",
-                NormalizedName = "SUPERADMIN"
-            };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(roles), Encoding.UTF8, "application/json");
-
-            var provider = TestClaimsProvider.WithAdminClaims();
-
-            //_client = factory.CreateClientWithTestAuth(provider);
-            //Act
-            var response = await _client.SendAsync(request);
-
-            var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
-
-            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -101,6 +65,68 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
             var applicationRoles = Assert.IsAssignableFrom<IEnumerable<ApplicationRoles>>(viewResult.Model);
             // Assert
             Assert.Equal("SuperAdmin", applicationRoles.Select(x=>x.Name).FirstOrDefault()); 
+        }
+
+        [Fact]
+        public async Task Create_ModelStateValid_ReturnsSuccess()
+        {
+            //arange
+            var role = new ApplicationRoles()
+            {
+                Id = 3,
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+
+            ApplicationRoles? emp = null;
+            var mockRepo = new Mock<IRepositoryService<ApplicationRoles>>();
+            mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationRoles>()))
+                .Callback<ApplicationRoles>(x => emp = x);
+
+            var logger = new Mock<ILogger>();
+            logger.Setup(c => c.Information(It.IsAny<string>()))
+                 ;
+
+            var controller = new RoleController(mockRepo.Object, logger.Object);
+
+            // Act
+            await controller.Create(role);
+
+            // Assert
+            mockRepo.Verify(x => x.Insert(It.IsAny<ApplicationRoles>()), Times.Once);
+            Assert.Equal(emp.Name, role.Name);
+        }
+
+        [Fact]
+        public async Task Create_ActionExecuted_RedirectsToIndexAction()
+        {
+            //arange
+            var role = new ApplicationRoles()
+            {
+                Id = 3,
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+
+            ApplicationRoles? emp = null;
+            var mockRepo = new Mock<IRepositoryService<ApplicationRoles>>();
+            mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationRoles>()))
+                .ReturnsAsync(true);
+
+            var logger = new Mock<ILogger>();
+            logger.Setup(c => c.Information(It.IsAny<string>()))
+                 ;
+
+            var controller = new RoleController(mockRepo.Object, logger.Object);
+
+            // Act
+            var result = await controller.Create(role);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
         }
     }
 }

@@ -37,7 +37,6 @@ namespace MainApp.BLL.Context
                 // await context.SaveChangesAsync();                
             }
         }
-
         public static async void SeedAdmin(ApplicationDbContext context)
         {
             if (context.Users.Any())
@@ -56,6 +55,20 @@ namespace MainApp.BLL.Context
             context.AddRange(admin);
             await context.SaveChangesAsync();
         }
-
+        public static async Task SeedRole(ApplicationDbContext context)
+        {
+            if (context.Roles.Any())
+            {
+                return;
+            }
+            var role = new ApplicationRoles()
+            {
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+            context.AddRange(role);
+            await context.SaveChangesAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace MainAppIntegtratedMvcTests
             //builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
 
             builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
-            builder.ConfigureServices(services =>
+            builder.ConfigureServices(async services =>
             {
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
@@ -44,6 +45,7 @@ namespace MainAppIntegtratedMvcTests
                     try
                     {
                         appContext.Database.EnsureCreated();
+                        //await SeedData(appContext);
                     }
                     catch (Exception ex)
                     {
@@ -53,5 +55,22 @@ namespace MainAppIntegtratedMvcTests
                 }
             });
         }
+
+        private async Task SeedData(ApplicationDbContext context)
+        {
+            if (context.Roles.Any())
+            {
+                return;
+            }
+            var role = new ApplicationRoles()
+            {
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+            context.AddRange(role);
+            await context.SaveChangesAsync();
+        }
+
     }
 }
