@@ -1,4 +1,5 @@
-﻿using MainApp.BLL;
+﻿using FluentAssertions;
+using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Models;
@@ -6,12 +7,15 @@ using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using MainApp.Web.Controllers;
 using MainApp.Web.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Newtonsoft.Json;
@@ -33,6 +37,9 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly Mock<ILogger<ITrackingService>> _loggerMock = new Mock<ILogger<ITrackingService>>();
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
+
+        private Mock<FakeUserManager> _mock = new Mock<FakeUserManager>();
+        private readonly UserManager<ApplicationUser> _userManager2;
 
         private HttpClient _client;
         private HttpClient _client2;
@@ -148,7 +155,9 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             {
                 FirstName = "Testerek",
                 LastName = "Testerkowski",
-                Email = "Testerkowski@example.com"
+                Email = "Testerkowski@example.com",
+                PasswordHash="123456",
+                
             };
 
             ApplicationRoles? emp = null;
@@ -174,8 +183,15 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             var trackingService = new MainApp.Web.Services.TrackingService(logger, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
 
             //_userManager is null??? zrobic mocka
+            var fakeUserManager = new FakeUserManagerBuilder().Build();
+            var userManager = MockUserManager.GetUserManager<ApplicationUser>()
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>())).
+                ReturnsAsync(userApp);
 
-            var controller = new AccountController(_userManager, _signInManager, loggerSerilog.Object, _applicationDbContext, mockRepo.Object, trackingService);
+
+
+
+            var controller = new AccountController(fakeUserManager.Object, _signInManager, loggerSerilog.Object, _applicationDbContext, mockRepo.Object, trackingService);
 
             // Act
             var result = await controller.Register(userReg);
@@ -184,5 +200,7 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Login", redirectToActionResult.ActionName);
         }
+
+
     }
 }
