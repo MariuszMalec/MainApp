@@ -94,15 +94,15 @@ public class ProgramMVC
         //-------------------------------------------------------
         var provider = configuration["DatabaseProvider"];//TODO z appsettings.json
         
-        if (environment.EnvironmentName == "PracaMsql")//TODO zmiana providera gdy wybrane spec. srodowisko
+        if (environment.EnvironmentName == "SqlServer")//TODO zmiana providera gdy wybrane spec. srodowisko
         {
             provider = Provider.SqlServer.ToString();
         }
-        if (environment.EnvironmentName == "PracaPostgres")//TODO zmiana providera gdy wybrane spec. srodowisko
+        if (environment.EnvironmentName == "WinPostgres")//TODO zmiana providera gdy wybrane spec. srodowisko
         {
             provider = Provider.PostgresWin.ToString();
         }
-        if (environment.EnvironmentName == "LaptopZonki")//TODO zmiana providera gdy wybrane spec. srodowisko
+        if (environment.EnvironmentName == "WinMySql")//TODO zmiana providera gdy wybrane spec. srodowisko
         {
             provider = Provider.MySqlWin.ToString();
         }

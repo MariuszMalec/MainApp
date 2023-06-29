@@ -30,15 +30,15 @@ IWebHostEnvironment environment = builder.Environment;
 
 var provider = configuration["DatabaseProvider"];
 
-if (environment.EnvironmentName == "PracaMsql")//TODO zmiana providera gdy wybrane spec. srodowisko
+if (environment.EnvironmentName == "SqlServer")//TODO zmiana providera gdy wybrane spec. srodowisko
 {
     provider = Provider.SqlServer.ToString();
 }
-if (environment.EnvironmentName == "PracaPostgres")
+if (environment.EnvironmentName == "WinPostgres")
 {
     provider = Provider.PostgresWin.ToString();
 }
-if (environment.EnvironmentName == "LaptopZonki")
+if (environment.EnvironmentName == "WinMySql")
 {
     provider = Provider.MySqlWin.ToString();
 }
@@ -201,9 +201,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-if (app.Environment.EnvironmentName.Contains("Praca") 
+if (app.Environment.EnvironmentName.Contains("Sql")
+    || app.Environment.EnvironmentName.Contains("Postgres")
     || app.Environment.EnvironmentName == "Linux" 
-    || app.Environment.EnvironmentName == "LaptopZonki"
     || app.Environment.EnvironmentName == "UnitTests")
 {
     app.UseDeveloperExceptionPage();

@@ -18,16 +18,6 @@
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:7001;http://localhost:7000"
     },
-    "LaptopZonki": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "LaptopZonki"
-      },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7001;http://localhost:7000"
-    },
     "Linux": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -38,32 +28,42 @@
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:7001;http://localhost:7000"
     },
-    "LaptopPracaMsql": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "PracaMsql"
-      },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7001;http://localhost:7000"
-    },
-    "LaptopPracaPostgres": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "PracaPostgres"
-      },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7001;http://localhost:7000"
-    },
     "UnitTests": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "UnitTests"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    },
+    "SqlServer": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "SqlServer"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    },
+    "WinPostgres": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "WinPostgres"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    },
+    "WinMySql": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "WinMySql"
       },
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:7001;http://localhost:7000"
