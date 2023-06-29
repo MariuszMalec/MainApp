@@ -72,19 +72,22 @@ public class ProgramMVC
                 .AddEnvironmentVariables()
                 .Build();
 
-        //var logger = new LoggerConfiguration()
+        // var connectionstring = "Server = localhost; Port=5432; User Id=mario; Password=mario13; Database=MainAppWebPg;";
+        // var logger = new LoggerConfiguration()
         //    //.ReadFrom.Configuration(conf)//TODO czytanie z appsettings
-
         //    //ponize bez appsetings
-        //    .MinimumLevel.Information()
-        //    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        //    .MinimumLevel.Verbose()
+        //    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
         //    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
         //    .Enrich.FromLogContext()
         //    .WriteTo.Console()
-        //    .WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day)
+        //    .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log/log.txt"), rollingInterval: RollingInterval.Day)
+        //    .WriteTo.PostgreSQL(connectionstring, "Logs")
         //    .CreateLogger();
-        //builder.Host.UseSerilog();
-        //dodac msql events patrz nizej
+        // builder.Host.UseSerilog();
+        // logger.Information("Starting app ...");
+        // Log.CloseAndFlush();
+
 
         //-------------------------------------------------------
         // -------------- ustalenie providera -------------------
@@ -175,6 +178,25 @@ public class ProgramMVC
                 configuration.WriteTo.File("Mylogs.log", rollingInterval: RollingInterval.Day);
                 configuration.WriteTo.PostgreSQL(
                       connectionString: "Server = localhost; Port=5432; User Id=postgres; Password=mario13; Database=MainAppWeb;",
+                      tableName: "LogEvents",
+                      restrictedToMinimumLevel: LogEventLevel.Information,
+                      needAutoCreateTable: true,
+                      respectCase: true,
+                      useCopy: false
+                    );
+            });
+        }
+        else if (provider == Provider.PostgresLinux.ToString())
+        {
+            builder.Host.UseSerilog((hostContext, services, configuration) =>
+            {
+                configuration.MinimumLevel.Verbose();
+                configuration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
+                configuration.MinimumLevel.Override("System", LogEventLevel.Error);
+                configuration.WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}");
+                configuration.WriteTo.File("./Logs/Mylogs.log", rollingInterval: RollingInterval.Day);
+                configuration.WriteTo.PostgreSQL(
+                      connectionString: "Server = localhost; Port=5432; User Id=mario; Password=mario13; Database=MainAppWebPg;",
                       tableName: "LogEvents",
                       restrictedToMinimumLevel: LogEventLevel.Information,
                       needAutoCreateTable: true,
