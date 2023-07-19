@@ -42,6 +42,10 @@ if (environment.EnvironmentName == "WinMySql")
 {
     provider = Provider.MySqlWin.ToString();
 }
+if (environment.EnvironmentName == "LinuxMySql")
+{
+    provider = Provider.MySqlLinux.ToString();
+}
 if (environment.EnvironmentName == "Linux")
 {
     provider = Provider.PostgresLinux.ToString();
@@ -73,6 +77,9 @@ switch (provider)
         builder.Services.AddDbContext<MainApplicationContext, PgDbContext>();
         break;
     case "MySqlWin":
+        builder.Services.AddDbContext<MainApplicationContext, MySqlDbContext>();
+        break;
+    case "MySqlLinux":
         builder.Services.AddDbContext<MainApplicationContext, MySqlDbContext>();
         break;
     case "SqlServer":
