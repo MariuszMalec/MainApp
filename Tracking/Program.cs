@@ -46,7 +46,7 @@ if (environment.EnvironmentName == "LinuxMySql")
 {
     provider = Provider.MySqlLinux.ToString();
 }
-if (environment.EnvironmentName == "Linux")
+if (environment.EnvironmentName == "LinuxPostgres")
 {
     provider = Provider.PostgresLinux.ToString();
 }

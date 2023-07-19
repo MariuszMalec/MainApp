@@ -106,7 +106,11 @@ public class ProgramMVC
         {
             provider = Provider.MySqlWin.ToString();
         }
-        if (environment.EnvironmentName == "Linux")//TODO zmiana providera gdy wybrane spec. srodowisko
+        if (environment.EnvironmentName == "LinuxMySql")//TODO zmiana providera gdy wybrane spec. srodowisko
+        {
+            provider = Provider.MySqlLinux.ToString();
+        }
+        if (environment.EnvironmentName == "LinuxPostgres")//TODO zmiana providera gdy wybrane spec. srodowisko
         {
             provider = Provider.PostgresLinux.ToString();
         }
