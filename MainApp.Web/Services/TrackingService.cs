@@ -168,7 +168,16 @@ namespace MainApp.Web.Services
 
         public async Task<Event> InsertEvent(ActivityActions activityActions, HttpContext httpContext, string email)
         {
-            var userEmail = httpContext.User.Identity.Name;
+            var userEmail = string.Empty;
+            if (httpContext == null)
+            {
+                userEmail = email;
+            }
+            else
+            {
+                userEmail = httpContext.User.Identity.Name;
+            }
+
             if (userEmail == null)
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);

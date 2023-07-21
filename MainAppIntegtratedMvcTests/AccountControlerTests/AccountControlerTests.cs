@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoMapper.Execution;
+using FluentAssertions;
 using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -165,9 +167,6 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
 
-            //var logger = new Mock<ILogger<ITrackingService>>();
-            //logger.Setup(c => c.LogInformation(It.IsAny<string>()));//TODO blad ?!
-
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .BuildServiceProvider();
@@ -182,16 +181,43 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             //TODO zamokowac http i userservice
             var trackingService = new MainApp.Web.Services.TrackingService(logger, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
 
-            //_userManager is null??? zrobic mocka
-            var fakeUserManager = new FakeUserManagerBuilder().Build();
-            var userManager = MockUserManager.GetUserManager<ApplicationUser>()
-                .Setup(x => x.FindByNameAsync(It.IsAny<string>())).
-                ReturnsAsync(userApp);
+            //
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "FakeDatabase")
+                .Options;
 
+            var users = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    UserName = "Test",
+                    Id = 1,
+                    Email = "test@test.it"
+                }
+            }.AsQueryable();
 
+            var fakeUserManager = new Mock<FakeUserManager>();
 
+            fakeUserManager.Setup(x => x.Users)
+                .Returns(users);
 
-            var controller = new AccountController(fakeUserManager.Object, _signInManager, loggerSerilog.Object, _applicationDbContext, mockRepo.Object, trackingService);
+            fakeUserManager.Setup(x => x.DeleteAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+            fakeUserManager.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+            fakeUserManager.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(IdentityResult.Success);
+            fakeUserManager.Setup(x =>
+                    x.ChangeEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var signInManager = new Mock<FakeSignInManager>();
+            signInManager.Setup(
+                    x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(),
+                        It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+
+            var controller = new AccountController(fakeUserManager.Object, signInManager.Object, loggerSerilog.Object, _applicationDbContext, mockRepo.Object, trackingService);
 
             // Act
             var result = await controller.Register(userReg);
@@ -201,6 +227,29 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             Assert.Equal("Login", redirectToActionResult.ActionName);
         }
 
+        private IEnumerable<ApplicationUser> GetUsersDto()
+        {
+            var sessions = new List<ApplicationUser>();
+            sessions.Add(new ApplicationUser()
+            {
+                Created = new DateTime(2016, 7, 2),
+                Id = 1,
+                FirstName = "Testerek",
+                LastName = "Testerkowski",
+                Email = "Testerkowski@example.com",
+                PasswordHash = "123456",
+            });
+            sessions.Add(new ApplicationUser()
+            {
+                Created = new DateTime(2016, 7, 2),
+                Id = 2,
+                FirstName = "Testerek",
+                LastName = "Testerkowski",
+                Email = "tester@example.com",
+                PasswordHash = "123456",
+            });
+            return sessions;
+        }
 
     }
 }
