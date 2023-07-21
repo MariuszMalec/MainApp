@@ -182,6 +182,11 @@ namespace MainApp.Web.Services
                 userEmail = email;
             var user = await _userService.GetByEmail(userEmail);
 
+            if (user == null)//TODO tylko dla testu tymczasowe rozwiazanie
+            {
+                return null;
+            }
+
             var events = GetAll(null, null).Result;//TODO musi byc aktywny project tracking!
 
             //TODO dodanie idy

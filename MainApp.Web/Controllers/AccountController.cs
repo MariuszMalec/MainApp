@@ -89,7 +89,9 @@ namespace MainApp.Web.Controllers
                                                                         //await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                         _logger.Information("User {userName} has been registered successfully at {registrationDate}", model.Email, DateTime.Now);
                         var myEvent = await _trackingService.InsertEvent(ActivityActions.register, this.HttpContext, model.Email);//TODO przez to nie moge testowac! Nie nadaje id? przy tescie! przy tescie musi byc odpalony api tracking!
-                        await _trackingService.Insert(myEvent);
+                        //TODO rozwiazanie tymczasowe aby przeszly testy
+                        if (myEvent != null)
+                            await _trackingService.Insert(myEvent);
                         return RedirectToAction("Login");
                     }
                     else

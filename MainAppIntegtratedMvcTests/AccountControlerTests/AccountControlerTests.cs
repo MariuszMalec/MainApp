@@ -153,16 +153,6 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
                 Email = "tester@example.com",
             };
 
-            var userApp = new ApplicationUser()
-            {
-                FirstName = "Testerek",
-                LastName = "Testerkowski",
-                Email = "Testerkowski@example.com",
-                PasswordHash="123456",
-                
-            };
-
-            ApplicationRoles? emp = null;
             var mockRepo = new Mock<IRepository<ApplicationUser>>();
             mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationUser>()))
                 .Returns(Task.CompletedTask);
@@ -178,13 +168,8 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
 
             _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");
 
-            //TODO zamokowac http i userservice
+            //TODO zamokowac http i jak z mockowwac userservice jako IPersonService
             var trackingService = new MainApp.Web.Services.TrackingService(logger, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
-
-            //
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "FakeDatabase")
-                .Options;
 
             var users = new List<ApplicationUser>
             {
@@ -226,30 +211,5 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Login", redirectToActionResult.ActionName);
         }
-
-        private IEnumerable<ApplicationUser> GetUsersDto()
-        {
-            var sessions = new List<ApplicationUser>();
-            sessions.Add(new ApplicationUser()
-            {
-                Created = new DateTime(2016, 7, 2),
-                Id = 1,
-                FirstName = "Testerek",
-                LastName = "Testerkowski",
-                Email = "Testerkowski@example.com",
-                PasswordHash = "123456",
-            });
-            sessions.Add(new ApplicationUser()
-            {
-                Created = new DateTime(2016, 7, 2),
-                Id = 2,
-                FirstName = "Testerek",
-                LastName = "Testerkowski",
-                Email = "tester@example.com",
-                PasswordHash = "123456",
-            });
-            return sessions;
-        }
-
     }
 }
