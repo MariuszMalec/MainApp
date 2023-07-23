@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Tracking;
 using Xunit;
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MainAppIntegrationTests.TrainerControllerTests
 {
@@ -26,7 +27,12 @@ namespace MainAppIntegrationTests.TrainerControllerTests
            .Build()
            .GetSection("ApiKey");
 
-            _httpClient = factory.CreateClient();
+            _httpClient = factory
+                            .WithWebHostBuilder(builder =>
+                {
+                    builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
+                })
+            .CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7001/");
             _httpClient.Timeout = new TimeSpan(0, 0, 30);
             _httpClient.DefaultRequestHeaders.Add(
