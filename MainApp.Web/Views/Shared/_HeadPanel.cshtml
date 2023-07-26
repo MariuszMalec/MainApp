@@ -101,46 +101,65 @@
             bool isLoggin = User.Identity.IsAuthenticated;
 
             <li>
-                <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="one" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-house "></i>
                     Home
                 </a>
             </li>
 
             <li>
-                <a class="nav-link text-dark border border-primary rounded"  style="background-color: darkseagreen"  asp-area="" asp-controller="Trainer" asp-action="Index">
+                <a class="one" asp-area="" asp-controller="Trainer" asp-action="Index">
                     <i class="bi bi-people"></i>
                     Trainers
                 </a>
             </li>
 
             <li>
-                <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="event" asp-action="Index">
+                <a class="one" asp-area="" asp-controller="event" asp-action="Index">
                         <i class="bi bi-menu-button-wide-fill"></i>
                         Events
                     </a>
             </li>
 
             <li>
-                   <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="claim" asp-action="Index">
+                   <a class="one" asp-area="" asp-controller="claim" asp-action="Index">
                            <i class="bi bi-menu-button-wide-fill"></i>
                            Claims
                    </a>
             </li>
 
             <li>
-                <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="userrole" asp-action="Index">
+                <a class="one" asp-area="" asp-controller="userrole" asp-action="Index">
                     <i class="bi bi-menu-button-wide-fill"></i>
                     User roles
                 </a>
             </li>
 
             <li>
-                <a class="nav-link text-dark border border-primary rounded" style="background-color: darkseagreen" asp-area="" asp-controller="role" asp-action="Index">
+                <a class="one" asp-area="" asp-controller="role" asp-action="Index">
                     <i class="bi bi-menu-button-wide-fill"></i>
-                    Roles
+                    All Roles
                 </a>
             </li>
          }
      </ul>
  </div>
+
+ <style>
+    a.one {
+        background-color: darkseagreen;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        border: 2px solid green;
+        border-radius: 25%;
+        margin-right: 5px;
+        width: 100px;
+    }
+    a.one:hover, a.one:active {
+            background-color: darkcyan;
+            color: white;
+    }
+ </style>
