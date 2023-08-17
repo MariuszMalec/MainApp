@@ -3,6 +3,7 @@ using MainApp.BLL;
 using MainApp.BLL.Enums;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace MainAppIntegrationTests.TrackingServiceTests
         private readonly Mock<Tracking.Services.IRepositoryService<Event>> _mockTrackingService = new Mock<Tracking.Services.IRepositoryService<Event>>();
         private readonly IConfiguration _configuration;
         private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
+        private readonly Mock<HttpContext> _mockHttpContext = new Mock<HttpContext>();
 
         public TrackingServiceTests(WebApplicationFactory<Program> factory)
         {
@@ -64,14 +66,47 @@ namespace MainAppIntegrationTests.TrackingServiceTests
             _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
         }
 
+
         [Fact]
-        public async Task GetAll_Events_ReturnOk_WhenExist()
+        public async Task DeleteAllEvents_FromMemory_ReturnOk_WhenTrue()
+        {
+            // Act
+            var myEvent = await _sut.DeleteAllEvents();
+
+            //assert
+            myEvent.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task DeleteEvent_FromMemory_ReturnOk_WhenTrue()
+        {
+            // Act
+            var myEvent = await _sut.DeleteEvent(1, GetEventFromMemory(), _mockHttpContext.Object);
+
+            //assert
+            myEvent.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetEventById_FromMemory_ReturnOk_WhenExist()
+        {
+            // Act
+            var myEvent = await _sut.GetEventById(1, "Admin@example.com", _mockHttpContext.Object);
+
+            //assert
+            myEvent.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task GetAll_Events_FromMemory_ReturnOk_WhenExist()
         {
             // Act
             var events = await _sut.GetAll(null,null);
 
+            var expectedNumbersEvents = 7;//look in tracking SeedEvents
+
             //assert
-            events.Should().HaveCount(1);
+            events.Should().HaveCount(expectedNumbersEvents);
         }
 
         [Fact]
@@ -112,11 +147,24 @@ namespace MainAppIntegrationTests.TrackingServiceTests
         {
             var myEvent = new MainApp.BLL.Entities.Event()
             {
-                Id = 2,
+                Id = 12,
                 Action = ActivityActions.create.ToString(),
                 CreatedDate = DateTime.Now,
                 UserId = 1, 
                 Email = "Admin@example.com"
+            };
+            return myEvent;
+        }
+
+        private MainApp.BLL.Entities.Event GetEventFromMemory()
+        {
+            var myEvent = new MainApp.BLL.Entities.Event()
+            {
+                Id = 1,
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                Email = "Admin@example.com",
+                Action = "register"
             };
             return myEvent;
         }
