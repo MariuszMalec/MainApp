@@ -11,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Tracking.Models;
@@ -84,6 +85,22 @@ namespace MainAppIntegrationTests.TrackingServiceTests
             //assert
             Assert.True(create);
         }
+
+        [Theory]
+        [InlineData("Admin@example.com", 2)]
+        [InlineData("User@example.com", 1)]
+        public async Task ActivitySelectedByMail_NumberOfLogin_ReturnOk_WhenIsCorrect(string email, int nmblogin)
+        {
+            // Act
+            var events = await _sut.ActivitySelectedByMail(email);
+
+            int getValueOfLogin = events["login"]; ;
+
+            //assert
+            Assert.Equal(nmblogin, getValueOfLogin);
+        }
+
+
 
         private IEnumerable<Event> GetEvents()
         {

@@ -227,5 +227,57 @@ namespace MainApp.Web.Services
             await Task.Yield();
             return events;
         }
+
+        public async Task<List<Event>> SelectedEventsByMail(string email)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var result = await _httpClient.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return new List<Event>();
+            }
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var events = JsonConvert.DeserializeObject<List<Event>>(content);
+
+            var sortEvents = events.Where(e=>e.Email == email).ToList();
+
+            await Task.Yield();
+
+            return sortEvents;
+        }
+
+        public async Task<Dictionary<string, int>> ActivitySelectedByMail(string email)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{AppiUrl}/Tracking");
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var result = await _httpClient.SendAsync(request);
+
+            if (!result.IsSuccessStatusCode)
+            {
+                return new Dictionary<string, int>();
+            }
+
+            var content = await result.Content.ReadAsStringAsync();
+
+            var events = JsonConvert.DeserializeObject<List<Event>>(content);
+
+            var sortEvents = events.Where(e => e.Email == email).ToList();
+
+            var activity = sortEvents.GroupBy(x => x.Action).Distinct()
+                    .ToDictionary(x => x.Key, x => x.Select(y => y.UserId).Sum());
+
+            await Task.Yield();
+
+            return activity;
+        }
+
     }
 }

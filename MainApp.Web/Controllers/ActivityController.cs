@@ -32,9 +32,8 @@ namespace MainApp.Web.Controllers
 
             if (!userEmail.Contains("Admin"))
             {
-                var noadminsums = events.GroupBy(x => x.Action)
-                    .ToDictionary(x => x.Key, x => x.Where(y=>!y.Email.Contains("Admin")).Select(y => y.UserId).Sum());
-                return View(new ActivityStatisticsView() { ActivitySums = noadminsums });
+                var activity = _trackingService.ActivitySelectedByMail(userEmail);
+                return View(new ActivityStatisticsView() { ActivitySums = activity.Result });
             }
 
             var sums = events.GroupBy(x => x.Action)

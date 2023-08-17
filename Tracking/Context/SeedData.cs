@@ -56,6 +56,55 @@ namespace Tracking.Context
                                            Email= "Admin@example.com",
                                            Action = "register"
             });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                Email = "Admin@example.com",
+                Action = "login"
+            });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                Email = "Admin@example.com",
+                Action = "logout"
+            });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                Email = "Admin@example.com",
+                Action = "login"
+            });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 1,
+                Email = "Admin@example.com",
+                Action = "logout"
+            });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 2,
+                Email = "User@example.com",
+                Action = "login"
+            });
+
+            context.AddRange(new Event()
+            {
+                CreatedDate = DateTime.Now,
+                UserId = 2,
+                Email = "User@example.com",
+                Action = "logout"
+            });
+
             await context.SaveChangesAsync();
 
         }
