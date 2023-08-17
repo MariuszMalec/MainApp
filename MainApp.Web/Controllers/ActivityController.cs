@@ -30,16 +30,8 @@ namespace MainApp.Web.Controllers
 
             var userEmail = this.HttpContext.User.Identity.Name;
 
-            if (!userEmail.Contains("Admin"))
-            {
-                var activity = _trackingService.ActivitySelectedByMail(userEmail);
-                return View(new ActivityStatisticsView() { ActivitySums = activity.Result });
-            }
-
-            var sums = events.GroupBy(x => x.Action)
-                .ToDictionary(x => x.Key, x => x.Select(y => y.UserId).Sum());
-
-            return View(new ActivityStatisticsView() { ActivitySums = sums});
+            var activity = _trackingService.ActivitySelectedByMail(userEmail);
+            return View(new ActivityStatisticsView() { ActivitySums = activity.Result });
 
         }
 

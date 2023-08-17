@@ -271,8 +271,8 @@ namespace MainApp.Web.Services
 
             var sortEvents = events.Where(e => e.Email == email).ToList();
 
-            var activity = sortEvents.GroupBy(x => x.Action).Distinct()
-                    .ToDictionary(x => x.Key, x => x.Select(y => y.UserId).Sum());
+            var activity = sortEvents.GroupBy(x => x.Action)
+                    .ToDictionary(x => x.Key, x => x.Select(y => y.UserId).Count());
 
             await Task.Yield();
 

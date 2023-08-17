@@ -4,14 +4,12 @@ using MainApp.BLL.Enums;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Tracking.Models;
@@ -99,8 +97,6 @@ namespace MainAppIntegrationTests.TrackingServiceTests
             //assert
             Assert.Equal(nmblogin, getValueOfLogin);
         }
-
-
 
         private IEnumerable<Event> GetEvents()
         {
