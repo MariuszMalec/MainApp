@@ -31,6 +31,8 @@ namespace MainApp.Web.Controllers
             var users = this.HttpContext.User;
 
             var userEmail = this.HttpContext.User.Identity.Name;
+
+            //TODO here acess has only admin with password admin
             List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
 
             var sortedTrainers = from s in trainers

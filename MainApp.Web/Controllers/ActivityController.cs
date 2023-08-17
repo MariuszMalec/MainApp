@@ -28,6 +28,15 @@ namespace MainApp.Web.Controllers
                 return RedirectToAction("EmptyList");
             }
 
+            var userEmail = this.HttpContext.User.Identity.Name;
+
+            if (!userEmail.Contains("Admin"))
+            {
+                var noadminsums = events.GroupBy(x => x.Action)
+                    .ToDictionary(x => x.Key, x => x.Where(y=>!y.Email.Contains("Admin")).Select(y => y.UserId).Sum());
+                return View(new ActivityStatisticsView() { ActivitySums = noadminsums });
+            }
+
             var sums = events.GroupBy(x => x.Action)
                 .ToDictionary(x => x.Key, x => x.Select(y => y.UserId).Sum());
 
