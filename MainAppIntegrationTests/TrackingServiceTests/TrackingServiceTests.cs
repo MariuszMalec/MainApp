@@ -85,14 +85,15 @@ namespace MainAppIntegrationTests.TrackingServiceTests
         }
 
         [Theory]
-        [InlineData("Admin@example.com", 2)]
-        [InlineData("User@example.com", 1)]
-        public async Task ActivitySelectedByMail_NumberOfLogin_ReturnOk_WhenIsCorrect(string email, int nmblogin)
+        [InlineData("Admin@example.com", 2, "login")]
+        [InlineData("User@example.com", 1, "login")]
+        [InlineData("Admin@example.com", 1, "register")]
+        public async Task ActivitySelectedByMail_NumberOfLogin_ReturnOk_WhenIsCorrect(string email, int nmblogin, string activity)
         {
             // Act
             var events = await _sut.ActivitySelectedByMail(email);
 
-            int getValueOfLogin = events["login"]; ;
+            int getValueOfLogin = events[activity]; ;
 
             //assert
             Assert.Equal(nmblogin, getValueOfLogin);
