@@ -11,6 +11,7 @@ using Microsoft.Net.Http.Headers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Tracking.Models;
@@ -119,6 +120,17 @@ namespace MainAppIntegrationTests.TrackingServiceTests
             Assert.True(create);
         }
 
+        [Fact]
+        public async Task SelectedEvents_ReturnOk_WhenExist()
+        {
+            // Act
+            var selectedEvents = await _sut.SelectedEvents("All", "create", GetEvents());
+
+            //assert
+            selectedEvents.Should().HaveCount(1);
+            selectedEvents.Any(x=>x.Action == "create").Should().BeTrue();
+        }
+
         [Theory]
         [InlineData("Admin@example.com", 2, "login")]
         [InlineData("User@example.com", 1, "login")]
@@ -132,15 +144,6 @@ namespace MainAppIntegrationTests.TrackingServiceTests
 
             //assert
             Assert.Equal(nmblogin, getValueOfLogin);
-        }
-
-        private IEnumerable<Event> GetEvents()
-        {
-            var events = new List<Event>()
-            {
-                new Tracking.Models.Event { Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
-            };
-            return events;
         }
 
         private MainApp.BLL.Entities.Event GetEvent()
@@ -167,6 +170,15 @@ namespace MainAppIntegrationTests.TrackingServiceTests
                 Action = "register"
             };
             return myEvent;
+        }
+
+        private List<MainApp.BLL.Entities.Event> GetEvents()
+        {
+            var events = new List<MainApp.BLL.Entities.Event>()
+            {
+                new MainApp.BLL.Entities.Event { Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
+            };
+            return events;
         }
     }
 }
