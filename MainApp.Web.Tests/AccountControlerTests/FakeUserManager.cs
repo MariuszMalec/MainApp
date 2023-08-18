@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace MainAppIntegtratedMvcTests.AccountControlerTests
+namespace MainApp.Web.Tests.AccountControlerTests
 {
     public class FakeUserManager : UserManager<ApplicationUser>
     {

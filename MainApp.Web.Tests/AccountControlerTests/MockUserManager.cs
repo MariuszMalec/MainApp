@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace MainAppIntegtratedMvcTests.AccountControlerTests
+namespace MainApp.Web.Tests.AccountControlerTests
 {
     public static class MockUserManager
     {
@@ -25,3 +25,4 @@ namespace MainAppIntegtratedMvcTests.AccountControlerTests
         }
     }
 }
+

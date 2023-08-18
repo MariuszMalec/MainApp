@@ -1,33 +1,25 @@
-﻿using AutoMapper.Execution;
-using FluentAssertions;
-using MainApp.BLL;
+﻿using MainApp.BLL;
 using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Models;
 using MainApp.BLL.Repositories;
-using MainApp.BLL.Services;
 using MainApp.Web.Controllers;
 using MainApp.Web.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Tracking.Services;
 
-namespace MainAppIntegtratedMvcTests.AccountControlerTests
+
+namespace MainApp.Web.Tests.AccountControlerTests
 {
     public class AccountControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>, IClassFixture<TestingTrackingWebAppFactory<Program>>
     {
