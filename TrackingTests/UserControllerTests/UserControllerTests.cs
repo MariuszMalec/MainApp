@@ -2,16 +2,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Tracking.Context;
-using Xunit;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace MainAppIntegrationTests.UserControllerTests
+namespace TrackingTests.UserControllerTests
 {
     //Jak uderzac do mvc skoro tracking tez ma nazwe Program?? mvc => ApplicationDbContext/ tracking => MainApplicationContext
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze

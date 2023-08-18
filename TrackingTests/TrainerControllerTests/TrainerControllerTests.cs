@@ -1,17 +1,11 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Net.Http.Headers;
-using System.IO;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Tracking;
-using Xunit;
 using System.Net;
-using Microsoft.AspNetCore.Hosting;
 
-namespace MainAppIntegrationTests.TrainerControllerTests
+namespace TrackingTests.TrainerControllerTests
 {
     public class TrainerControllerTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
@@ -29,9 +23,9 @@ namespace MainAppIntegrationTests.TrainerControllerTests
 
             _httpClient = factory
                             .WithWebHostBuilder(builder =>
-                {
-                    builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
-                })
+                            {
+                                builder.UseEnvironment("UnitTests");//TODO to dodalem aby poszly testy.
+                            })
             .CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7001/");
             _httpClient.Timeout = new TimeSpan(0, 0, 30);

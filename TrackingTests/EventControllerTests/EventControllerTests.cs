@@ -3,14 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Tracking;
 using Tracking.Context;
-using Xunit;
 
-namespace MainAppIntegrationTests.EventControllerTests
+namespace TrackingTests.EventControllerTests
 {
     public class EventControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {

@@ -1,39 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Tracking.Controllers;
 using Tracking.Models;
 using Tracking.Services;
-using Xunit;
 
-namespace MainAppUnitTests.TrainerTests
+
+namespace TrackingTests.TrainerControllerWithMockTests
 {
-    public class TrainerControllerTests
+    public class TrainerControllerWithMockTests
     {
 
         [Fact]
         public async Task GetTrainer_ReturnTrainer_WhenExist()
         {
             // Arrange
-            var userView = new Trainer () 
-            { 
+            var userView = new Trainer()
+            {
                 Id = 1,
-                FirstName="Hej",
+                FirstName = "Hej",
                 LastName = "Ho"
             };
             var mockRepo = new Mock<IRepositoryService<Trainer>>();
             mockRepo.Setup(r => r.Get(1))
                 .ReturnsAsync(userView);
-            
+
             var controller = new TrainerController(mockRepo.Object);
 
             // Act
             var result = await controller.GetTrainer(1) as OkObjectResult;
 
             // Assert
-            Assert.Equal(userView,result.Value);
+            Assert.Equal(userView, result.Value);
         }
 
         [Fact]
@@ -66,7 +63,7 @@ namespace MainAppUnitTests.TrainerTests
             var mockRepo = new Mock<IRepositoryService<Trainer>>();
             mockRepo.Setup(repo => repo.GetAll())
                 .ReturnsAsync(GetTrainers());
-                ;              
+            ;
             var controller = new TrainerController(mockRepo.Object);
 
             // Act
@@ -93,7 +90,6 @@ namespace MainAppUnitTests.TrainerTests
             Assert.IsType<NotFoundObjectResult>(result);
         }
 
-
         [Fact]
         public async Task Insert_Trainer_WhenSatusIsNotOkCreatedAtActionResult_ReturnFalse()
         {
@@ -105,7 +101,7 @@ namespace MainAppUnitTests.TrainerTests
             };
 
             var mockRepo = new Mock<IRepositoryService<Trainer>>();
-            mockRepo.Setup(repo => repo.Insert(trainer));        
+            mockRepo.Setup(repo => repo.Insert(trainer));
             var controller = new TrainerController(mockRepo.Object);
 
             // Act

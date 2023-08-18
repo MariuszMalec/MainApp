@@ -4,20 +4,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Tracking;
 using Tracking.Context;
-using Xunit;
 
-namespace MainAppIntegrationTests.TrainerControllerTests
+namespace TrackingTests.TrainerControllerTests
 {
     public class TrainerControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
@@ -117,7 +109,5 @@ namespace MainAppIntegrationTests.TrainerControllerTests
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
-
-
     }
 }
