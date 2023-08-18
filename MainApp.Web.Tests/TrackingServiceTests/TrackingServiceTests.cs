@@ -9,15 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Tracking.Models;
-using Xunit;
 
-namespace MainAppIntegrationTests.TrackingServiceTests
+namespace MainApp.Web.Tests.TrackingServiceTests
 {
     public class TrackingServiceTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
@@ -61,7 +55,7 @@ namespace MainAppIntegrationTests.TrackingServiceTests
                                     .AddInMemoryCollection(inMemorySettings)
                                     .Build();
             // 2 way
-            _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");  
+            _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");
 
             //TODO zamokowac http i userservice
             _sut = new TrackingService(_loggerMock.Object, _httpClientFactory.Object, _userService.Object, _configurationMock.Object);
@@ -102,7 +96,7 @@ namespace MainAppIntegrationTests.TrackingServiceTests
         public async Task GetAll_Events_FromMemory_ReturnOk_WhenExist()
         {
             // Act
-            var events = await _sut.GetAll(null,null);
+            var events = await _sut.GetAll(null, null);
 
             var expectedNumbersEvents = 7;//look in tracking SeedEvents
 
@@ -128,7 +122,7 @@ namespace MainAppIntegrationTests.TrackingServiceTests
 
             //assert
             selectedEvents.Should().HaveCount(1);
-            selectedEvents.Any(x=>x.Action == "create").Should().BeTrue();
+            selectedEvents.Any(x => x.Action == "create").Should().BeTrue();
         }
 
         [Theory]
@@ -153,7 +147,7 @@ namespace MainAppIntegrationTests.TrackingServiceTests
                 Id = 12,
                 Action = ActivityActions.create.ToString(),
                 CreatedDate = DateTime.Now,
-                UserId = 1, 
+                UserId = 1,
                 Email = "Admin@example.com"
             };
             return myEvent;

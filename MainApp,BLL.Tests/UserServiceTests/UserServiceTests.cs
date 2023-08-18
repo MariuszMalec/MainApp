@@ -3,18 +3,12 @@ using MainApp.BLL.Entities;
 using MainApp.BLL.Repositories;
 using MainApp.BLL.Services;
 using Moq;
-using MoreLinq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace MainAppUnitTests.TrainerTests
+namespace MainApp_BLL.Tests.UserServiceTests
 {
     public class UserServiceTests
     {
-        private readonly UserService _sut; 
+        private readonly UserService _sut;
         private readonly Mock<IRepository<ApplicationUser>> _userMockRepo = new Mock<IRepository<ApplicationUser>>();
 
         public UserServiceTests()
@@ -112,13 +106,13 @@ namespace MainAppUnitTests.TrainerTests
 
             // Act
             var userDtos = await _sut.GetAll();
-            var userD = userDtos.Select(x => x.Id).ToList().Count();    
+            var userD = userDtos.Select(x => x.Id).ToList().Count();
 
             var result = userDtos.Select(x => x.Id)
                 .DistinctBy(x => x).Count();
-            
+
             // Assert
-            Assert.Equal(userD, result);   
+            Assert.Equal(userD, result);
         }
 
         private List<ApplicationUser> GetUsersDto()

@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MainApp.Web\MainApp.Web.csproj" />
     <ProjectReference Include="..\Tracking\Tracking.csproj" />
   </ItemGroup>
 
