@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace MainAppIntegtratedMvcTests.UserContextTests
+namespace MainApp.Web.Tests.UserContextTests
 {
     public class UserContextTests : IClassFixture<ApplicationUserSeedDataFixture>
     {

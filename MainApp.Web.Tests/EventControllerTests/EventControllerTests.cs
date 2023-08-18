@@ -12,7 +12,7 @@ using Microsoft.Net.Http.Headers;
 using Moq;
 using ILogger = Serilog.ILogger;
 
-namespace MainAppIntegtratedMvcTests.EventControllerTests
+namespace MainApp.Web.Tests.EventControllerTests
 {
     public class EventControllerTests : IClassFixture<WebApplicationFactory<ProgramMVC>>//wspoldzielenie factory testy nieco szybsze
     {
@@ -72,7 +72,7 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
 
             mockRepo.Verify(u => u.GetAll(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(viewResult);
-            Assert.Equal("Admin@example.com", model.Select(x=>x.Email).First());
+            Assert.Equal("Admin@example.com", model.Select(x => x.Email).First());
         }
 
         private async Task<List<MainApp.BLL.Entities.Event>> GetEvents()
@@ -82,19 +82,6 @@ namespace MainAppIntegtratedMvcTests.EventControllerTests
                 new MainApp.BLL.Entities.Event { Id=3, Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
             };
             return events;
-        }
-
-        private MainApp.BLL.Entities.Event GetEvent()
-        {
-            var myEvent = new MainApp.BLL.Entities.Event()
-            {
-                Id = 2,
-                Action = ActivityActions.create.ToString(),
-                CreatedDate = DateTime.Now,
-                UserId = 1,
-                Email = "Admin@example.com"
-            };
-            return myEvent;
         }
     }
 }

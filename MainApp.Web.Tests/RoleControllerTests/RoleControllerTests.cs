@@ -8,7 +8,7 @@ using Moq;
 using Serilog;
 using System.Net;
 
-namespace MainAppIntegtratedMvcTests.RoleControllerTests
+namespace MainApp.Web.Tests.RoleControllerTests
 {
     public class RoleControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>
     {
@@ -39,7 +39,7 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
         public async Task Index_GetCorrectName_ReturnsSuccess()
         {
             //arange
-            var roles = new List<ApplicationRoles>() 
+            var roles = new List<ApplicationRoles>()
                 {
                     new ApplicationRoles()
                     {
@@ -64,7 +64,7 @@ namespace MainAppIntegtratedMvcTests.RoleControllerTests
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
             var applicationRoles = Assert.IsAssignableFrom<IEnumerable<ApplicationRoles>>(viewResult.Model);
             // Assert
-            Assert.Equal("SuperAdmin", applicationRoles.Select(x=>x.Name).FirstOrDefault()); 
+            Assert.Equal("SuperAdmin", applicationRoles.Select(x => x.Name).FirstOrDefault());
         }
 
         [Fact]

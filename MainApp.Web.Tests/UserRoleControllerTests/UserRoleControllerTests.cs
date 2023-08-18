@@ -2,7 +2,7 @@
 using Microsoft.Net.Http.Headers;
 using System.Net;
 
-namespace MainAppIntegtratedMvcTests.UserRoleControllerTests
+namespace MainApp.Web.Tests.UserRoleControllerTests
 {
     public class UserRoleControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>
     {
