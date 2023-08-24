@@ -147,7 +147,7 @@ namespace MainApp.Web.Tests.AccountControlerTests
 
             var mockRepo = new Mock<IRepository<ApplicationUser>>();
             mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationUser>()))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(true);
 
             var serviceProvider = new ServiceCollection()
                 .AddLogging()

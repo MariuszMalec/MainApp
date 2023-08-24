@@ -31,7 +31,7 @@ namespace MainApp.BLL.Repositories
         {
             return await entities.SingleOrDefaultAsync(s => s.Id == id);
         }
-        public async Task Insert(T entity)
+        public async Task<bool> Insert(T entity)
         {
             if (entity == null)
             {
@@ -39,6 +39,7 @@ namespace MainApp.BLL.Repositories
             }
             entities.Add(entity);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task Update(T entity)

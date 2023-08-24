@@ -10,7 +10,7 @@ namespace MainApp.BLL.Repositories
         Task<IEnumerable<T>> GetAll();
         IQueryable<T> GetAllQueryable();
         Task<T> GetById(int id);
-        Task Insert(T entity);
+        Task<bool> Insert(T entity);
         Task Update(T entity);
         Task Delete(T entity);
     }

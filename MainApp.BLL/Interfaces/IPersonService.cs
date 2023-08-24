@@ -8,7 +8,7 @@ namespace MainApp.BLL
     {
         Task<IEnumerable<ApplicationUser>> GetAll();
 
-        Task Insert(ApplicationUser user);
+        Task<bool> Insert(ApplicationUser user);
 
         Task<ApplicationUser> GetById(int id);
 

@@ -18,6 +18,24 @@ namespace MainApp_BLL.Tests.UserServiceTests
 
 
         [Fact]
+        public async Task Insert_ShoudCreateUser_ReturnTrue()
+        {
+            // Arrange
+            _userMockRepo.Setup(x => x.Insert((ApplicationUser)It.IsAny<IRepository<ApplicationUser>>())).ReturnsAsync(true);
+
+            // Act
+            var result = await _sut.Insert(new ApplicationUser ()
+            {
+                Created = new DateTime(2016, 7, 2),
+                Id = 1,
+                FirstName = "test"
+            });
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
         public async Task GetAllUsers_ShoudReturnUsers_WhenUsersExist()
         {
             // Arrange

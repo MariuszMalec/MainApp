@@ -20,9 +20,14 @@ namespace MainApp.BLL.Services
             return await Users.GetAll();
         }
 
-        public async Task Insert(ApplicationUser user)
+        public async Task<bool> Insert(ApplicationUser user)
         {
+            if (user == null)
+            {
+                return false;
+            }
             await Users.Insert(user);
+            return true;
         }
 
         public async Task<ApplicationUser> GetById(int id)
