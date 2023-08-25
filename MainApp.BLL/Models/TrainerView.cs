@@ -19,6 +19,8 @@ namespace MainApp.BLL.Models
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Mobile Phone")]
         [RegularExpression(@"^\d{3}-\d{3}-\d{3}$", ErrorMessage = "Not a valid mobile phone number. Format ###-###-###")]
+#nullable enable
         public string? PhoneNumber { get; set; }
+#nullable disable
     }
 }

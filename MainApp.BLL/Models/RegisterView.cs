@@ -20,7 +20,10 @@ namespace MainApp.BLL.Models
         //[RegularExpression(@"^(\d{10})$", ErrorMessage = "Not a valid phone number")]
         [Display(Name = "Mobile Phone number")]
         [RegularExpression(@"^\d{3}-\d{3}-\d{3}$", ErrorMessage = "Not a valid mobile phone number. Format ###-###-###")]
+
+#nullable enable
         public string? PhoneNumber { get; set; }
+#nullable disable
 
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [Required(ErrorMessage = "Email is required")]

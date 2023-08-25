@@ -8,6 +8,8 @@
 
         public string Email { get; set; }
 
+#nullable enable
         public string? PhoneNumber { get; set; }
+#nullable disable
     }
 }
