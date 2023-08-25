@@ -17,15 +17,12 @@ namespace MainApp.Web.Tests.EventControllerTests
     public class EventControllerTests : IClassFixture<WebApplicationFactory<ProgramMVC>>//wspoldzielenie factory testy nieco szybsze
     {
         private readonly ITrackingService _sut;
-        private readonly Mock<ITrackingService> _trackingServiceMock = new Mock<ITrackingService>();
-        private readonly HttpClient _httpClient;
         private readonly Mock<ILogger<ITrackingService>> _loggerMock = new Mock<ILogger<ITrackingService>>();
         private readonly Mock<ILogger> _loggerEventControllerMock = new Mock<ILogger>();
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly HttpClient _client;
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
         private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
-        //private readonly Mock<Tracking.Services.IRepositoryService<Event>> _mockTrackingService = new Mock<Tracking.Services.IRepositoryService<Event>>();
 
         public EventControllerTests(WebApplicationFactory<ProgramMVC> factory)
         {
@@ -81,6 +78,7 @@ namespace MainApp.Web.Tests.EventControllerTests
             {
                 new MainApp.BLL.Entities.Event { Id=3, Action = ActivityActions.create.ToString(), CreatedDate = DateTime.Now, UserId = 1, Email = "Admin@example.com" }
             };
+            await Task.CompletedTask;
             return events;
         }
     }

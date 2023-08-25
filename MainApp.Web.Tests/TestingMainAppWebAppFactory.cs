@@ -33,12 +33,13 @@ namespace MainApp.Web.Tests
                         appContext.Database.EnsureCreated();
                         //await SeedData(appContext);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //Log errors or do anything you think it's needed
                         throw;
                     }
                 }
+                await Task.CompletedTask;
             });
         }
 

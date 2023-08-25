@@ -13,7 +13,9 @@ namespace SendEmail.API.Services
         private readonly IConfiguration _config;
         IHttpClientFactory _httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EmailService(IConfiguration config, IHttpClientFactory httpClientFactory)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _config = config;
             _httpClientFactory = httpClientFactory;

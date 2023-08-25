@@ -1,54 +1,36 @@
-using Microsoft.EntityFrameworkCore;
+using MainApp.BLL;
+using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
+using MainApp.BLL.Enums;
+using MainApp.BLL.Models;
+using MainApp.BLL.Repositories;
+using MainApp.BLL.Services;
+using MainApp.Web.ClaimsFactory;
+using MainApp.Web.Middleware;
+using MainApp.Web.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.Net.Http.Headers;
 using Serilog;
-using Serilog.Filters;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using MainApp.BLL.Context;
-using MainApp.Web.Services;
-using MainApp.BLL;
-using MainApp.BLL.Services;
-using MainApp.BLL.Repositories;
-using MainApp.BLL.Entities;
-using Microsoft.Net.Http.Headers;
-using MainApp.Web.Middleware;
-using Microsoft.AspNetCore.Identity;
-using System.Net;
-using System.Net.Security;
-using System.Net.Http;
-using MainApp.Web.ClaimsFactory;
-using MainApp.BLL.Models;
-using MainApp.BLL.Enums;
-using Microsoft.DotNet.Scaffolding.Shared;
-using Serilog.Context;
-using Microsoft.Extensions.Hosting.Internal;
-using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Diagnostics;
-using System.Net.Sockets;
-using Microsoft.Identity.Client;
-using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Data;
-using Microsoft.VisualStudio.Web.CodeGeneration.Design;
-using Serilog.Events;
-using Serilog.Sinks.PostgreSQL;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
+using System.Net.Http;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class ProgramMVC
 {
-    private static CancellationTokenSource _tokenSource = new CancellationTokenSource();
-    private static bool _restartRequest;
-    private static TcpListener server = null;
     private static bool _selectProviderFromConsole = false;
 
     public static async Task Main(string[] args)
@@ -120,7 +102,7 @@ public class ProgramMVC
             provider = Provider.UnitTests.ToString();
         }
 
-        if (_selectProviderFromConsole)//TODO zmiana providera jesli wybrany inny przez console
+        if (_selectProviderFromConsole)//TODO zmiana providera jesli wybrany inny czyli przez console
         {
             provider = SelectProvider();
             args = new string[] { provider };

@@ -23,9 +23,6 @@ namespace MainApp.Web.Tests.AccountControlerTests
 {
     public class AccountControllerTests : IClassFixture<TestingMainAppWebAppFactory<ProgramMVC>>, IClassFixture<TestingTrackingWebAppFactory<Program>>
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly MainApp.Web.Services.TrackingService _trackingService;
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly Mock<IConfiguration> _configurationMock = new Mock<IConfiguration>();
         private readonly ApplicationDbContext _applicationDbContext;
@@ -33,7 +30,6 @@ namespace MainApp.Web.Tests.AccountControlerTests
         private readonly Mock<IHttpClientFactory> _httpClientFactory = new Mock<IHttpClientFactory>();
 
         private Mock<FakeUserManager> _mock = new Mock<FakeUserManager>();
-        private readonly UserManager<ApplicationUser> _userManager2;
 
         private HttpClient _client;
         private HttpClient _client2;

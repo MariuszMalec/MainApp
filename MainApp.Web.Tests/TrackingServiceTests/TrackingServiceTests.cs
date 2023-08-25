@@ -16,7 +16,6 @@ namespace MainApp.Web.Tests.TrackingServiceTests
     public class TrackingServiceTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
         private readonly TrackingService _sut;
-        private readonly HttpClient _httpClient;
         private readonly Mock<ILogger<TrackingService>> _loggerMock = new Mock<ILogger<TrackingService>>();
         private readonly Mock<IPersonService> _userService = new Mock<IPersonService>();
         private readonly HttpClient _client;

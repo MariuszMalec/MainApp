@@ -37,14 +37,12 @@ namespace MainApp.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly Microsoft.AspNetCore.Hosting.IApplicationLifetime _applicationLifetime;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IApplicationLifetime applicationLifetime, SignInManager<ApplicationUser> signInManager = null)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, SignInManager<ApplicationUser> signInManager = null)
         {
             _logger = logger;
             _configuration = configuration;
-            _applicationLifetime = applicationLifetime;
             _signInManager = signInManager;
         }
 
@@ -111,7 +109,7 @@ namespace MainApp.Web.Controllers
             {
                 //TODO tutaj od nowa odpalic apke z wyborem providera!! jak to zrobic??                
 
-                _signInManager.SignOutAsync();
+                await  _signInManager.SignOutAsync();
                 //TempData["Provider"] = provider;
 
                 model.RememberMe = true;
@@ -119,45 +117,12 @@ namespace MainApp.Web.Controllers
                 model.Password = "";
 
                 ViewData["Modelek"] = JsonConvert.SerializeObject(model);
-                //return RedirectToAction(nameof(Index));
 
-                //_applicationLifetime.StopApplication();//TODO stop app
-
-                //System.Web.HttpRuntime.UnloadAppDomain();
-
-                //AppDomain.Unload();
-
-                //await ProgramMVC.Main(new string[] { provider });
-
-                //Process currentProcess = Process.GetCurrentProcess();
-                //string applicationPath = currentProcess.MainModule.FileName;
-                //Process.Start(applicationPath);
-                //currentProcess.Kill();
-                //await ProgramMVC.Main(new string[] { provider });
 
                 return Content("change to new provider , how ???????????");//TODO Jak stad z restartowac applikacje!
 
-                //return new EmptyResult();
-
-                //return RedirectToAction("Index", "Home", new { param = JsonConvert.SerializeObject(model) });
-
-
             }
 
-            //_applicationDbContext.Database.CanConnect();
-
-            //using (var connection = new QC.SqlConnection(
-            //        connectionString
-            //    ))
-            //{
-            //    connection.Open();
-            //    //connection.ChangeDatabase("MainApp");
-            //    //_applicationDbContext.Database.GetDbConnection().ChangeDatabase("");
-            //    _logger.LogWarning($"Connected to {strProvider} successfully.");
-            //}
-
-            //ViewBag.Test = provider;
-            //ViewData["Provider"] = provider;
             TempData["Provider"] = provider;
 
             _logger.LogWarning($"Connected to {provider} successfully.");

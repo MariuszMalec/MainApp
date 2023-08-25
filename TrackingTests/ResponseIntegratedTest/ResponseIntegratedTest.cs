@@ -12,12 +12,8 @@ namespace TrackingTests.ResponseIntegratedTest
 {
     public class ResponseIntegratedTest : IClassFixture<TestingWebAppFactory<Program>>
     {
-        private readonly ILogger<TrainersService> _logger;
-        private readonly TrackingService _trackingService;
         private readonly HttpClient _client;
-        IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
-        private HttpContext _httpContext;
 
         public ResponseIntegratedTest(TestingWebAppFactory<Program> factory)
             => _client = factory.CreateClient();

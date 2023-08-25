@@ -110,7 +110,6 @@ namespace MainApp.Web.Tests.RoleControllerTests
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
-            ApplicationRoles? emp = null;
             var mockRepo = new Mock<IRepositoryService<ApplicationRoles>>();
             mockRepo.Setup(r => r.Insert(It.IsAny<ApplicationRoles>()))
                 .ReturnsAsync(true);

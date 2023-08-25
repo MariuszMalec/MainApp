@@ -31,7 +31,7 @@ namespace MainApp.Web.Tests.UserContextTests
             var users = _fixture.UserContext.Users;
 
             // Act
-            var result = users.FirstOrDefault();
+            var result = users.First();
 
             // Assert
             Assert.Equal("Admin@example.com", result.Email);

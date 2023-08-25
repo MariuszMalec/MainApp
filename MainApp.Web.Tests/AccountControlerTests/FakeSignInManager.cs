@@ -21,7 +21,7 @@ namespace MainApp.Web.Tests.AccountControlerTests
         {
         }
 
-        public override Task SignInAsync(ApplicationUser user, bool isPersistent, string authenticationMethod = null)
+        public override Task SignInAsync(ApplicationUser user, bool isPersistent, string? authenticationMethod = null)
         {
             return Task.FromResult(0);
         }
