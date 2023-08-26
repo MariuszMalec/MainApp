@@ -30,7 +30,9 @@ namespace TrackingTests.TrainerControllerWithMockTests
             var result = await controller.GetTrainer(1) as OkObjectResult;
 
             // Assert
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Assert.Equal(userView, result.Value);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         [Fact]
@@ -53,7 +55,9 @@ namespace TrackingTests.TrainerControllerWithMockTests
             var result = await controller.GetTrainer(2) as NotFoundObjectResult;
 
             // Assert
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Assert.Equal($"404 Brak uzytkownika!", result.Value);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         [Fact]

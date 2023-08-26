@@ -27,12 +27,16 @@ namespace TrackingTests.TrainerControllerTests
                         var dbContextOptions = services
                             .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<MainApplicationContext>));
 
+#pragma warning disable CS8604 // Possible null reference argument.
                         services.Remove(dbContextOptions);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                         var dbConnectionDesciptor = services.SingleOrDefault(
                             d => d.ServiceType == typeof(DbConnection));
 
+#pragma warning disable CS8604 // Possible null reference argument.
                         services.Remove(dbConnectionDesciptor);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                         services
                          .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("TrackingDb"));//TODO to nie dziala musialem dodac w program.cs!

@@ -95,7 +95,9 @@ namespace MainApp.Web.Tests.RoleControllerTests
 
             // Assert
             mockRepo.Verify(x => x.Insert(It.IsAny<ApplicationRoles>()), Times.Once);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Assert.Equal(emp.Name, role.Name);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         [Fact]

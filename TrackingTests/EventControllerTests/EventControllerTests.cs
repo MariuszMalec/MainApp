@@ -23,7 +23,9 @@ namespace TrackingTests.EventControllerTests
                         var dbContextOptions = services
                             .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<MainApplicationContext>));
 
+#pragma warning disable CS8604 // Possible null reference argument.
                         services.Remove(dbContextOptions);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                         services
                          .AddDbContext<MainApplicationContext>(options => options.UseInMemoryDatabase("EventDb"));//TODO Czemu nie dziala to!!

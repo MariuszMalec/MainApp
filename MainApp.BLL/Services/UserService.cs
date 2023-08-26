@@ -39,9 +39,13 @@ namespace MainApp.BLL.Services
         {
             await Users.Delete(user);
         }
-        public async Task Update(ApplicationUser user)
+        public async Task<bool> Update(ApplicationUser user)
         {
-            await Users.Update(user);
+            if (user == null)
+            {
+                return false;
+            }
+            return await Users.Update(user);
         }
 
         public async Task<ApplicationUser> GetByEmail(string userEmail)

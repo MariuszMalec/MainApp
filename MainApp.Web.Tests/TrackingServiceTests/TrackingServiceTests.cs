@@ -50,10 +50,12 @@ namespace MainApp.Web.Tests.TrackingServiceTests
             {
                 { "Provider","UnitTest"},
             };
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             _configuration = new ConfigurationBuilder()
                                     .AddInMemoryCollection(inMemorySettings)
                                     .Build();
-            // 2 way
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+                              // 2 way
             _configurationMock.SetupGet(x => x[It.Is<string>(s => s == "Provider")]).Returns("UnitTests");
 
             //TODO zamokowac http i userservice

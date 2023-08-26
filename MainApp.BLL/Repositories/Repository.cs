@@ -42,7 +42,7 @@ namespace MainApp.BLL.Repositories
             return true;
         }
 
-        public async Task Update(T entity)
+        public async Task<bool> Update(T entity)
         {
             if (entity == null)
             {
@@ -50,6 +50,7 @@ namespace MainApp.BLL.Repositories
             }
             entities.Update(entity);
             await _context.SaveChangesAsync();
+            return true;
         }
         public async Task Delete(T entity)
         {

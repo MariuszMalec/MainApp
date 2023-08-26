@@ -20,7 +20,9 @@ namespace MainApp.Web.Tests.AccountControlerTests
         };
             userValidators.Add(new UserValidator<TUser>());
             passwordValidators.Add(new PasswordValidator<TUser>());
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             var userManager = new Mock<UserManager<TUser>>(store.Object, null, passwordHasher.Object, userValidators, passwordValidators, null, null, null, null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             return userManager;
         }
     }

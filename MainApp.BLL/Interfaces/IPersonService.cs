@@ -14,7 +14,7 @@ namespace MainApp.BLL
 
         Task Delete(ApplicationUser user);
 
-        Task Update(ApplicationUser user);
+        Task<bool> Update(ApplicationUser user);
 
         Task<ApplicationUser> GetByEmail(string userEmail);
     }

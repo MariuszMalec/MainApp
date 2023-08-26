@@ -37,7 +37,9 @@ namespace MainApp.Web.Tests.AccountControlerTests
         WebApplicationFactory<ProgramMVC> factory = new WebApplicationFactory<ProgramMVC>();
         WebApplicationFactory<Program> factory2 = new WebApplicationFactory<Program>();
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public AccountControllerTests(TestingMainAppWebAppFactory<ProgramMVC> factory, TestingTrackingWebAppFactory<Program> factory2)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _client = factory.CreateClient();
             _client.BaseAddress = new Uri("https://localhost:5001/");
@@ -62,7 +64,9 @@ namespace MainApp.Web.Tests.AccountControlerTests
 
             var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Assert.Equal("/api/Tracking", requestMessage.RequestUri.LocalPath);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -94,7 +98,9 @@ namespace MainApp.Web.Tests.AccountControlerTests
 
             var requestMessage = Assert.IsType<HttpRequestMessage>(response.RequestMessage);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Assert.Equal("/Account/Register", requestMessage.RequestUri.LocalPath);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             Assert.IsType<HttpResponseMessage>(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -149,7 +155,9 @@ namespace MainApp.Web.Tests.AccountControlerTests
                 .AddLogging()
                 .BuildServiceProvider();
             var factory = serviceProvider.GetService<ILoggerFactory>();
+#pragma warning disable CS8604 // Possible null reference argument.
             var logger = factory.CreateLogger<ITrackingService>();
+#pragma warning restore CS8604 // Possible null reference argument.
 
             var loggerSerilog = new Mock<Serilog.ILogger>();
             loggerSerilog.Setup(c => c.Information(It.IsAny<string>()));

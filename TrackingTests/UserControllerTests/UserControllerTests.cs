@@ -24,7 +24,9 @@ namespace TrackingTests.UserControllerTests
                         var dbContextOptions = services
                             .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<MainApplicationContext>));
 
+#pragma warning disable CS8604 // Possible null reference argument.
                         services.Remove(dbContextOptions);
+#pragma warning restore CS8604 // Possible null reference argument.
 
                         ;
                         services

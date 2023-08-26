@@ -16,6 +16,23 @@ namespace MainApp_BLL.Tests.UserServiceTests
             _sut = new UserService(_userMockRepo.Object);
         }
 
+        //[Fact]
+        //public async Task Update_ShoudUpdateUser_ReturnTrue()
+        //{
+        //    // Arrange
+        //    _userMockRepo.Setup(x => x.Update((ApplicationUser)It.IsAny<IRepository<ApplicationUser>>())).ReturnsAsync(true);
+
+        //    // Act
+        //    var result = await _sut.Update(new ApplicationUser()
+        //    {
+        //        Created = new DateTime(2016, 7, 2),
+        //        Id = 1,
+        //        FirstName = "test2"
+        //    });
+
+        //    // Assert
+        //    result.Should().BeTrue();
+        //}
 
         [Fact]
         public async Task Insert_ShoudCreateUser_ReturnTrue()

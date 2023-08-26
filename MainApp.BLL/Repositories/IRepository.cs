@@ -11,7 +11,7 @@ namespace MainApp.BLL.Repositories
         IQueryable<T> GetAllQueryable();
         Task<T> GetById(int id);
         Task<bool> Insert(T entity);
-        Task Update(T entity);
+        Task<bool> Update(T entity);
         Task Delete(T entity);
     }
 }
