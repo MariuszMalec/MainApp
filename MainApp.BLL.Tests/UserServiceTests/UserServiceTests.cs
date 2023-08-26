@@ -16,23 +16,26 @@ namespace MainApp_BLL.Tests.UserServiceTests
             _sut = new UserService(_userMockRepo.Object);
         }
 
-        //[Fact]
-        //public async Task Update_ShoudUpdateUser_ReturnTrue()
-        //{
-        //    // Arrange
-        //    _userMockRepo.Setup(x => x.Update((ApplicationUser)It.IsAny<IRepository<ApplicationUser>>())).ReturnsAsync(true);
+        [Fact]
+        public async Task Update_ShoudUpdateUser_ReturnTrue()
+        {
+            // Arrange
+            _userMockRepo.Setup(x => x.Update((ApplicationUser)It.IsAny<IRepository<ApplicationUser>>())).ReturnsAsync(true);
+            //_userMockRepo.Setup(x => x.GetAll()).ReturnsAsync(GetUsersDto());
 
-        //    // Act
-        //    var result = await _sut.Update(new ApplicationUser()
-        //    {
-        //        Created = new DateTime(2016, 7, 2),
-        //        Id = 1,
-        //        FirstName = "test2"
-        //    });
 
-        //    // Assert
-        //    result.Should().BeTrue();
-        //}
+            // Act
+            var result = await _sut.Update(new ApplicationUser()
+            {
+                Created = new DateTime(2016, 7, 2),
+                Id = 1,
+                FirstName = "test2"
+            });
+
+            // Assert
+            _userMockRepo.Verify(d => d.Update(It.IsAny<ApplicationUser>()), Times.Once());
+            //result.Should().BeTrue();
+        }
 
         [Fact]
         public async Task Insert_ShoudCreateUser_ReturnTrue()
@@ -45,7 +48,7 @@ namespace MainApp_BLL.Tests.UserServiceTests
             {
                 Created = new DateTime(2016, 7, 2),
                 Id = 1,
-                FirstName = "test"
+                FirstName = "test11"
             });
 
             // Assert
