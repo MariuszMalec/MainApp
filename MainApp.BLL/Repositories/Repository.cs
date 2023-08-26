@@ -52,7 +52,7 @@ namespace MainApp.BLL.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task Delete(T entity)
+        public async Task<bool> Delete(T entity)
         {
             if (entity == null)
             {
@@ -60,6 +60,7 @@ namespace MainApp.BLL.Repositories
             }
             entities.Remove(entity);
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

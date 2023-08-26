@@ -35,10 +35,15 @@ namespace MainApp.BLL.Services
             return await Users.GetById(id);
         }
 
-        public async Task Delete(ApplicationUser user)
+        public async Task<bool> Delete(ApplicationUser user)
         {
-            await Users.Delete(user);
+            if (user == null)
+            {
+                return false;
+            }
+            return await Users.Delete(user);
         }
+
         public async Task<bool> Update(ApplicationUser user)
         {
             if (user == null)

@@ -12,7 +12,7 @@ namespace MainApp.BLL
 
         Task<ApplicationUser> GetById(int id);
 
-        Task Delete(ApplicationUser user);
+        Task<bool> Delete(ApplicationUser user);
 
         Task<bool> Update(ApplicationUser user);
 
