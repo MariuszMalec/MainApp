@@ -23,6 +23,11 @@ namespace MainApp.BLL.Services
             {
                 return false;
             }
+            var getEntity = GetAll();
+            if (getEntity.Result.All(x => x.Id == model.Id))
+            {
+                return false;
+            }
             var user = await _context.Roles.FindAsync(id);
             _context.Roles.Remove(user);
             await _context.SaveChangesAsync();
@@ -51,6 +56,12 @@ namespace MainApp.BLL.Services
             entity.NormalizedName = entity.Name.ToUpper();
             entity.ConcurrencyStamp = Guid.NewGuid().ToString();
 
+            var getEntity = GetAll();
+            if (getEntity.Result.Any(x=>x.Id == entity.Id))
+            {
+                return false;
+            }
+
             if (entity == null)
             {
                 return false;
@@ -67,6 +78,12 @@ namespace MainApp.BLL.Services
             {
                 return false;
             }
+            var getEntity = GetAll();
+            if (getEntity.Result.All(x => x.Id == entity.Id))
+            {
+                return false;
+            }
+
             _context.Roles.Update(entity);
             await _context.SaveChangesAsync();
             return true;
