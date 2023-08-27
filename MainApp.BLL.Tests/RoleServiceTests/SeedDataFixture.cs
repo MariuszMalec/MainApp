@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace MainApp_BLL.Tests.RoleServiceTests
 {
-    public class RoleSeedDataFixture : IDisposable
+    public class SeedDataFixture : IDisposable
     {
         public ApplicationDbContext context { get; private set; }
 
-        public RoleSeedDataFixture()
+        public SeedDataFixture()
         {
 
             ConfigurationManager configuration = new ConfigurationManager();
@@ -22,6 +22,16 @@ namespace MainApp_BLL.Tests.RoleServiceTests
                 Name = "Test",
                 NormalizedName = "TEST",
             });
+
+            context.Users.Add(new ApplicationUser
+            {
+                Id = 1,
+                FirstName = "Test",
+                LastName = "Test",
+                Email = "Test@example.com",
+                UserRole="Test"
+            });
+
             context.SaveChanges();
         }
 

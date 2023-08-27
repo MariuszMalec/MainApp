@@ -2,10 +2,10 @@
 
 namespace MainApp_BLL.Tests.RoleServiceTests
 {
-    public class RoleContextTests : IClassFixture<ApplicationRoleSeedDataFixture>
+    public class ContextTests : IClassFixture<ApplicationRoleSeedDataFixture>
     {
         ApplicationRoleSeedDataFixture _fixture;
-        public RoleContextTests(ApplicationRoleSeedDataFixture fixture)
+        public ContextTests(ApplicationRoleSeedDataFixture fixture)
         {
             _fixture = fixture;
         }

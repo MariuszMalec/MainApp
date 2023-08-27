@@ -5,14 +5,14 @@ using Moq;
 
 namespace MainApp_BLL.Tests.RoleServiceTests
 {
-    public class RoleServiceTests : IClassFixture<RoleSeedDataFixture>
+    public class RoleServiceTests : IClassFixture<SeedDataFixture>
     {
 
         private readonly Mock<IRepositoryService<ApplicationRoles>> _repoService = new Mock<IRepositoryService<ApplicationRoles>>();
 
         private readonly RoleService _sut;
 
-        public RoleServiceTests(RoleSeedDataFixture fixture)
+        public RoleServiceTests(SeedDataFixture fixture)
         {
             _sut = new RoleService(fixture.context);
         }
