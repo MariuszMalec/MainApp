@@ -178,19 +178,22 @@ namespace MainApp_BLL.Tests.UserServiceTests
             {
                 Created = new DateTime(2016, 7, 2),
                 Id = 1,
-                FirstName = "test1"
+                FirstName = "test1",
+                Email = "test1@gmail.com"
             });
             sessions.Add(new ApplicationUser()
             {
                 Created = new DateTime(2018, 7, 2),
                 Id = 2,
-                FirstName = "test2"
+                FirstName = "test2",
+                Email = "test2@gmail.com"
             });
             sessions.Add(new ApplicationUser()
             {
                 Created = new DateTime(2018, 7, 2),
                 Id = 3,
-                FirstName = "test3"
+                FirstName = "test3",
+                Email = "test3@gmail.com"
             });
             return sessions;
         }

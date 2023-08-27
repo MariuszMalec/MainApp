@@ -1,11 +1,16 @@
 ﻿using FluentAssertions;
+using MainApp.BLL.Context;
+using MainApp.BLL.Entities;
+using MainApp.BLL.Services;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace MainApp_BLL.Tests.RoleServiceTests
 {
-    public class RoleServiceTests : IClassFixture<ApplicationRoleSeedDataFixture>
+    public class RoleContextTests : IClassFixture<ApplicationRoleSeedDataFixture>
     {
         ApplicationRoleSeedDataFixture _fixture;
-        public RoleServiceTests(ApplicationRoleSeedDataFixture fixture)
+        public RoleContextTests(ApplicationRoleSeedDataFixture fixture)
         {
             _fixture = fixture;
         }

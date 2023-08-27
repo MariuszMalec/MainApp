@@ -1,11 +1,9 @@
 ﻿using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
-using MainApp.BLL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MainApp.BLL.Services
