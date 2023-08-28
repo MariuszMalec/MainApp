@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using MainApp.BLL.Entities;
 using MainApp.BLL.Models;
 using MainApp.BLL.Services;
 using MainApp_BLL.Tests.RoleServiceTests;
@@ -19,6 +20,28 @@ namespace MainApp_BLL.Tests.UserRoleServiceTests
         }
 
         [Fact]
+        public async Task GetById_ShoudReturnUserRole_WhenExist()
+        {
+            // Arrange
+            _repoService.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(new ApplicationUserRoleView() {
+                Id = 1,
+                FirstName = "Test",
+                LastName = "test",
+                RoleId = 1,
+                UserId = 1,
+                UserRole = "Test"
+            });
+
+            // Act
+            var roles = await _sut.GetById(1);
+
+            var result = roles.FirstName;
+
+            // Assert
+            result.Should().Be("Test");
+        }
+
+        [Fact]
         public async Task GetAllUserRoles_ShoudReturnRoles_WhenExist()
         {
             // Arrange
@@ -30,6 +53,7 @@ namespace MainApp_BLL.Tests.UserRoleServiceTests
             // Assert
             roles.Should().NotBeEmpty();
             roles.Should().HaveCount(1);
+            roles.Where(r=>r.FirstName == "Test").Select(x=>x.FirstName).FirstOrDefault().Should().Be("Test");
         }
 
         private IEnumerable<ApplicationUserRoleView> GetUserRoles()
