@@ -77,6 +77,23 @@ namespace TrackingTests.UserServiceTests
             _userMockRepo.Verify(x => x.Delete(It.IsAny<User>()), Times.Once);
         }
 
+        [Fact]
+        public async Task Update_ShoudReturnTrue_WhenIsRun()
+        {
+            // Arrange
+            var userDto = new User
+            {
+                Id = 1,
+                FirstName = "Test"
+            };
+
+            // Act
+            await _sut.Update(userDto);
+
+            // Assert
+            _userMockRepo.Verify(x => x.Update(It.IsAny<User>()), Times.Once);
+        }
+
         private List<User> GetUsers()
         {
             var sessions = new List<User>();
