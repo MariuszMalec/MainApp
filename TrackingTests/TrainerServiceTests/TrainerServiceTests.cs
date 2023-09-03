@@ -17,7 +17,7 @@ namespace TrackingTests.TrainerServiceTests
         }
 
         [Fact]
-        public async Task GetAll_ShoudReturnUsers_WhenUsersExist()
+        public async Task GetAll_ShoudReturnTrainers_WhenUsersExist()
         {
             // Arrange
             _mockRepo.Setup(x => x.GetAll()).ReturnsAsync(GetTrainers());
@@ -32,34 +32,32 @@ namespace TrackingTests.TrainerServiceTests
         }
 
         [Fact]
-        public async Task Get_ShoudReturnTrue_WhenUserExist()
+        public async Task Get_ShoudReturnTrue_WhenTrainerExist()
         {
             // Arrange
-            var userId = 2;
-            var userName = "";
-            var userDto = new Trainer
+            var trainerId = 2;
+            var trainerDto = new Trainer
             {
-                Id = 2,
-                FirstName = userName
+                Id = 2
             };
-            _mockRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(userDto);
+            _mockRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(trainerDto);
 
             // Act
-            var result = await _sut.Get(userId);
+            var result = await _sut.Get(trainerId);
 
             // Assert
-            Assert.Equal(userId, result.Id);
+            Assert.Equal(trainerId, result.Id);
         }
 
         [Fact]
-        public async Task Get_ShoudReturnFalse_WhenUserNotExist()
+        public async Task Get_ShoudReturnFalse_WhenTrainerNotExist()
         {
             // Arrange
-            var userId = 1;//nie ma tego uzytkownika
+            var trainerId = 1;//nie ma tego uzytkownika
             _mockRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Trainer() { });
 
             // Act
-            var result = await _sut.Get(userId);
+            var result = await _sut.Get(trainerId);
 
             // Assert
             Assert.Null(result.Email);
@@ -81,14 +79,13 @@ namespace TrackingTests.TrainerServiceTests
         public async Task Update_ShoudReturnTrue_WhenIsRun()
         {
             // Arrange
-            var userDto = new Trainer
+            var trainerDto = new Trainer
             {
-                Id = 1,
-                FirstName = "Test"
+                Id = 1
             };
 
             // Act
-            await _sut.Update(userDto);
+            await _sut.Update(trainerDto);
 
             // Assert
             _mockRepo.Verify(x => x.Update(It.IsAny<Trainer>()), Times.Once);
