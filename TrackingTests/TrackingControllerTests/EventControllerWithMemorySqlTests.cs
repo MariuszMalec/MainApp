@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tracking.Context;
 
-namespace TrackingTests.EventControllerTests
+namespace TrackingTests.TrackingControllerTests
 {
     public class EventControllerWithMemorySqlTests : IClassFixture<WebApplicationFactory<Program>>//wspoldzielenie factory testy nieco szybsze
     {
