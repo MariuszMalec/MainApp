@@ -21,12 +21,12 @@ namespace MainApp.Web.Services
     public class TrainersService : ITrainersService
     {
         private readonly ILogger<TrainersService> _logger;
-        private readonly TrackingService _trackingService;
+        private readonly ITrackingService _trackingService;
         IHttpClientFactory httpClientFactory;
         private const string AppiUrl = "https://localhost:7001/api";
         private readonly HttpClient _httpClient;
 
-        public TrainersService(IHttpClientFactory httpClientFactory, ILogger<TrainersService> logger, TrackingService trackingService)
+        public TrainersService(IHttpClientFactory httpClientFactory, ILogger<TrainersService> logger, ITrackingService trackingService)
         {
             this.httpClientFactory = httpClientFactory;
             _logger = logger;

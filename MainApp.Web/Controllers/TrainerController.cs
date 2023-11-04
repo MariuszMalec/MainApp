@@ -2,7 +2,7 @@
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +15,9 @@ namespace MainApp.Web.Controllers
     public class TrainerController : Controller
     {
         private ITrainersService _trainerService;
-        private readonly ILogger<TrainerController> _logger;
+        private readonly ILogger _logger;
 
-        public TrainerController(ITrainersService trainerService, ILogger<TrainerController> logger)
+        public TrainerController(ITrainersService trainerService, ILogger logger)
         {
             _trainerService = trainerService;
             _logger = logger;
@@ -49,11 +49,11 @@ namespace MainApp.Web.Controllers
 
             if (!sortedTrainers.Any())
             {
-                _logger.LogWarning("UnAuthorized");
+                _logger.Warning("UnAuthorized");
                 return RedirectToAction("UnAuthorized");      
             }
 
-            _logger.LogInformation("Download trainers from Tracking API...");
+            _logger.Information("Download trainers from Tracking API...");
             return View(sortedTrainers);
         }
 
@@ -64,10 +64,10 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                _logger.Warning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
-            _logger.LogInformation($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
+            _logger.Information($"User {userEmail} sprawdza dane uzytkowniaka o id {id}");
             return View(model);
         }
 
@@ -91,11 +91,11 @@ namespace MainApp.Web.Controllers
                 var userEmail = this.HttpContext.User.Identity.Name;
 
                 var check = await _trainerService.CreateTrainer(model, this.HttpContext);
-                _logger.LogInformation("User {userName} create new trainer at {date}", userEmail, DateTime.Now);
+                _logger.Information("User {userName} create new trainer at {date}", userEmail, DateTime.Now);
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer can't be created, email exist yet!");
+                    _logger.Warning($"Trainer can't be created, email exist yet!");
                     return RedirectToAction("EmailExistYet");
                 }
 
@@ -114,7 +114,7 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                _logger.Warning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -133,11 +133,11 @@ namespace MainApp.Web.Controllers
                 }
                 var userEmail = this.HttpContext.User.Identity.Name;
                 var check = await _trainerService.EditTrainer(id, model, this.HttpContext);
-                _logger.LogWarning("User {userName} edit trainer with id {id} at {date}", userEmail, model.Id,DateTime.Now);
+                _logger.Warning("User {userName} edit trainer with id {id} at {date}", userEmail, model.Id,DateTime.Now);
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {model.Id} doesn't exist!");
+                    _logger.Warning($"Trainer with Id {model.Id} doesn't exist!");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -157,7 +157,7 @@ namespace MainApp.Web.Controllers
             var model = await _trainerService.GetTrainerById(id, userEmail, this.HttpContext);
             if (model == null)
             {
-                _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                _logger.Warning($"Trainer with Id {id} doesn't exist!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -174,12 +174,12 @@ namespace MainApp.Web.Controllers
 
                 if (check == false)
                 {
-                    _logger.LogWarning($"Trainer with Id {id} doesn't exist!");
+                    _logger.Warning($"Trainer with Id {id} doesn't exist!");
                     return RedirectToAction("EmptyList");
                 }
 
                 var userEmail = this.HttpContext.User.Identity.Name;
-                _logger.LogWarning("User {userName} delete trainer with id {id} at {date}", userEmail, model.Id, DateTime.Now);
+                _logger.Warning("User {userName} delete trainer with id {id} at {date}", userEmail, model.Id, DateTime.Now);
     
                 return RedirectToAction("Index");
             }
