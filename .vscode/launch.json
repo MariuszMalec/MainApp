@@ -18,7 +18,7 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "LinuxMySql"
+                "ASPNETCORE_ENVIRONMENT": "PostgresWin"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -48,7 +48,7 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "LinuxMySql"
+                "ASPNETCORE_ENVIRONMENT": "PostgresWin"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
