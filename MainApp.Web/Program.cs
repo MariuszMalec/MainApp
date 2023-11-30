@@ -383,7 +383,7 @@ public class ProgramMVC
                 if (context.Database.IsRelational())
                 {
                     context.Database.EnsureCreated();
-                    //context?.Database.Migrate();
+                    context?.Database.Migrate();
                     await SeedData.SeedUser(context, userManager, roleManager);
                 }
             }
