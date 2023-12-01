@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using MainApp.WebAppMvc.Models;
 
 namespace MainApp.WebAppMvc.Areas.Identity.Pages.Account
 {
@@ -116,7 +119,7 @@ namespace MainApp.WebAppMvc.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToPage("./Trainer");
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -9,6 +9,8 @@ builder.Services.AddDbContext<MainAppWebAppMvcContext>(options => options.UseSql
 
 builder.Services.AddDefaultIdentity<MainAppWebAppMvcUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<MainAppWebAppMvcContext>();
 
+builder.Services.AddHttpClient();//TODO add to use IHttpClientFactory
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

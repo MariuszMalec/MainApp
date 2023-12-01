@@ -1,0 +1,62 @@
+﻿@page
+@using MainApp.WebAppMvc.Models
+@using Newtonsoft.Json
+@model TrainerModel
+@{
+    ViewData["Title"] = "Trainers from api";
+    var trainers = ViewData["Trainers"];
+
+    var trainersAsString = ViewData["TrainersAsString"].ToString();
+    var models = JsonConvert.DeserializeObject<List<TrainerView>>(trainersAsString);
+
+
+}
+
+<header>
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    
+@*     <p class="text-danger">@Model.ViewData["Trainers2"]</p> *@
+
+</header>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                FirstName
+            </th>
+            <th>
+                LastName
+            </th>
+            <th>
+                Email
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in models)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
