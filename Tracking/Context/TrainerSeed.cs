@@ -26,18 +26,18 @@ namespace Tracking.Context
 
 
             //TODO entity nadaje automatycznie id
-            new Trainer {FirstName = "Patryk", LastName="Szwermer" , Email ="pssg@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Przemyslaw", LastName="Sawicki" , Email ="ps@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Marcin", LastName="Dabrowski" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Piotr", LastName="Katny" , Email ="pk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Marcin", LastName="Dudzic" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Maciej", LastName="Krakowiak" , Email ="mk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Mateusz", LastName="Cebula" , Email ="mc@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow},
-            new Trainer {FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow}
+            new Trainer {FirstName = "Patryk", LastName="Szwermer" , Email ="pssg@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconSzwermer.png"},
+            new Trainer {FirstName = "Przemyslaw", LastName="Sawicki" , Email ="ps@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconSawicki.png"},
+            new Trainer {FirstName = "Marcin", LastName="Dabrowski" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/hacker32X32.png"},
+            new Trainer {FirstName = "Piotr", LastName="Katny" , Email ="pk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconKatny.png"},
+            new Trainer {FirstName = "Marcin", LastName="Dudzic" , Email ="md@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/iconDefault.png"},
+            new Trainer {FirstName = "Maciej", LastName="Krakowiak" , Email ="mk@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/gamer32X32.png"},
+            new Trainer {FirstName = "Mateusz", LastName="Cebula" , Email ="mc@example.com", PhoneNumber = "", CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconCebula.png"},
+            new Trainer {FirstName = "Jakub", LastName="Nowikowski" , Email ="jk@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/iconDefault.png"},
+            new Trainer {FirstName = "Jan", LastName="Choma" , Email ="jc@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/iconDefault.png"},
+            new Trainer {FirstName = "Marcin", LastName="Przypek" , Email ="mp@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconDefault.png"},
+            new Trainer {FirstName = "Michal", LastName="Sosnowski" , Email ="ms@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow, TrainerPicture = "https://localhost:5001/iconDefault.png"},
+            new Trainer {FirstName = "Maciej", LastName="Tyszka" , Email ="mt@example.com", PhoneNumber = "" , CreatedDate = DateTime.UtcNow, TrainerPicture="https://localhost:5001/iconDefault.png"}
         };
 
         public static List<Trainer> GetAll()

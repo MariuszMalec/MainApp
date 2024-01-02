@@ -10,6 +10,7 @@
 
 #nullable enable
         public string? PhoneNumber { get; set; }
+        public string? TrainerPicture { get; set; }
 #nullable disable
     }
 }

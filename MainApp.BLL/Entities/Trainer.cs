@@ -11,6 +11,7 @@ namespace MainApp.BLL.Entities
         public string Email { get; set; }
 #nullable enable
         public string? PhoneNumber { get; set; }
+        public string? TrainerPicture { get; set; }
 #nullable disable
     }
 }

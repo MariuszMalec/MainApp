@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -59,7 +60,6 @@ namespace MainApp.Web.Services
                 var myEvent = await _trackingService.InsertEvent(ActivityActions.ViewTrainers, httpContext, userEmail);
                 await _trackingService.Insert(myEvent);
             }
-
             return trainers;
         }
         public async Task<TrainerView> GetTrainerById(int id, string userEmail, HttpContext httpContext)

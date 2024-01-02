@@ -1,5 +1,6 @@
 ﻿using MainApp.BLL.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace MainApp.BLL.Models
 {
@@ -21,6 +22,8 @@ namespace MainApp.BLL.Models
         [RegularExpression(@"^\d{3}-\d{3}-\d{3}$", ErrorMessage = "Not a valid mobile phone number. Format ###-###-###")]
 #nullable enable
         public string? PhoneNumber { get; set; }
+
+        public string? TrainerPicture { get; set; }
 #nullable disable
     }
 }

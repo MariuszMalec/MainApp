@@ -45,4 +45,10 @@
     <Folder Include="DataBaseUser\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\984103_avatar_geek_male_man_person_iconX42.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
