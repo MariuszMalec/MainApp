@@ -8,34 +8,40 @@
 
 <div>
     <h4>TrainerView</h4>
-
         <div class="container mt-3">
              <div class="container">
                   <div class="row">
-                       <div class="col">
-                        @if(Model.LastName.Contains("Szwermer"))
-                        {
-                            <img class="shape-circle-image" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_icon.png">      
-                        }
-                        else if(Model.LastName.Contains("Sawicki"))
-                        {
-                            <img class="shape-circle-image" alt="Image placeholder" src="~/628291_avatar_headset_male_man_person_iconX512.png"> 
-                        }
-                        else if(Model.LastName.Contains("Dabrowski"))
-                        {
-                             <img class="shape-circle-image" alt="Image placeholder" src="~/hackerX512.png"> 
-                 
-                        }
-                        else if(Model.LastName.Contains("Katny"))
-                        {
-                             <img class="shape-circle-image" alt="Image placeholder" src="~/628290_avatar_male_man_mature_old_iconX512.png">            
-                        }
+                    <div class="card" style="background-color : lightgray">
+                        <div class="col">
+                            @if (Model.LastName.Contains("Szwermer"))
+                            {
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/984103_avatar_geek_male_man_person_icon.png">
+                            }
+                            else if (Model.LastName.Contains("Sawicki"))
+                            {
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/628291_avatar_headset_male_man_person_iconX512.png">
+                            }
+                            else if (Model.LastName.Contains("Dabrowski"))
+                            {
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/hackerX512.png">
 
-                        else if(Model.LastName.Contains("Admin"))
-                        {
-                             <img class="shape-circle-image" alt="Image placeholder" src="~/icons8-administrator-male-500.png">            
-                        }
+                            }
+                            else if (Model.LastName.Contains("Katny"))
+                            {
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/628290_avatar_male_man_mature_old_iconX512.png">
+                            }
+
+                            else if (Model.LastName.Contains("Admin"))
+                            {
+                                <img class="shape-circle-image" alt="Image placeholder" src="~/icons8-administrator-male-500.png">
+                            }
+                        <div class="card-body">
+                            <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
+                            <p class="card-text"></p>
+                                <a class="btn btn-success" asp-action="Index">Back to List</a>
                         </div>
+                    </div>
+                   </div>
                  </div>
              </div>
         </div> 
@@ -75,6 +81,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a class="btn btn-success" asp-action="Index">Back to List</a>
 </div>
