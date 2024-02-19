@@ -64,21 +64,20 @@
         </div>
 </environment>
 
-<h2> @ViewBag.Test</h2>
-<h2> @ViewData["Provider"]</h2>
-<h2> @TempData["Provider"]</h2>
-
+<h3> @ViewBag.Test</h3>
+<h3> @ViewData["Provider"]</h3>
+<h3> @TempData["Provider"]</h3>
 
 <div class="text-center bg-transparent">
 
     @if (!SignInManager.IsSignedIn(User))
     {
-        <h3 class="card-title font-weight-bold col">Welcome @userFullName (@provider)</h3>
+        <h4 class="card-title font-weight-bold col">Welcome @userFullName (@provider)</h4>
         <a class="btn btn-primary" asp-controller="account" asp-action="Login">Go to login</a>
         <hr />
         <div class="card bg-dark text-white">
-          <img class="card-img" src="~/images/welcome.png" alt="Card image">     
-          <div class="card-img-overlay">
+          <img class="card-img" src="~/images/welcome.png" alt="Card image">
+            <div class="card-img-overlay">
             <h5 class="card-title">Register or login</h5>
             <p class="card-text">Web api with MVC project</p>
           </div>
@@ -119,3 +118,11 @@
             </div>       
         </div>
     }
+
+<style>
+    .card-img {
+        width: 100%;
+        height: 20vw;
+        object-fit: cover;
+    }
+</style>
