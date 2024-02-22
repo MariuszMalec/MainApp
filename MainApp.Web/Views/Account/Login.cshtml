@@ -7,48 +7,53 @@
     categoryList = incomeList;
 }
 
-<div class="container mt-3">
-    <h1>Login</h1>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Login" asp-controller="Account">
-                @*<form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">*@
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
-                    <input type="email" asp-for="Email" class="form-control" placeholder="Email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+<div class="row-md-4 col-xs-3 border-primary mb-3">
+    <div class="card mb-3" style="max-width: 540px; background-image: url('https://plus.unsplash.com/premium_photo-1677093905933-22469186a34b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover;">
+        <div class="row g-0">
+            <div class="rows-md-12">
+                <div class="card-header text-white bg-info">
+                    <p class="card-text">
+                        <h5 class="card-title">
+                            Login
+                        </h5>
+                    </p>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <img src="https://plus.unsplash.com/premium_photo-1677093905933-22469186a34b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt=""
+                     style="object-fit:scale-down;
+                            width:100%;
+                            height:auto;
+                            border: solid 1px #CCC">
+            </div>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <form asp-action="Login" asp-controller="Account">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <div class="checkbox" style="position: relative; left: 20px">
+                                <label asp-for="RememberMe" class="form-label">
+                                    <input class="form-check-input" asp-for="RememberMe" />
+                                    @Html.DisplayNameFor(m => m.RememberMe)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Log in</button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <div class="checkbox">
-                        <label asp-for="RememberMe" class="form-label">
-                            <input class="form-check-input" asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
-                    </div>
-                </div>
-
-@*                <div class="form-group">
-                    <label asp-for="ProviderName" class="control-label"></label>
-                            <select asp-for="ProviderName" id="categorySelect" asp-items="categoryList" class="form-control">
-                        <option selected="selected">@Model.ProviderName</option>
-                    </select>
-                    <span asp-validation-for="ProviderName" class="text-danger"></span>
-                </div>*@
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Log in</button>
-                </div>
-            </form>
-
-            
-
+            </div>
         </div>
     </div>
 </div>

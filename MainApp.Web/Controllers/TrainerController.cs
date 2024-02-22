@@ -31,7 +31,7 @@ namespace MainApp.Web.Controllers
             if (ExtentionsMethod.IsAjaxRequest(this.Request))
             {
                 //Delay just for demo purpose
-                Thread.Sleep(3000);
+                Thread.Sleep(500);
 
                 ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
