@@ -1,6 +1,7 @@
 ﻿using MainApp.BLL.Context;
 using MainApp.BLL.Entities;
 using MainApp.BLL.Enums;
+using MainApp.BLL.ExtentionsMethod;
 using MainApp.BLL.Models;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -32,14 +34,24 @@ namespace MainApp.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
+            if (ExtentionsMethod.IsAjaxRequest(this.Request))
+            {
+                var models = await _roleService.GetAll();
 
-            var models = await _roleService.GetAll();
+                if (models == null)
+                    return Content("models is null!");
 
-            if (models == null)
-                return Content("models is null!");
+                _logger.LogInformation("Get users role at {loginDate}", DateTime.Now);
+                //return View(models);
 
-            _logger.LogInformation("Get users role at {loginDate}", DateTime.Now);
-            return View(models);
+                //Delay just for demo purpose
+                Thread.Sleep(500);
+                return PartialView("_Report", models);
+            }
+            else
+            {
+                return View("Report");
+            }
         }
 
         // GET: RoleController/Details/5

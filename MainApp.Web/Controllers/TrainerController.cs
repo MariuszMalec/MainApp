@@ -1,5 +1,4 @@
-﻿using MainApp.BLL.ExtentionsMethod;
-using MainApp.BLL.Models;
+﻿using MainApp.BLL.Models;
 using MainApp.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MainApp.Web.Controllers
@@ -28,49 +26,38 @@ namespace MainApp.Web.Controllers
         // GET: TrainerController
         public async Task<ActionResult<List<TrainerView>>> Index(string sortOrder)
         {
-            if (ExtentionsMethod.IsAjaxRequest(this.Request))
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var userEmail = "Trainer@example.com";//TODO only for tests! niestety nie dziala bo HttpContext = null!!
+
+            if (this.HttpContext != null)
             {
-                //Delay just for demo purpose
-                Thread.Sleep(500);
-
-                ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-
-                var userEmail = "Trainer@example.com";//TODO only for tests! niestety nie dziala bo HttpContext = null!!
-
-                if (this.HttpContext != null)
-                {
-                    userEmail = this.HttpContext.User.Identity.Name;
-                }
-
-                //TODO here acess has only admin with password admin
-                List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
-
-                var sortedTrainers = from s in trainers
-                                     select s;
-                switch (sortOrder)
-                {
-                    case "name_desc":
-                        sortedTrainers = sortedTrainers.OrderByDescending(s => s.LastName);
-                        break;
-                    default:
-                        sortedTrainers = sortedTrainers.OrderBy(s => s.LastName);
-                        break;
-                }
-
-                if (!sortedTrainers.Any())
-                {
-                    _logger.Warning("UnAuthorized");
-                    return RedirectToAction("UnAuthorized");
-                }
-
-                _logger.Information("Download trainers from Tracking API...");
-                //return View(sortedTrainers);
-                return PartialView("_Report", sortedTrainers);
+                userEmail = this.HttpContext.User.Identity.Name;
             }
-            else
+
+            //TODO here acess has only admin with password admin
+            List<TrainerView> trainers = await _trainerService.GetAll(userEmail, this.HttpContext);
+
+            var sortedTrainers = from s in trainers
+                                 select s;
+            switch (sortOrder)
             {
-                return View("Report");
+                case "name_desc":
+                    sortedTrainers = sortedTrainers.OrderByDescending(s => s.LastName);
+                    break;
+                default:
+                    sortedTrainers = sortedTrainers.OrderBy(s => s.LastName);
+                    break;
             }
+
+            if (!sortedTrainers.Any())
+            {
+                _logger.Warning("UnAuthorized");
+                return RedirectToAction("UnAuthorized");
+            }
+
+            _logger.Information("Download trainers from Tracking API...");
+            return View(sortedTrainers);
         }
 
         // GET: UserController/Details/5

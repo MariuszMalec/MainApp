@@ -1,151 +1,69 @@
-﻿@model IEnumerable<MainApp.BLL.Models.TrainerView>
+﻿@using MainApp.BLL.Context
 @using MainApp.BLL.Entities
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<MainApp.BLL.Models.ApplicationUserRoleView>
 @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Index";
 }
 
-@{
-    var user = await UserManager.GetUserAsync(User);
-    var userFullName = "";
-    if (user != null)
-    {
-        userFullName = $"{user.FirstName} {user.LastName} {user.UserRole}";
-    }
-}
+<h1>List of users roles</h1>
 
-<h1>Trainers</h1>
-
-<p>
-    <a class="btn btn-success" asp-action="Create"><img class="rounded" alt="Image placeholder" src="~/icons8-add-user-male-32X32.png">Create New</a>
-</p>
-
-<div class="card mt-5 shadow-lg">
-    <div class="card-header">
-        List of trainers
-    </div>
-    <div class="card-body">
-        <div class="d-flex">
-            <h5 class="card-title"> @userFullName </h5>
-        </div>
-        <p class="card-text">
-            <div class="row">
-                <div class="col">
-
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Avatar
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.FirstName)
-                                </th>
-                                <th>
-                                    @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.NameSortParm })
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Email)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PhoneNumber)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CreatedDate)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-
-                                    <td>
-                                        @{
-                                            if (item.LastName.Contains("Szwermer"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Krakowiak"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Dabrowski"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Sawicki"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Katny"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Cebula"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src=@item.TrainerPicture>
-                                                </a>
-                                            }
-                                            else if (item.LastName.Contains("Admin"))
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src="~/admin.png">
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <a href="#" class="avatar">
-                                                    <img class="rounded" alt="Image placeholder" src="~/man32X32.png">
-                                                </a>
-                                            }
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FirstName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastName)
-                                    </td>
-                                    <td>
-                                        @item.Email
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
-                                        <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
-                                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-        </p>
-        <a href="/Home/index" class="btn btn-primary">Go to Home</a>
-    </div>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserRole)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRole)
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
