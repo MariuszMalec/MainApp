@@ -5,50 +5,61 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="card" style="border-radius: 10px ;background-image: url('https://images.unsplash.com/photo-1519219788971-8d9797e0928e?q=80&w=2044&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
 
-<p>
-    <a class="btn btn-success" asp-action="Create"><img class="rounded" alt="Image placeholder" src="~/icons8-add-user-male-32X32.png">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NormalizedName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ConcurrencyStamp)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NormalizedName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
-            </td>
-            <td>
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <header class="w3-container w3-blue">
+        <h5>Roles</h5>
+        <p>
+            <a class="btn btn-success" asp-action="Create"><img class="rounded" alt="Image placeholder" src="~/icons8-add-user-male-32X32.png">Create New</a>
+        </p>
+    </header>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NormalizedName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ConcurrencyStamp)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NormalizedName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Edit"><img class="rounded" alt="Image placeholder" src="~/editX32.png"></a>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Details"><img class="rounded" alt="Image placeholder" src="~/employeeX32.png"></a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="Delete"><img class="rounded" alt="Image placeholder" src="~/trash-binX32.png"></a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+
+    <footer class="w3-container w3-blue">
+        <h5> @DateTime.Now </h5>
+    </footer>
+
+</div>
+
