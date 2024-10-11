@@ -1,5 +1,6 @@
 ﻿@using MainApp.BLL.Context;
 @using MainApp.BLL.Enums;
+@using MainApp.BLL.Models
 @model MainApp.BLL.Models.ApplicationUserRoleView
 @inject ApplicationDbContext _context
 
@@ -8,9 +9,20 @@
 }
 
 @{
-    var incomeList = Html.GetEnumSelectList<Roles>().Where(l => int.Parse(l.Value) >= 0).ToList();
+    var result = new List<SelectListItem>();
+    var ctx = _context;
+    var items = from n in ctx.Roles
+                select new SelectListItem
+                        {
+                            Text = n.Name,
+                            Value = n.Id.ToString()
+                        };
+    foreach (var item in items)
+        result.Add(item);
+
+    //var incomeList = Html.GetEnumSelectList<Roles>().Where(l => int.Parse(l.Value) >= 0).ToList();
     var categoryList = new List<SelectListItem>();
-    categoryList = incomeList;
+    categoryList = result;
 }
 
 <h1>Edit</h1>

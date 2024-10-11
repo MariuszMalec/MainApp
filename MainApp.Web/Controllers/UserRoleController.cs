@@ -156,7 +156,10 @@ namespace MainApp.Web.Controllers
                 });
 
                 //set name from selected enum
-                var modelRoleName = Enum.GetName(typeof(Roles), int.Parse(model.UserRole));
+                //var modelRoleName = Enum.GetName(typeof(Roles), int.Parse(model.UserRole));
+                //set new roles according database
+                var modelRoleName = _context.Roles.Where(x => x.Id.ToString() == model.UserRole).Select(x => x.Name).FirstOrDefault();
+
                 var newRoleId = _context.Roles.Where(r => r.Name == modelRoleName).Select(r => r.Id).FirstOrDefault();
 
                 _context.Add(new IdentityUserRole<int>()
@@ -171,7 +174,7 @@ namespace MainApp.Web.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("User {userName} edit trainer with id {id} at {date}", model.UserId, model.RoleId, DateTime.Now);
+                _logger.LogInformation("User {userName} edit user with id {id} at {date}", model.UserId, model.RoleId, DateTime.Now);
 
                 return RedirectToAction(nameof(Index));
             }
