@@ -13,7 +13,7 @@
     var roleName = "";
     if (user != null)
     {
-        userFullName = $"{user.FirstName} {user.LastName}";
+        userFullName = $"{user.FirstName} {user.LastName} : {user.UserRole}";
 
         var userByMail = await UserManager.FindByEmailAsync(user.Email);
 
@@ -30,6 +30,14 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    string getTitle= ViewBag.Title;
+
+    if (getTitle != null)
+    {
+        if (getTitle.Contains("Access denied"))
+            return;
+    }
+
     var controller = ViewContext.RouteData.Values["Controller"].ToString();
     var action = ViewContext.RouteData.Values["Action"].ToString();
 
