@@ -1,0 +1,134 @@
+﻿@using MainApp.BLL.Context
+@using MainApp.BLL.Entities
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ApplicationDbContext _context
+@using MainApp.Web.Services;
+@using Microsoft.EntityFrameworkCore
+ 
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var userFullName = "";
+    var roleName = "";
+    if (user != null)
+    {
+        userFullName = $"{user.FirstName} {user.LastName}";
+
+        var userByMail = await UserManager.FindByEmailAsync(user.Email);
+
+        var roleUser = await _context.UserRoles.Where(x => x.UserId == userByMail.Id).Select(x => x.RoleId).FirstOrDefaultAsync();
+
+        roleName = await _context.Roles.Where(x => x.Id == roleUser).Select(x => x.Name).FirstOrDefaultAsync();
+
+        if (roleName.Contains("Admin"))
+        {
+
+        }
+    }
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var controller = ViewContext.RouteData.Values["Controller"].ToString();
+    var action = ViewContext.RouteData.Values["Action"].ToString();
+
+    <body>
+        <div class="navigation">
+            <ul>
+                <li class="@(controller == "Home" ? "active" : "")">
+                    <!-- https://youtu.be/P_A2kNpyQBs?t=937 -->
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+                        <span class="title">Home</span>
+                    </a>
+                </li>
+
+                <li class="@(controller == "Trainer" ? "active" : "")">
+                    <a asp-area="" asp-controller="Trainer" asp-action="Index">
+                        <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
+                        <span class="title">Trainers</span>
+                    </a>
+                </li>
+
+                <li class="@(controller == "Event" ? "active" : "")">
+                    <a asp-area="" asp-controller="Event" asp-action="Index">
+                        <span class="icon"><ion-icon name="list-outline"></ion-icon></span>
+                        <span class="title">Events</span>
+                    </a>
+                </li>
+                @{
+                    if (roleName.Contains("Admin"))
+                    {
+                        <li class="@(controller == "User" ? "active" : "")">
+                            <a asp-area="" asp-controller="User" asp-action="Index">
+                                <span class="icon"><ion-icon name="people-circle"></ion-icon></span>
+                                <span class="title">Users</span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="@(controller == "User" ? "active" : "")">
+                            <a asp-area="" asp-controller="Account" asp-action="AccessDenied">
+                                <span class="icon"><ion-icon name="people-circle"></ion-icon></span>
+                                <span class="title">Users</span>
+                            </a>
+                        </li>
+                    }
+                }
+
+                <li class="@(controller == "Activity" ? "active" : "")">
+                    <a asp-area="" asp-controller="Activity" asp-action="Index">
+                        <span class="icon"><ion-icon name="accessibility-outline"></ion-icon></span>
+                        <span class="title">Activity</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js">
+        </script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js">
+        </script>
+
+        <script>
+            let menuToogle = document.querySelector('.toogle');
+            let navigation = document.querySelector('.navigation');
+            menuToogle.onclick = function () {
+            menuToogle.classList.toggle('active');
+            navigation.classList.toggle('active');
+            }
+
+            let list = document.querySelectorAll('.list');
+            for (let i = 0; i < list.length; i++) {
+            list[i].onclick = function () {
+            let j = 0;
+            while (j < list.length) {
+            list[j++].className = 'list';
+            }
+            list[i].className = 'list active';
+            }
+            }
+        </script>
+    </body>
+}
+
+ <style>
+    a.one {
+        background-color: darkseagreen;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        border: 2px solid green;
+        border-radius: 25%;
+        margin-right: 5px;
+        width: 100px;
+    }
+    a.one:hover, a.one:active {
+            background-color: darkcyan;
+            color: white;
+    }
+ </style>

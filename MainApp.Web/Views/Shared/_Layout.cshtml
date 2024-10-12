@@ -1,8 +1,6 @@
 ﻿@using MainApp.BLL.Entities;
 @using Microsoft.AspNetCore.Identity;
 @using System.Net;
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,6 +45,7 @@ https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <partial name="_HeadPanel" />
+                        <partial name="_LeftHeadPanel" />
                         <partial name="_LoginPartial" />
                         <partial name="_Profile" />
                     </ul>
