@@ -130,7 +130,8 @@ namespace MainApp.Web.Controllers
             if (model.NormalizedName == "ADMIN")
             {
                 _logger.Error($"Role Admin can't be deleted!");
-                return Content($"Admin can't be deleted!");
+                //return Content($"Admin can't be deleted!");
+                return RedirectToAction("AccessDenied", "Account");
             }
 
             if (model == null)
