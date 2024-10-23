@@ -295,6 +295,7 @@ public class ProgramMVC
         builder.Services.AddTransient<IRepositoryService<ApplicationUserRoleView>, UserRoleService>();
         builder.Services.AddTransient<IRepositoryService<ApplicationRoles>, RoleService>();
         builder.Services.AddTransient<EmailService>();
+        builder.Services.AddScoped<ErrorHandlingMiddleware>();
         builder.Services.AddHttpClient();
         //builder.Services.AddSerilog(logger);//inject serilog
 
@@ -408,6 +409,8 @@ public class ProgramMVC
         app.UseRouting();
 
         app.UseMiddleware<MyExceptionMiddleware>();
+
+        app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseAuthentication();
 

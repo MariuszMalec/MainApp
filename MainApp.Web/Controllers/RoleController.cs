@@ -1,4 +1,5 @@
 ﻿using MainApp.BLL.Entities;
+using MainApp.BLL.Exceptions;
 using MainApp.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -89,6 +90,8 @@ namespace MainApp.Web.Controllers
             var model = await _roleService.GetById(id);
             if (model == null)
             {
+                //throw new NotFoundException("Role not found!");
+                //return NotFound("Role not found!");
                 return RedirectToAction("EmptyList");
             }
             return View(model);
@@ -167,6 +170,12 @@ namespace MainApp.Web.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult EmptyList(int id)
+        {
+            ViewBag.Id = id;
+            return View();
         }
     }
 }
