@@ -1,0 +1,10 @@
+@host = https://localhost
+@port = 7001
+@Tracking = {{host}}:{{port}}
+@ApiKey = 8e421ff965cb4935ba56ef7833bf4750
+
+GET {{Tracking}}/api/Tracking
+APIKEY: {{ApiKey}}
+Accept: application/json
+
+###
