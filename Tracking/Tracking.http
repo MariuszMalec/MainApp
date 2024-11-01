@@ -8,3 +8,9 @@ APIKEY: {{ApiKey}}
 Accept: application/json
 
 ###
+
+GET {{Tracking}}/api/trainer
+APIKEY: {{ApiKey}}
+Accept: application/json
+
+###
